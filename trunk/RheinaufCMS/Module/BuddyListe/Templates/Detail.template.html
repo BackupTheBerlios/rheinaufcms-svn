@@ -1,0 +1,63 @@
+<!--TEMPLATE-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de"><head>
+<meta  http-equiv="Content-type" content="text/html; charset=ISO-8850-1" />
+<link rel="stylesheet" href="/RheinaufCMS/CSS/Screen.css" media="screen" type="text/css" />
+	<!--[if IE]>
+	   <link rel="stylesheet" href="/RheinaufCMS/CSS/ie_zusatz.css" type="text/css" />
+	<![endif]-->
+<title>Buddyliste: {If:Schulname}, {If:PLZ} {If:Stadt}</title>
+
+<script type="text/javascript">window.focus()</script>
+
+</head>
+<body>
+<div>
+<a href="Startseite"> <img src="/Images/buddy_schriftzug_50px.gif" alt="Buddy-Schriftzug" class="floatright"style="margin-right:3em;"/></a>
+</div>
+<h2>Buddyliste: <br/>
+{If:Schulname}, {If:Stadt}</h2>
+
+<div id="bl-linke-spalte">
+<h1>{If:Projektname}</h1>
+<h3>Beschreibung:</h3>
+<p>{If:Beschreibung}</p>
+
+<h3>Einsatz der Schüler:</h3>
+<p>{If:EinsatzSchüler}</p>
+
+<h3>Einsatz von Pädagogen:</h3>
+
+{If:EngagementLehrer}
+
+<h3>Rahmendaten:</h3>
+<ul>
+<li>Schulform: {If:Schulform}</li>
+<li>Prjojektstart: {If:Projektstart}</li>
+<li>Beteiligte:<br/>
+{If:Schüler}<br/>
+{If:Pädagogen}</li>
+</ul>
+<h3>Kontakt:</h3>
+<address>{If:Schulname}<br/>
+{If:Adresse}<br/>
+{If:PLZ}{If:Stadt}<br/>
+<br/>
+Telefon: {If:Telefon}<br/>
+{IfNotEmpty:emailSchule(E-Mail:
+<a href="mailto:[emailSchule]">[emailSchule]</a><br/>)}
+
+URL: {If:Link}<br/>
+
+<br/>
+Ansprechpartner: {If:Ansprechpartner}<br/>
+<a href="mailto:{If:E-Mail}">{If:E-Mail}</a><br/>
+</address>
+</div>
+<div id="bl-rechte-spalte">
+{If:Bilder}
+</div>
+</body>
+</html>
+
+<!--/TEMPLATE-->

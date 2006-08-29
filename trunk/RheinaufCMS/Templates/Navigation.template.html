@@ -1,0 +1,27 @@
+Folgende Klassen werden eingefügt:
+
+Rubrik inaktiv = "navi"
+Rubrik aktiv   = "navi navi_active"
+
+Seite inaktiv = "subnavi"
+Seite aktiv   = "subnavi subnavi_active"
+
+<!--PRE-->
+<ul class="navi_links">
+<!--/PRE-->
+
+<!--RUBRIK-->	
+	<li class="{navi_class}">
+		<a href="{link}" class="{span_class}" tabindex="{tabindex}"><span class="span_class">{name}</span></a>
+    </li>
+<!--/RUBRIK-->	
+
+<!--SUBNAVI-->
+	<li class="{subnavi_class}">
+			<a href="{subnavi_link}" tabindex="{tabindex}"><span>{subnavi_name}</span></a>	</li>
+<!--/SUBNAVI-->
+
+<!--POST-->
+</ul>
+
+ <!--/POST-->

@@ -1,0 +1,24 @@
+<!--PRE-->
+<form action="{SELF}" method="get">
+<fieldset ><legend>Filter</legend>
+PLZ:
+<input type="text" name="PLZ" value="{If:plz_value}" />
+Stadt:<input type="text" name="Stadt" value="{If:stadt_value}" />
+<input type="submit" name="Filter" value="Anzeigen"/>
+</fieldset>
+</form>
+<a href="{SELF}?new" class="button">Ort hinzufügen</a>
+<table>
+<thead>
+ <tr><th><a href="{SELF}?order=PLZ">PLZ</a> </th><th><a href="{SELF}?order=Stadt">Stadt</a></th><th><a href="{SELF}?order=Location_name">Name</a></th><th colspan="3"></th></tr>
+</thead>
+ <tbody>
+ <!--/PRE-->
+<!--LOOP-->
+  <tr class="{If:alt_row}"><td>{If:PLZ}</td><td>{If:Stadt}</td><td>{If:Location_name}</td><td><a href="{SELF}?addwork={Location_id}" class="button">Werk hinzufügen</a></td><td><a href="{SELF}?editworks={Location_id}" class="button">Ort bearbeiten</a></td><td><a href="{SELF}?delloc={Location_id}" class="button" onclick="return delete_confirm()">Ort entfernen</a></td></tr>
+<!--/LOOP-->
+<!--POST-->
+
+  </tbody>
+ </table>
+<!--/POST-->
