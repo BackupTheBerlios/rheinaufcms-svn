@@ -1,7 +1,7 @@
 /**
  * The ImageManager plugin javascript.
  * @author $Author$
- * @version $Id$
+ * @version $Id: image-manager.js 3 2006-08-29 12:15:04Z ray_cologne $
  * @package ImageManager
  */
 

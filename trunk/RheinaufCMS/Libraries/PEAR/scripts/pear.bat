@@ -16,7 +16,7 @@ REM ----------------------------------------------------------------------
 REM  Authors:     Alexander Merz (alexmerz@php.net)
 REM ----------------------------------------------------------------------
 REM
-REM  Last updated 12/29/2004 ($Id$ is not replaced if the file is binary)
+REM  Last updated 12/29/2004 ($Id: pear.bat 3 2006-08-29 12:15:04Z ray_cologne $ is not replaced if the file is binary)
 
 REM change this lines to match the paths of your system
 REM -------------------

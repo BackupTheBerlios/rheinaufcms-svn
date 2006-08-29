@@ -2,7 +2,7 @@
 /**
  * File Utilities.
  * @author $Author$
- * @version $Id$
+ * @version $Id: Files.php 3 2006-08-29 12:15:04Z ray_cologne $
  * @package ImageManager
  */
 
@@ -14,7 +14,7 @@ define('FILE_COPY_OK', 103);
 /**
  * File Utilities
  * @author $Author$
- * @version $Id$
+ * @version $Id: Files.php 3 2006-08-29 12:15:04Z ray_cologne $
  * @package ImageManager
  * @subpackage files
  */

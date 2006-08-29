@@ -37,7 +37,7 @@
 //    }
 //
 //
-// $Id$
+// $Id: GD.php 3 2006-08-29 12:15:04Z ray_cologne $
 //
 // Image Transformation interface using the GD library
 //

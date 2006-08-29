@@ -58,9 +58,11 @@ class RheinaufCMS
 
 	function add_db_prefix()
 	{
+		$db_prefix = (defined(DB_PREFIX)) ? DB_PREFIX :'';
+
 		foreach ($this->tables as $key =>$value)
 		{
-			$this->tables[$key] = DB_PREFIX.$value;
+			$this->tables[$key] = $db_prefix.$value;
 		}
 		$this->extract_to_this($this->tables);
 	}

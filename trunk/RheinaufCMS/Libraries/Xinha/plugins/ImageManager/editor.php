@@ -2,7 +2,7 @@
 /**
  * The PHP Image Editor user interface.
  * @author $Author$
- * @version $Id$
+ * @version $Id: editor.php 3 2006-08-29 12:15:04Z ray_cologne $
  * @package ImageManager
  */
 

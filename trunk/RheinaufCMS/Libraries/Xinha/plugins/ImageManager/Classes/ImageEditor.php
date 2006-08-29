@@ -2,7 +2,7 @@
 /**
  * Image Editor. Editing tools, crop, rotate, scale and save.
  * @author $Author$
- * @version $Id$
+ * @version $Id: ImageEditor.php 3 2006-08-29 12:15:04Z ray_cologne $
  * @package ImageManager
  */
 
@@ -11,7 +11,7 @@ require_once('Transform.php');
 /**
  * Handles the basic image editing capbabilities.
  * @author $Author$
- * @version $Id$
+ * @version $Id: ImageEditor.php 3 2006-08-29 12:15:04Z ray_cologne $
  * @package ImageManager
  * @subpackage Editor
  */
