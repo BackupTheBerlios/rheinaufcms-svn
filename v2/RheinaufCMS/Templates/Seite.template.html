@@ -1,0 +1,33 @@
+<!--HEADER-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+
+   <title>{IfNotEmpty:projekt_name([projekt_name])} - {IfNotEmpty:title([title])}</title>
+	<link rel="stylesheet" href="/RheinaufCMS/CSS/Screen.css" media="screen" type="text/css" />
+	<!--[if IE]>
+	   <link rel="stylesheet" href="/RheinaufCMS/CSS/ie_zusatz.css" type="text/css" />
+	<![endif]-->
+	{IfNotEmpty:other_css([other_css])}
+	
+	<meta name="author" content="Buddy-e.V." />
+	{IfNotEmpty:keywords(<meta name="keywords" content="[keywords]" />)}
+	{IfNotEmpty:description(<meta name="description" content="[description]" />)}
+	
+	<meta http-equiv="imagetoolbar" content="no" />
+
+	{IfNotEmpty:scripts([scripts])}
+</head>
+
+<body>
+{navi}
+<div id="content">	 
+<!--/HEADER-->
+<!--FOOTER-->
+
+</div><!-- content-->
+
+</body>
+</html>
+
+<!--/FOOTER-->
