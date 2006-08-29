@@ -360,7 +360,7 @@ RheinaufCMSLinker.Dialog.prototype._prepareDialog = function()
   eval(dTreeName + ' = this.dTree');
 
  // this.dTree.add(this.Dialog_nxtid++, -1, document.location.host, null, document.location.host);
-   this.dTree.add(this.Dialog_nxtid++, -1, project_name , null, 'Titel');
+   this.dTree.add(this.Dialog_nxtid++, -1, project_name + ' (Server)', null, 'Titel' + '(Server)');
   this.makeNodes(files, 0);
 
   // Put it in
@@ -371,7 +371,7 @@ RheinaufCMSLinker.Dialog.prototype._prepareDialog = function()
   ddTree.style.left = 1 + 'px';
   ddTree.style.top =  0 + 'px';
   ddTree.style.overflow = 'auto';
-
+  ddTree.style.backgroundColor = 'white';
   this.ddTree = ddTree;
   this.dTree._linker_premade = this.dTree.toString();
 
@@ -379,15 +379,14 @@ RheinaufCMSLinker.Dialog.prototype._prepareDialog = function()
   options.style.position = 'absolute';
   options.style.top      = 0   + 'px';
   options.style.right    = 0   + 'px';
-  options.style.width    = 500 + 'px';
+  options.style.width    = 500+ 'px';
   options.style.overflow = 'auto';
-  options.style.marginRight = 22 + 'px';
 
   // Hookup the resizer
   this.dialog.onresize = function()
     {
      var h = parseInt(dialog.height) - dialog.getElementById('h1').offsetHeight;
-	 var w = parseInt(dialog.width)  - 544 ;
+	 var w = parseInt(dialog.width)  - 322 ;
 	 // An error is thrown with IE when trying to set a negative width or a negative height
 	 // But perhaps a width / height of 0 is not the minimum required we need to set
 	 if (w<0) w = 0;
@@ -562,3 +561,4 @@ RheinaufCMSLinker.Dialog.prototype.hide = function()
   this.linker.editor.enableToolbar();
   return this.dialog.hide();
 }
+

@@ -1,4 +1,15 @@
-<?php if (!isset($_SESSION)) session_start(); ?>
+<?php if (!isset($_SESSION)) session_start();
+header('Content-type:text/javascript');
+/*--------------------------------
+--  Xinha Editor Configuration
+--
+--  $HeadURL$
+--  $LastChangedDate$
+--  $LastChangedRevision$
+--  $LastChangedBy$
+---------------------------------*/
+
+?>
 
 window.moveTo(0,0);
 window.resizeTo(screen.width,screen.height);
@@ -29,7 +40,8 @@ window.focus();
 	//'Forms',
 	'InsertAnchor',
 	//'GetHtml',
-	'Linker',
+	//'Linker',
+	'RheinaufCMSLinker',
 	'DoubleClick',
 	//'InsertPicture',
 	//'LangMarks',
@@ -70,21 +82,17 @@ window.focus();
       y = document.body.clientHeight;
     }
 
-
 	xinha_config.height = y-30 + 'px';
 	xinha_config.width = x + 'px';
 
-
 	xinha_config.toolbar =
 	 [
-	    ["formatblock","bold","italic","fontsize"],
+	    ["formatblock","bold","italic"],
 	    ["separator","insertorderedlist","insertunorderedlist"],
 	    ["separator","inserthorizontalrule","createlink","insertimage","inserttable"],
 	    ["separator","undo","redo","selectall"], (HTMLArea.is_gecko ? [] : ["cut","copy","paste","overwrite"]),
 	    ["separator","killword","removeformat","toggleborders","separator","htmlmode","about","showhelp"]
  	 ];
-
-
 
  	//xinha_config.flowToolbars = false;
 	xinha_config.showLoading = true;
@@ -101,7 +109,7 @@ window.focus();
 	xinha_config.InsertSnippet.showInsertVariable =true;
     xinha_config.InsertSnippet.snippets = '/RheinaufCMS/Libraries/XinhaConfig/snippets.php';
 
-    xinha_config.Linker.backend =  _editor_url + 'plugins/Linker/rheinauf_cms_db_scan.php',
+   // xinha_config.Linker.backend =  _editor_url + 'plugins/Linker/rheinauf_cms_db_scan.php',
 
 	xinha_config.SuperClean.show_dialog = true;
     xinha_config.SuperClean.filters = {
@@ -111,13 +119,13 @@ window.focus();
 
     xinha_editors   = HTMLArea.makeEditors(xinha_editors, xinha_config, xinha_plugins);
 
-	xinha_editors.editor.config.stylistLoadStylesheet('/RheinaufCMS/CSS/Screen.css');
-	xinha_editors.editor.config.stylistLoadStylesheet('/RheinaufCMS/Libraries/XinhaConfig/editor.css');
+	xinha_editors.editor.config.stylistLoadStylesheet('/CSS/Screen.css');
+	xinha_editors.editor.config.stylistLoadStylesheet('/Libraries/XinhaConfig/editor.css');
 
-	<?php if(is_file('RheinaufCMS/CSS/'.$_SESSION['rubrik'].'.css'))
+	<?php if(is_file('../../CSS/'.$_SESSION['rubrik'].'.css'))
 			{
 				$rubrik = $_SESSION['rubrik'];
-				print "	xinha_editors.editor.config.stylistLoadStylesheet('/RheinaufCMS/CSS/$rubrik.css');";
+				print "	xinha_editors.editor.config.stylistLoadStylesheet('/CSS/$rubrik.css');";
 			}
 	?>
 	HTMLArea.startEditors(xinha_editors);
@@ -136,10 +144,6 @@ window.focus();
 				}
 			}
 		}
-
-
-
-
 }
 
 	window.onload = xinha_init;
@@ -149,9 +153,7 @@ window.focus();
 
 				alert(i + '=>' + object[i]);
 				if (!confirm('weiter')) break;
-
 		}
-
 	}
 
 	function save(xinha_object,action) {
@@ -179,5 +181,4 @@ window.focus();
 			savesubmit.save(editor);
 			alert('Bitte warten Sie einige Sekunden bis das Speichern abgeschlossen ist und klicken dann OK.');
 		}
-
 	}

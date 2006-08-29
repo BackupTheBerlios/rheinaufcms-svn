@@ -1,5 +1,23 @@
-function(html) {
-    // Remove HTML comments
+/*--------------------------------
+--  Word Crap Filter
+--
+--  $HeadURL$
+--  $LastChangedDate$
+--  $LastChangedRevision$
+--  $LastChangedBy$
+---------------------------------*/
+function(html,editor) {
+
+	html = html.replace(new RegExp(String.fromCharCode(8216),"g"),"'");
+ 	html = html.replace(new RegExp(String.fromCharCode(8217),"g"),"'");
+	html = html.replace(new RegExp(String.fromCharCode(8218),"g"),"'");
+	html = html.replace(new RegExp(String.fromCharCode(8219),"g"),"'");
+	html = html.replace(new RegExp(String.fromCharCode(8220),"g"),"\"");
+	html = html.replace(new RegExp(String.fromCharCode(8221),"g"),"\"");
+	html = html.replace(new RegExp(String.fromCharCode(8222),"g"),"\"");
+	html = html.replace(new RegExp(String.fromCharCode(8223),"g"),"\"");
+
+	// Remove HTML comments
 	html = html.replace(/<!--[\w\s\d@{}:.;,'"%!#_=&|?~()[*+\/\-\]]*-->/gi, "" );
 	html = html.replace(/<!--[^\0]*-->/gi, '');
     // Remove all HTML tags
@@ -9,7 +27,7 @@ function(html) {
     // Remove all META tags
 	html = html.replace(/<\/?\s*META[^>]*>/gi, "" );
     // Remove all SPAN tags
-	html = html.replace(/<\/?\s*SPAN[^>]*>/gi, "" );
+	//html = html.replace(/<\/?\s*SPAN[^>]*>/gi, "" );
 	// Remove all FONT tags
     html = html.replace(/<\/?\s*FONT[^>]*>/gi, "");
     // Remove all IFRAME tags.
@@ -19,11 +37,11 @@ function(html) {
     // Remove all TITLE tags & content
 	html = html.replace(/<\s*TITLE[^>]*>(.|[\n\r\t])*<\/\s*TITLE\s*>/gi, "" );
 	// Remove javascript
-    html = html.replace(/<\s*SCRIPT[^>]*>[^\0]*<\/\s*SCRIPT\s*>/gi, "");
+    //html = html.replace(/<\s*SCRIPT[^>]*>[^\0]*<\/\s*SCRIPT\s*>/gi, "");
     // Remove all HEAD tags & content
 	html = html.replace(/<\s*HEAD[^>]*>(.|[\n\r\t])*<\/\s*HEAD\s*>/gi, "" );
 	// Remove Class attributes
-	html = html.replace(/<\s*(\w[^>]*) class=([^ |>]*)([^>]*)/gi, "<$1$3") ;
+	//html = html.replace(/<\s*(\w[^>]*) class=([^ |>]*)([^>]*)/gi, "<$1$3") ;
 	// Remove Style attributes
 	html = html.replace(/<\s*(\w[^>]*) style="([^"]*)"([^>]*)/gi, "<$1$3") ;
 	// Remove Lang attributes
@@ -47,6 +65,10 @@ function(html) {
 
 	// Remove any <br> at the end
 	html = html.replace(/(\s*<br>|<br \/>\s*)*$/, "");
+
+	editor.setHTML(html);
+    editor._wordClean();
+    html =  editor.getInnerHTML();
 
 	html = html.trim();
 	return html;
