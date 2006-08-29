@@ -1,4 +1,12 @@
 <?php
+/*--------------------------------
+--  Rheinauf CMS Admin UI
+--
+--  $HeadURL$
+--  $LastChangedDate$
+--  $LastChangedRevision$
+--  $LastChangedBy$
+---------------------------------*/
 class Admin extends RheinaufCMS
 {
 	var $installed_modules = array();
