@@ -1,4 +1,4 @@
-HTMLArea.version={"Release":"Trunk","Head":"$HeadURL: http://svn.xinha.python-hosting.com/trunk/htmlarea.js $".replace(/^[^:]*: (.*) \$$/,"$1"),"Date":"$LastChangedDate: 2006-08-22 05:28:24 +0200 (Di, 22 Aug 2006) $".replace(/^[^:]*: ([0-9-]*) ([0-9:]*) ([+0-9]*) \((.*)\) \$/,"$4 $2 $3"),"Revision":"$LastChangedRevision: 555 $".replace(/^[^:]*: (.*) \$$/,"$1"),"RevisionBy":"$LastChangedBy: mokhet $".replace(/^[^:]*: (.*) \$$/,"$1")};
+HTMLArea.version={"Release":"Trunk","Head":"$HeadURL$".replace(/^[^:]*: (.*) \$$/,"$1"),"Date":"$LastChangedDate$".replace(/^[^:]*: ([0-9-]*) ([0-9:]*) ([+0-9]*) \((.*)\) \$/,"$4 $2 $3"),"Revision":"$LastChangedRevision$".replace(/^[^:]*: (.*) \$$/,"$1"),"RevisionBy":"$LastChangedBy$".replace(/^[^:]*: (.*) \$$/,"$1")};
 if(typeof _editor_url=="string"){
 _editor_url=_editor_url.replace(/\x2f*$/,"/");
 }else{

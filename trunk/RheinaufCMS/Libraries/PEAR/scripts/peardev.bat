@@ -16,7 +16,7 @@ REM ----------------------------------------------------------------------
 REM  Authors:     Alexander Merz (alexmerz@php.net)
 REM ----------------------------------------------------------------------
 REM
-REM  $Id: peardev.bat,v 1.2 2005/03/21 15:23:43 cellog Exp $
+REM  $Id$
 
 REM change this lines to match the paths of your system
 REM -------------------
