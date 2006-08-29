@@ -1,4 +1,13 @@
 <?php
+/*--------------------------------
+--  Rheinauf CMS Main Class
+--
+--  $HeadURL$
+--  $LastChangedDate$
+--  $LastChangedRevision$
+--  $LastChangedBy$
+---------------------------------*/
+
 class RheinaufCMS
 {
 	var $connection;
