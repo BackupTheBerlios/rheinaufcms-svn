@@ -2,6 +2,8 @@
 /*--------------------------------
 --  RheinaufCMS Main Class
 --
+--  Open Source (GPL)
+--
 --  $HeadURL$
 --  $LastChangedDate$
 --  $LastChangedRevision$
