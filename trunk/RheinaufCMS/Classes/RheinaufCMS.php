@@ -1,6 +1,6 @@
 <?php
 /*--------------------------------
---  Rheinauf CMS Main Class
+--  RheinaufCMS Main Class
 --
 --  $HeadURL$
 --  $LastChangedDate$
