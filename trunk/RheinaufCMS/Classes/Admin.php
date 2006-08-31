@@ -1,6 +1,6 @@
 <?php
 /*--------------------------------
---  Rheinauf CMS Admin UI
+--  RheinaufCMS Admin UI
 --
 --  $HeadURL$
 --  $LastChangedDate$
@@ -13,16 +13,23 @@ class Admin extends RheinaufCMS
 	var $admin_menu = array ();
 	var $noframe;
 
+	var $tables = array('user_table'=>'RheinaufCMS>User',
+						'rechte_table'=>'RheinaufCMS>Rechte',
+						'groups_table'=>'RheinaufCMS>Groups',
+						'admin_module_table' =>'RheinaufCMS>Admin>Module'
+	);
+
 	function Admin($db_connection,$path_information)
 	{
 		session_start();
+		$this->add_db_prefix();
 		$this->connection = $db_connection;
 		$this->extract_to_this($path_information);
     	$this->path_information = $path_information;
     	$this->seite = $this->uri_components[1];
 
 		if (!isset($_SESSION['RheinaufCMS_User'])) $this->login('',false);
-		$this->installed_modules = General::multi_unserialize($this->connection->db_assoc("SELECT * FROM `RheinaufCMS>Admin>Module` ORDER BY `id` ASC"));
+		$this->installed_modules = General::multi_unserialize($this->connection->db_assoc("SELECT * FROM `$this->admin_module_table` ORDER BY `id` ASC"));
 
 
 
@@ -36,7 +43,7 @@ class Admin extends RheinaufCMS
 		}
 		else
 		{
-			$allowed_modules_sql = "SELECT  * FROM `RheinaufCMS>Rechte` WHERE `id` = '". implode("' OR `id` ='",$_SESSION['RheinaufCMS_User']['allowed_actions']) ."' ";
+			$allowed_modules_sql = "SELECT  * FROM `$this->rechte_table` WHERE `id` = '". implode("' OR `id` ='",$_SESSION['RheinaufCMS_User']['allowed_actions']) ."' ";
 			$allowed_modules = $this->connection->db_assoc($allowed_modules_sql);
 			$this->allowed_modules = array();
 			for ($i=0;$i<count($allowed_modules);$i++)

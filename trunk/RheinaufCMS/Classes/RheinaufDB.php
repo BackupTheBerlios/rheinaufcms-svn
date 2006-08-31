@@ -1,4 +1,12 @@
 <?php
+/*--------------------------------
+--  RheinaufCMS Database Functions
+--
+--  $HeadURL$
+--  $LastChangedDate$
+--  $LastChangedRevision$
+--  $LastChangedBy$
+---------------------------------*/
 class RheinaufDB
 {
 	var $connection;
@@ -100,6 +108,7 @@ class RheinaufDB
 			$values[] = "'$value'";
 		}
 		$sql = "INSERT INTO `$table` (".implode(',',$cols).") VALUES (".implode(',',$values).")";
+		return $this->db_query($sql);
 	}
 }
 ?>
