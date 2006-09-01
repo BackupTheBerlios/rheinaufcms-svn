@@ -1,7 +1,7 @@
 <?php
 /**
  * The main GUI for the ImageManager.
- * @author $Author: ray_cologne $
+ * @author $Author$
  * @version $Id: manager.php 3 2006-08-29 12:15:04Z ray_cologne $
  * @package ImageManager
  */

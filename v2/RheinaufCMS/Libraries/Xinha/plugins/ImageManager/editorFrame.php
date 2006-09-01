@@ -1,7 +1,7 @@
 <?php 
 /**
  * The frame that contains the image to be edited.
- * @author $Author: ray_cologne $
+ * @author $Author$
  * @version $Id: editorFrame.php 3 2006-08-29 12:15:04Z ray_cologne $
  * @package ImageManager
  */

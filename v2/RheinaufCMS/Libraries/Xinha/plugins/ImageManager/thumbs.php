@@ -3,7 +3,7 @@
  * On the fly Thumbnail generation.
  * Creates thumbnails given by thumbs.php?img=/relative/path/to/image.jpg
  * relative to the base_dir given in config.inc.php
- * @author $Author: ray_cologne $
+ * @author $Author$
  * @version $Id: thumbs.php 3 2006-08-29 12:15:04Z ray_cologne $
  * @package ImageManager
  */

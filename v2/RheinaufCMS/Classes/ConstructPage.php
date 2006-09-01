@@ -4,10 +4,10 @@
 --  v2
 --	Builds a page from the templates
 --
---  $HeadURL: https://ray_cologne@svn.berlios.de/svnroot/repos/rheinaufcms/v2/RheinaufCMS/Classes/RheinaufCMS.php $
---  $LastChangedDate: 2006-08-29 18:58:09 +0200 (Di, 29 Aug 2006) $
---  $LastChangedRevision: 8 $
---  $LastChangedBy: ray_cologne $
+--  $HeadURL$
+--  $LastChangedDate$
+--  $LastChangedRevision$
+--  $LastChangedBy$
 ---------------------------------*/
 class ConstructPage extends RheinaufCMS
 {

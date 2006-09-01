@@ -26,19 +26,19 @@
     --   * Jedit is the recommended editor, a comment of this format should be
     --     included in the top 10 lines of the file (see the embedded edit mode)
     --
-    --  $HeadURL: https://ray_cologne@svn.berlios.de/svnroot/repos/rheinaufcms/v2/RheinaufCMS/Libraries/Xinha/htmlarea.js $
-    --  $LastChangedDate: 2006-08-29 18:22:19 +0200 (Di, 29 Aug 2006) $
-    --  $LastChangedRevision: 7 $
-    --  $LastChangedBy: ray_cologne $
+    --  $HeadURL$
+    --  $LastChangedDate$
+    --  $LastChangedRevision$
+    --  $LastChangedBy$
     --------------------------------------------------------------------------*/
 
 HTMLArea.version =
 {
   'Release'   : 'Trunk',
-  'Head'      : '$HeadURL: https://ray_cologne@svn.berlios.de/svnroot/repos/rheinaufcms/v2/RheinaufCMS/Libraries/Xinha/htmlarea.js $'.replace(/^[^:]*: (.*) \$$/, '$1'),
-  'Date'      : '$LastChangedDate: 2006-08-29 18:22:19 +0200 (Di, 29 Aug 2006) $'.replace(/^[^:]*: ([0-9-]*) ([0-9:]*) ([+0-9]*) \((.*)\) \$/, '$4 $2 $3'),
-  'Revision'  : '$LastChangedRevision: 7 $'.replace(/^[^:]*: (.*) \$$/, '$1'),
-  'RevisionBy': '$LastChangedBy: ray_cologne $'.replace(/^[^:]*: (.*) \$$/, '$1')
+  'Head'      : '$HeadURL$'.replace(/^[^:]*: (.*) \$$/, '$1'),
+  'Date'      : '$LastChangedDate$'.replace(/^[^:]*: ([0-9-]*) ([0-9:]*) ([+0-9]*) \((.*)\) \$/, '$4 $2 $3'),
+  'Revision'  : '$LastChangedRevision$'.replace(/^[^:]*: (.*) \$$/, '$1'),
+  'RevisionBy': '$LastChangedBy$'.replace(/^[^:]*: (.*) \$$/, '$1')
 };
 
 if ( typeof _editor_url == "string" )
