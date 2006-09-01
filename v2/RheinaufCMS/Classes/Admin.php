@@ -13,12 +13,15 @@ class Admin extends RheinaufCMS
 	var $admin_menu = array ();
 	var $noframe;
 
-	function Admin($db_connection,$path_information)
+	function Admin()
+	{
+
+	}
+	function class_init($pObj)
 	{
 		session_start();
-		$this->connection = $db_connection;
-		$this->extract_to_this($path_information);
-    	$this->path_information = $path_information;
+		$this->pObj = $pObj;
+		$this->connection = $pObj->connection;
     	$this->seite = $this->uri_components[1];
 
 		if (!isset($_SESSION['RheinaufCMS_User'])) $this->login('',false);

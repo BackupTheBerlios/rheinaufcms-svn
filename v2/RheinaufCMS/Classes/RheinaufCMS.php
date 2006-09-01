@@ -35,10 +35,9 @@ class RheinaufCMS
 		$this->structure = $this->structure_array();
 		define('SELF_URL',$_SERVER['REQUEST_URI']);
 		$this->page_props = new page_props(SELF_URL,$this);
+		$this->page_props = $this->page_props->page_props;
 
-		$this->debug($this->page_props);
-
-		$this->debug($this->structure);
+		$page = new ConstructPage($this);
 
 		if (isset($_POST['user']) && isset($_POST['pass'])) $this->check_login();
 
@@ -49,6 +48,8 @@ class RheinaufCMS
 
 		$sql_time = $endtime - START_TIME;
 		print '<br>'.$sql_time;
+
+		//print_r($this);
 		return ;
 		print $this->content();
 	}
@@ -81,7 +82,7 @@ class RheinaufCMS
 
 	function includes()
 	{
-		include_once(INSTALL_PATH.'/Classes/Seite.php');
+		include_once(INSTALL_PATH.'/Classes/ConstructPage.php');
 		include_once(INSTALL_PATH.'/Module/Navi.php');
 		include_once(INSTALL_PATH.'/Classes/Date.php');
 		include_once(INSTALL_PATH.'/Classes/HTML.php');

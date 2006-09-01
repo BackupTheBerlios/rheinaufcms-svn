@@ -1,10 +1,19 @@
 <?
+/*--------------------------------
+--  Rheinauf CMS Template Parser
+--  v2
+--  $HeadURL$
+--  $LastChangedDate$
+--  $LastChangedRevision$
+--  $LastChangedBy$
+---------------------------------*/
 class Template extends RheinaufCMS
 {
 	var $template;
 	var $parts= array();
-	function Template($template)
+	function Template($template,$pObj)
 	{
+		$this->pObj = $pObj;
 		if (@is_file($template)) $this->template = RheinaufFile::get_file($template);
 		else $this->template = $template;
 		if (is_file($snippet_pfad = INSTALL_PATH.'/Templates/Snippets.html'))
@@ -16,13 +25,13 @@ class Template extends RheinaufCMS
 	function get_part ($name='')
 	{
 
-		if (preg_match('#<!--'.$name.'-->(.*?)<!--/'.$name.'-->#s',$this->template,$matches)) return $matches[1];
+		if (preg_match('/<!--'.$name.'-->(.*?)<!--\/'.$name.'-->/s',$this->template,$matches)) return $matches[1];
 		else return $this->template;
 	}
 
 	function get_all_parts($template)
 	{
-		preg_match_all('#<!--(.*?)-->(.*?)<!--/.*?-->#s',$template,$matches);
+		preg_match_all('/<!--(.*?)-->(.*?)<!--\/\1-->/s',$template,$matches);
 
 		$array=array();
 		for ($i=0;$i<count($matches[1]);$i++)
