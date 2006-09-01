@@ -1,7 +1,7 @@
 <?php
 /*--------------------------------
 --  Rheinauf CMS Admin UI
---
+--  v2
 --  $HeadURL: https://ray_cologne@svn.berlios.de/svnroot/repos/rheinaufcms/v2/RheinaufCMS/Classes/Admin.php $
 --  $LastChangedDate: 2006-08-29 18:58:09 +0200 (Di, 29 Aug 2006) $
 --  $LastChangedRevision: 8 $
@@ -22,7 +22,8 @@ class Admin extends RheinaufCMS
     	$this->seite = $this->uri_components[1];
 
 		if (!isset($_SESSION['RheinaufCMS_User'])) $this->login('',false);
-		$this->installed_modules = General::multi_unserialize($this->connection->db_assoc("SELECT * FROM `RheinaufCMS>Admin>Module` ORDER BY `id` ASC"));
+
+		$this->installed_modules = $this->connection->db_assoc("SELECT * FROM `RheinaufCMS>Admin>Module` ORDER BY `id` ASC");
 
 
 
@@ -53,7 +54,7 @@ class Admin extends RheinaufCMS
 
 		foreach ($this->installed_modules as $module)
 		{
-			include_once(INSTALL_PATH.'/Classes/Admin/'.$module['Name'].'.php');
+			include_once(INSTALL_PATH.'/'.$module['Path']);
 		}
 
 

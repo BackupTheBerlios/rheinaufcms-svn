@@ -1,0 +1,33 @@
+/*--------------------------------
+--  Rheinauf CMS Default Template
+--  v2
+--	This one is for EVERY page
+--
+--  $HeadURL: https://ray_cologne@svn.berlios.de/svnroot/repos/rheinaufcms/v2/RheinaufCMS/Classes/RheinaufCMS.php $
+--  $LastChangedDate: 2006-08-29 18:58:09 +0200 (Di, 29 Aug 2006) $
+--  $LastChangedRevision: 8 $
+--  $LastChangedBy: ray_cologne $
+---------------------------------*/
+<!--HTML_HEAD-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+
+   <title>{IfNotEmpty:projekt_name([projekt_name])} - {IfNotEmpty:title([title])}</title>
+	<link rel="stylesheet" href="/RheinaufCMS/CSS/Screen.css" media="screen" type="text/css" />
+
+	{IfNotEmpty:other_css([other_css])}
+	{IfNotEmpty:keywords(<meta name="keywords" content="[keywords]" />)}
+	{IfNotEmpty:description(<meta name="description" content="[description]" />)}
+
+	<meta http-equiv="imagetoolbar" content="no" />
+
+	{IfNotEmpty:scripts([scripts])}
+</head>
+
+<body>
+<!--/HTML_HEAD-->
+<!--HTML_FOOT-->
+</body>
+</html>
+<!--/HTML_FOOT-->

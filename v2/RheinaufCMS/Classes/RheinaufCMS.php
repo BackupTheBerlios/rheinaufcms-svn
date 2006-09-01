@@ -1,7 +1,7 @@
 <?php
 /*--------------------------------
 --  Rheinauf CMS Main Class
---
+--  v2
 --  $HeadURL: https://ray_cologne@svn.berlios.de/svnroot/repos/rheinaufcms/v2/RheinaufCMS/Classes/RheinaufCMS.php $
 --  $LastChangedDate: 2006-08-29 18:58:09 +0200 (Di, 29 Aug 2006) $
 --  $LastChangedRevision: 8 $
@@ -12,21 +12,16 @@ class RheinaufCMS
 {
 	var $connection;
 	var $debug = false;
-	var $homepath;
-	var	$pfad;
-	var $path_information;
-	var $uri_components;
-	var	$rubrik;
-	var	$seite;
-	var $navi;
+	var $structure;
+	var $page_props;
 	var $other_css;
 	var $scripts;
 	var $noframe = false;
 
-	var $tables = array('navi_table'=>'RheinaufCMS>Navi',
-						'user_table'=>'RheinaufCMS>User',
+	var $tables = array('user_table'=>'RheinaufCMS>User',
 						'rechte_table'=>'RheinaufCMS>Rechte',
-						'groups_table'=>'RheinaufCMS>Groups'
+						'groups_table'=>'RheinaufCMS>Groups',
+						'structure_table'=>'RheinaufCMS>Structure'
 	);
 
 	function RheinaufCMS()
@@ -37,21 +32,32 @@ class RheinaufCMS
 		$this->add_db_prefix();
 
 		$this->connection = new RheinaufDB();
-		$this->navi = $this->navi_array();
-		$this->pfad();
-		$this->title = $this->rubrik;
+		$this->structure = $this->structure_array();
+		define('SELF_URL',$_SERVER['REQUEST_URI']);
+		$this->page_props = new page_props(SELF_URL,$this);
+
+		$this->debug($this->page_props);
+
+		$this->debug($this->structure);
 
 		if (isset($_POST['user']) && isset($_POST['pass'])) $this->check_login();
 
+		$mtime = microtime();
+		$mtime = explode(" ",$mtime);
+		$mtime = $mtime[1] + $mtime[0];
+		$endtime = $mtime;
+
+		$sql_time = $endtime - START_TIME;
+		print '<br>'.$sql_time;
+		return ;
 		print $this->content();
 	}
 
 	function ini_sets()
 	{
-		set_include_path(get_include_path().PATH_SEPARATOR.INSTALL_PATH.'/Classes/'.PATH_SEPARATOR.INSTALL_PATH.'/Module/'.PATH_SEPARATOR .INSTALL_PATH.'/Libraries/');
+		set_include_path(get_include_path().PATH_SEPARATOR.INSTALL_PATH.'/Classes/'.PATH_SEPARATOR.INSTALL_PATH.'/Module/'.PATH_SEPARATOR .INSTALL_PATH.'/Libraries/'.PATH_SEPARATOR .INSTALL_PATH.'/Admin/');
 		ini_set('arg_separator.output','&amp;');
 		ini_set('display_errors',1);
-		header('Content-type: text/html;charset=ISO-8859-15');
 		header('Content-Script-Type: text/javascript');
 		setlocale(LC_ALL, 'de_DE');
 	}
@@ -66,6 +72,7 @@ class RheinaufCMS
 		}
 		$this->extract_to_this($this->tables);
 	}
+
 	function add_incl_path ($path)
 	{
 		set_include_path(get_include_path().PATH_SEPARATOR.$path);
@@ -82,45 +89,32 @@ class RheinaufCMS
 		include_once(INSTALL_PATH.'/Classes/RheinaufFile.php');
 		include_once(INSTALL_PATH.'/Classes/RheinaufDB.php');
 		include_once(INSTALL_PATH.'/Classes/General.php');
+		include_once(INSTALL_PATH.'/Classes/Admin.php');
 		//include_once('Bilder.php');
 
 	}
 
-
-	function navi_array()
+	function debug($array)
 	{
-		//if (!$this->connection) $this->connection = new RheinaufDB();
-		$navifromdb = $this->connection->db_assoc("SELECT * FROM `$this->navi_table` ORDER BY `id` ASC");
-
-		$navi = array();
-		for ($i=0;$i<count($navifromdb);$i++)
-		{
-			$rubrik_key = $navifromdb[$i]['Rubrik_key'];
-			if ($navifromdb[$i]['Hierarchy']==0)
-			{
-				$navi[$rubrik_key]['Rubrik'] = $navifromdb[$i]['Rubrik'];
-				$navi[$rubrik_key]['Show'] = $navifromdb[$i]['Show'];
-				$navi[$rubrik_key]['Show_to'] = ($navifromdb[$i]['Show_to'] != '') ? explode(',',$navifromdb[$i]['Show_to']):'';
-				$navi[$rubrik_key]['Modul'] = $navifromdb[$i]['Modul'];
-				$navi[$rubrik_key]['ext_link'] = $navifromdb[$i]['ext_link'];
-
-
-				$navi[$rubrik_key]['Subnavi'] = array();
-			}
-			else if ($navifromdb[$i]['Hierarchy']==1)
-			{
-				$page_key = $navifromdb[$i]['Page_key'];
-				$navi[$rubrik_key]['Subnavi'][$page_key]['Seite'] = $navifromdb[$i]['Seite'];
-				$navi[$rubrik_key]['Subnavi'][$page_key]['Show'] = $navifromdb[$i]['Show'];
-				$navi[$rubrik_key]['Subnavi'][$page_key]['Show_to'] = ($navifromdb[$i]['Show_to'] != '') ? explode(',',$navifromdb[$i]['Show_to']):'';
-				$navi[$rubrik_key]['Subnavi'][$page_key]['Modul'] = $navifromdb[$i]['Modul'];
-				$navi[$rubrik_key]['Subnavi'][$page_key]['ext_link'] = $navifromdb[$i]['ext_link'];
-
-			}
-
-		}
-		return $navi;
+		print '<pre>';
+		print_r($array);
+		print '</pre>';
 	}
+
+	function structure_array()
+	{
+
+		$structurefromdb = $this->connection->db_assoc("SELECT * FROM `$this->structure_table` ORDER BY `Depth` ASC,`id` ASC");
+		$structure = array();
+
+		foreach ($structurefromdb as $entry)
+		{
+			$hierarchy = explode('::',$entry['URI']);
+			eval('$this_entry = $structure[\''.implode("']['Children']['",$hierarchy).'\'][\'Page\']= $entry;');
+		}
+		return $structure;
+	}
+
 
 	function content()
 	{
@@ -131,14 +125,12 @@ class RheinaufCMS
 			setcookie('RheinaufCMS_user',false,0,'/');
 		}
 
+		if (preg_match('/^\/admin/i',SELF_URL))
+		{
+			$this->rubrik = 'Admin';
+			return $this->content_module('Admin');
+		}
 		$vars = array();
-
-		$rubrik = $this->I18n_get_int($this->navi[$_GET['r']]['Rubrik']);
-		$seite =  $this->I18n_get_int($this->navi[$_GET['r']]['Subnavi'][$_GET['s']]['Seite']);
-
-
-		$vars['rubrik'] = rawurlencode($this->rubrik);
-		$vars['seite'] =  rawurlencode($this->seite);
 
 		$title = ($this->seite != 'index')  ? $rubrik.' | '.$seite : $rubrik;
 
@@ -228,24 +220,25 @@ class RheinaufCMS
 		$vars['title'] = $title;
 		$vars['navi'] = $this->navi_menu();
 
-		if ($this->navi[$_GET['r']]['Modul']!='') $modul = $this->navi[$_GET['r']]['Modul'];
-		else $modul = $this->navi[$_GET['r']]['Subnavi'][$_GET['s']]['Modul'];
+		if ($this->navi[$_GET['r']]['Modul']!='') $module = $this->navi[$_GET['r']]['Modul'];
+		elseif (preg_match('/^\/admin/i',SELF_URL)) $module = 'Admin';
+		else $module = $this->navi[$_GET['r']]['Subnavi'][$_GET['s']]['Modul'];
 
-		if (preg_match('/(.*?)\((.*?)\)/',$modul,$match))
+		if (preg_match('/(.*?)\((.*?)\)/',$module,$match))
 		{
-			$modul = $match[1];
+			$module = $match[1];
 			$args = $match[2];
 		}
-		if (!class_exists($modul))
+		if (!class_exists($module))
 		{
-			include_once($modul.'.php');
+			include_once($module.'.php');
 		}
-		if (is_callable(array($modul,'class_init')))
+		if (is_callable(array($module,'class_init')))
 		{
-			eval('$instance = new $modul ('.$args.');');
+			eval('$instance = new $module ('.$args.');');
 			$instance->class_init($this->connection,$this->path_information);
 		}
-		else $instance = new $modul ($this->connection,$this->path_information);
+		else $instance = new $module ($this->connection,$this->path_information);
 
 		$instance_show = $instance->show();
 
@@ -265,9 +258,9 @@ class RheinaufCMS
 			return $instance_show;
 		}
 
-		if (is_file(DOCUMENT_ROOT.INSTALL_PATH.'/Templates/'.$modul.'/template.html'))
+		if (is_file(DOCUMENT_ROOT.INSTALL_PATH.'/Templates/'.$module.'/template.html'))
 		{
-			$page= new Seite($this->path_information,DOCUMENT_ROOT.INSTALL_PATH.'/Templates/'.$modul.'/template.html');
+			$page= new Seite($this->path_information,DOCUMENT_ROOT.INSTALL_PATH.'/Templates/'.$module.'/template.html');
 		}
 		else $page = new Seite($this->path_information);
 
@@ -280,7 +273,7 @@ class RheinaufCMS
 		}
 
 		$header = $page->header($vars);
-		if ($modul!='Admin')
+		if ($module!='Admin')
 		{
 			$content = new Template ($instance_show);
 			$content = $content->parse_template('',$vars);
@@ -371,10 +364,6 @@ class RheinaufCMS
 	function login($meldung='',$navi=true)
 	{
 
-		if (HTTPS && !isset($_SERVER['HTTPS']))
-		{
-			header("Location: ".'https://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
-		}
 		$page = new Seite($this->path_information);
 
 		$login_form = new Template(INSTALL_PATH.'/Templates/Login.template.html');
@@ -406,7 +395,6 @@ class RheinaufCMS
 		{
 			if ($this->check_login())
 			{
-				//if (HTTPS) header("Location: ".'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
 				header("Location: ".'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
 			}
 			else
@@ -476,10 +464,6 @@ class RheinaufCMS
 		}
 	}
 
-	function debug()
-	{
-		$this->debug =true;
-	}
 
 	function check_right($id)
 	{
@@ -541,6 +525,41 @@ class RheinaufCMS
 		}
 		elseif (isset($langs[$lang])) return $langs[$lang];
 		else return $langs['default'];
+	}
+}
+class page_props
+{
+	var $page_props;
+
+	function page_props($uri,$pObj)
+	{
+		$uri = strtolower(rawurldecode($uri));
+		$uri_components = array();
+		$uri_components = explode('/',$uri);
+		array_shift($uri_components);
+		$page = false;
+		$i =0;
+		while ($uri_components)
+		{
+			$structure_var = '$pObj->structure[\''.implode("']['Children']['",$uri_components).'\'][\'Page\']';
+			if (!$page)
+			{
+				eval('$page = '.$structure_var.';');
+				if ($page)
+				{
+					$this->page_props = $page;
+					$this->page_props['structure_access_path'] = str_replace('$pObj->structure','',$structure_var);
+				}
+			}
+			else
+			{
+				eval ('$this->page_props[\'Ancestors\'][] = '.$structure_var.';');
+				$i++;
+			}
+			array_pop($uri_components);
+		}
+		$this->page_props['Ancestors'] = array_reverse($this->page_props['Ancestors'] );
+		$this->page_props['Hierarchy'] = $hierarchy = explode('::',$this->page_props['Hierarchy']);
 	}
 }
 ?>
