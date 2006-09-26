@@ -376,14 +376,24 @@ class SeiteEdit extends Admin
 		$files = RheinaufFile::dir_array($folder,false,'html');
 		rsort($files,SORT_NUMERIC);
 
-		while (count($files)>5)
+		while (count($files)>10)
 		{
 			RheinaufFile::delete($folder.end($files));
 			array_pop($files);
 		}
-		RheinaufFile::write_file($folder."content.html",$contents);
-
-		print 'Fertig';
+		
+		if (RheinaufFile::write_file($folder."content.html",$contents))
+		{
+			$saved = 'true';
+			$as = (isset($_REQUEST['workingversion'])) ? ' als Arbeitsversion' : ' als Liveversion';
+			$message = 'Gespeichert' .$as;
+		}
+		else 
+		{
+			$saved = 'false';
+			$message = 'Beim Speichern ist ein Fehler aufgetreten.\nBitte versuchen Sie es noch einmal.\nSollte sich das Problem nicht beheben lassen, melden Sie es bitte dem Administrator.'; 
+		}
+		print $message = "state = {'saved':$saved,'message':'$message'};";
 	}
 	function save_tmp()
 	{

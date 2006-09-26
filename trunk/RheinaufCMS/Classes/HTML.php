@@ -64,7 +64,7 @@ class Html
 		return $return;
 	}
 
-	function head ($charset="ISO-8850-15",$doctype = 'xhtml_1_strict')
+	function head ($charset="ISO-8850-1",$doctype = 'xhtml_1_strict')
 	{
 		$return = $this->doctype($doctype);
 		$this->meta(array('http-equiv'=>'Content-type','content'=>'text/html; charset='.$charset));

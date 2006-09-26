@@ -118,12 +118,17 @@ SaveSubmit.prototype.save =  function(editor) {
 	HTMLArea._postback(editor._textArea.form.action+'&nohtml', post, function(getback) {
 
 		if (getback) {
-			self.setMessage(self._lc("Ready"));
-			self.changedReset();
-		};
-		removeMessage = function() { self.removeMessage()} ;
-		window.setTimeout("removeMessage()",1000);
-
+			var state = {'saved':false,'message':''};
+			eval(getback);
+			if (state.saved == true)
+			{
+				self.setMessage(state.message);
+				self.changedReset();
+			}
+			else
+			{
+				alert(state.message);
+			}		
 	});
 	HTMLArea._getback(editor._textArea.form.action+'&nohtml&workingvmenu',function(getback){if (getback)  eval(getback)});
 };

@@ -53,7 +53,7 @@ class RheinaufCMS
 		set_include_path(get_include_path().PATH_SEPARATOR.INSTALL_PATH.'/Classes/'.PATH_SEPARATOR.INSTALL_PATH.'/Module/'.PATH_SEPARATOR .INSTALL_PATH.'/Libraries/');
 		ini_set('arg_separator.output','&amp;');
 		ini_set('display_errors',1);
-		header('Content-type: text/html;charset=ISO-8859-15');
+		header('Content-type: text/html;charset=ISO-8859-1');
 		header('Content-Script-Type: text/javascript');
 		setlocale(LC_ALL, 'de_DE');
 	}
@@ -372,7 +372,8 @@ class RheinaufCMS
 
 	function login($meldung='',$navi=true)
 	{
-
+		if (!isset($_SESSION)) session_start();
+		$vars['uuid'] = $_SESSION['uuid'] = General::uuid(); 
 		if (HTTPS && !isset($_SERVER['HTTPS']))
 		{
 			header("Location: ".'https://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
@@ -425,7 +426,7 @@ class RheinaufCMS
 		$user = General::input_clean($_POST['user']);
 		$pass = General::input_clean($_POST['pass']);
 		$result = $this->connection->db_assoc("SELECT * FROM `$this->user_table` WHERE `Name`='$user' AND `Password`='$pass'");
-		if ($result[0]['Name'] ==$user && $result[0]['Password'] == $pass)
+		if ($result[0]['Name'] ==$user && $result[0]['Password'] == $pass && $_SESSION['uuid'] == $_POST['uuid'])
 		{
 			$_SESSION['RheinaufCMS_User'] = General::multi_unserialize($result[0]);
 			setcookie('RheinaufCMS_user',$user,0,'/');
@@ -447,6 +448,7 @@ class RheinaufCMS
 					$_SESSION['RheinaufCMS_User']['allowed_actions'] = $this->rechte[0]['Rechte'];
 				}
 			}
+			unset($_SESSION['uuid']);
 			return true;
 		}
 		else

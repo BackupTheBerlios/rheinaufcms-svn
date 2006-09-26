@@ -1,5 +1,5 @@
 #php_flag register_globals off
-
+AddDefaultCharset ISO-8859-1
 ErrorDocument 404 /CMSinit.php?httperror=404
 ErrorDocument 403 /CMSinit.php?httperror=403
 
