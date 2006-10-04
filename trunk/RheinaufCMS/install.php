@@ -139,6 +139,8 @@ class RheinaufCMS_Install
 	function form()
 	{
 		print '
+		<h1>Installation RheinaufCMS</h1>
+		<p>bitte tragen sie die folgenden Angaben ein</p>
 		    <form action="install.php" method="post">
       <table>
 
