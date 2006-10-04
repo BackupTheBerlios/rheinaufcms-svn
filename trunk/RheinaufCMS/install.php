@@ -107,6 +107,9 @@ class RheinaufCMS_Install
 		{
 			RheinaufFile::xchmod($images_dir,'777');
 		}
+		print 'Schreibrechte gesetzt<br />';
+		
+		print 'Weiter zum <a href="/Admin">Login</a>';
 	}
 	function create_tables()
 	{
@@ -122,8 +125,14 @@ class RheinaufCMS_Install
 		{
 			$query = preg_replace("/(INSERT INTO `RheinaufCMS>User` VALUES \('', '){admin_name}(', '', '){admin_pass}(', '', '', 0, 'Admin'\);)/",
 												"$1".$_POST['admin_name']."$2".$_POST['admin_pass']."$3",$query);
-			$connection->db_query($query);
+			
+			if (!$connection->db_query($query))
+			{
+				print 'Fehler beim Datenbankzugriff. Installation abgebrochen<br />';
+				return;
+			}
 		}
+		print  'Tabellen geschrieben<br />';
 	}
 
 	
