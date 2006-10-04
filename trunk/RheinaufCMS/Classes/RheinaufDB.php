@@ -26,7 +26,7 @@ class RheinaufDB
 	function db_query ($sql)
 	{
 		if (!isset($this->connection)) $this->connection = $this->connection->db_connect();
-		$result = mysql_query($sql,$this->connection) or print_r(debug_backtrace());//die($sql.mysql_error());
+		$result = mysql_query($sql,$this->connection) or die($sql.mysql_error());
 		if ($this->debug)
 		{
 			 print $sql.'<br />';

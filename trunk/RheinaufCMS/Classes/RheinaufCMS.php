@@ -374,7 +374,7 @@ class RheinaufCMS
 	{
 		if (!isset($_SESSION)) session_start();
 		$vars['uuid'] = $_SESSION['uuid'] = General::uuid(); 
-		if (HTTPS && !isset($_SERVER['HTTPS']))
+		if (defined('HTTPS') && HTTPS && !isset($_SERVER['HTTPS']))
 		{
 			header("Location: ".'https://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
 		}

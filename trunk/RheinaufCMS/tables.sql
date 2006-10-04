@@ -51,7 +51,7 @@ CREATE TABLE `RheinaufCMS>Groups` (
 --
 
 
-INSERT INTO `RheinaufCMS>Groups` VALUES (0, 'Verwalter', 'a:8:{i:0;s:13:"GruppenRechte";i:1;s:6:"Module";i:2;s:18:"NaviEditRubrikEdit";i:3;s:17:"NaviEditRubrikNeu";i:4;s:17:"NaviEditSeiteEdit";i:5;s:16:"NaviEditSeiteNeu";i:6;s:5:"Seite";i:7;s:7:"UserNeu";}');
+INSERT INTO `RheinaufCMS>Groups` VALUES ('', 'Admin', 'a:8:{i:0;s:13:"GruppenRechte";i:1;s:6:"Module";i:2;s:18:"NaviEditRubrikEdit";i:3;s:17:"NaviEditRubrikNeu";i:4;s:17:"NaviEditSeiteEdit";i:5;s:16:"NaviEditSeiteNeu";i:6;s:5:"Seite";i:7;s:7:"UserNeu";}');
 -- --------------------------------------------------------
 
 --
@@ -148,5 +148,5 @@ CREATE TABLE `RheinaufCMS>User` (
 -- Daten für Tabelle `RheinaufCMS>User`
 --
 
-INSERT INTO `RheinaufCMS>User` VALUES (0, 'admin', '', 'admin', '', '', 0, 'dev');
+INSERT INTO `RheinaufCMS>User` VALUES ('', '{admin_name}', '', '{admin_pass}', '', '', 0, 'Admin');
 

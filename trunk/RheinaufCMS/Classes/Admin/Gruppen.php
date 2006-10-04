@@ -75,16 +75,15 @@ class Gruppen extends Admin
 			$th[] = $recht['RechtName'];
 		}
 		$table->add_th($th);
-		for ($i=0;$i<count($this->existent_groups);$i++)
+		$i =0;
+		foreach ($this->existent_groups as $group)
 		{
-
-
-			if (isset($_GET['editgroup']) && $_GET['editgroup'] == $i )
+			if (isset($_GET['editgroup']) && $_GET['editgroup'] == $group['id'] )
 			{
-				$td = array(Form::add_input('text','name',$this->existent_groups[$i]['Name']));
+				$td = array(Form::add_input('text','name',$group['Name']));
 				for ($j=0;$j<count($this->rechte);$j++)
 				{
-					if (in_array($this->rechte[$j]['id'],$this->existent_groups[$i]['Rechte']))
+					if (in_array($this->rechte[$j]['id'],$group['Rechte']))
 					{
 						$td[] = Form::add_input('checkbox','Recht[]',$this->rechte[$j]['id'],array('checked'=>'checked'));
 					}
@@ -93,29 +92,31 @@ class Gruppen extends Admin
 						$td[] = Form::add_input('checkbox','Recht[]',$this->rechte[$j]['id']);
 					}
 				}
-				$id = Form::add_input('hidden','group_id',$i);
+				$id = Form::add_input('hidden','group_id',$group['id']);
+				$old_name = Form::add_input('hidden','old_name',$group['Name']);
 				$new_rechte_submit = Form::add_input('image','submit_rechte','Speichern',array('src'=>$this->images['apply_path'],'alt'=>'Speichern'));
-				$td[] = $id.$new_rechte_submit;
+				$td[] = $id.$old_name.$new_rechte_submit;
 			}
 			else
 			{
-				$td = array(Html::bold($this->existent_groups[$i]['Name']));
+				$td = array(Html::bold($group['Name']));
 				for ($j=0;$j<count($this->rechte);$j++)
 				{
-					$td[] = (in_array($this->rechte[$j]['id'],$this->existent_groups[$i]['Rechte'])) ? $this->images['checkbox_disabled_checked'] : $this->images['checkbox_disabled_unchecked'];
+					$td[] = (in_array($this->rechte[$j]['id'],$group['Rechte'])) ? $this->images['checkbox_disabled_checked'] : $this->images['checkbox_disabled_unchecked'];
 				}
-				$edit_button = Html::a('/Admin/Gruppen?editgroup='.$i,$this->images['edit'],array('title'=>'Eigenschaften bearbeiten'));
-				$delete_button = Html::a('/Admin/Gruppen?deletegroup='.$i,$this->images['delete_group'],array('title'=>'Gruppe löschen','onclick'=>"return confirm('Gruppe ".$this->existent_groups[$i]['Name']." löschen?')"));
+				$edit_button = Html::a('/Admin/Gruppen?editgroup='.$group['id'],$this->images['edit'],array('title'=>'Eigenschaften bearbeiten'));
+				$delete_button = Html::a('/Admin/Gruppen?deletegroup='.$group['id'],$this->images['delete_group'],array('title'=>'Gruppe löschen','onclick'=>"return confirm('Gruppe ".addcslashes($group['Name'],"'")." löschen?')"));
 				$td[] = $edit_button;
 				$td[] = $delete_button;
 			}
 			$class = (is_int($i/2)) ?   'abwechselnde_flaechen_1': 'abwechselnde_flaechen_2';
 			$table->add_td($td,array('class'=>(is_int($i/2)) ?   'abwechselnde_flaechen_1': 'abwechselnde_flaechen_2'));
+			$i++;
 		}
 		$new_group_button = Html::a('/Admin/Gruppen?newgroup',$this->images['new_group'].' Gruppe hinzufügen');
 		if (isset($_GET['newgroup']))
 		{
-			$td = array(Form::add_input('text','name','Name...'));
+			$td = array(Form::add_input('text','name',''));
 			for ($j=0;$j<count($this->rechte);$j++)
 			{
 				$td[] = Form::add_input('checkbox','Recht[]',$this->rechte[$j]['id']);
@@ -132,9 +133,9 @@ class Gruppen extends Admin
 
 	function rechte_update()
 	{
-		$id = $this->existent_groups[$_POST['group_id']]['id'];
-		$old_name = $this->existent_groups[$_POST['group_id']]['Name'];
-		$name = $_POST['name'];
+		$id = $_POST['group_id'];
+		$old_name = General::input_clean($_POST['old_name'],true);
+		$name = General::input_clean($_POST['name'],true);
 		$new_rechte = (isset($_POST['Recht'])) ? serialize($_POST['Recht']) : serialize(array());
 		if ($_SESSION['RheinaufCMS_User']['Group'] == $old_name) $_SESSION['RheinaufCMS_User']['Group'] = $name;
 		$this->connection->db_query("UPDATE `$this->groups_table` SET `Name` = '$name', `Rechte` = '$new_rechte' WHERE `id` = '$id'");
@@ -147,11 +148,11 @@ class Gruppen extends Admin
 	function new_group_input()
 	{
 		if ($_POST['name'] == 'dev') return;
-		$id = count($this->existent_groups);
-		$name = $_POST['name'];
+		
+		$name = General::input_clean($_POST['name'],true);
 		$new_rechte = (isset($_POST['Recht'])) ? serialize($_POST['Recht']) : serialize(array());
 
-		$this->connection->db_query("INSERT INTO `$this->groups_table` ( `id` , `Name` , `Rechte` ) VALUES ('$id', '$name', '$new_rechte')");
+		$this->connection->db_query("INSERT INTO `$this->groups_table` ( `id` , `Name` , `Rechte` ) VALUES ('', '$name', '$new_rechte')");
 		$this->group_table_update();
 	}
 

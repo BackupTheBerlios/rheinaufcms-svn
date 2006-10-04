@@ -69,7 +69,7 @@ RheinaufCMSLinker.prototype._createLink = function(a)
     subject:  '',
     body:     '',
     anchor:   ''
-
+  }
   if(a && a.tagName.toLowerCase() == 'a')
   {
     var href =this.editor.fixRelativeLinks(a.getAttribute('href'));

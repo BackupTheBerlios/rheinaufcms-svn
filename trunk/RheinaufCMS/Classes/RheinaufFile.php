@@ -17,7 +17,7 @@ class RheinaufFile
 	{
 		$text = General::input_clean($text);
 
-		if (!is_file($filename) && USE_FTP)
+		if (!is_file($filename) && defined('USE_FTP') && USE_FTP)
 		{
 
 			$filename = str_replace(docroot(),'',$filename);
@@ -162,6 +162,24 @@ class RheinaufFile
 		else chmod($file,decoct(strval($mode)));
 	}
 
+	function xchmod($dir,$mode)
+	{
+		RheinaufFile::chmod($dir,$mode);
+		$current_dir = opendir($dir);
+		while($entryname = readdir($current_dir))
+		{
+			if(is_dir("$dir/$entryname") and ($entryname != "." and $entryname != ".."))
+			{
+				RheinaufFile::xchmod("${dir}/${entryname}",$mode);
+			}
+			elseif($entryname != "." and $entryname != "..")
+			{
+				RheinaufFile::chmod("${dir}/${entryname}",$mode);
+			}
+		}
+		closedir($current_dir);
+	}
+	
 	function mkdir ($dirname)
 	{
 		if (USE_FTP) RheinaufFile::ftpcmd("ftp_mkdir(\$conn_id,'".RheinaufFile::server2ftppath($dirname)."');");

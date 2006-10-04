@@ -1,5 +1,5 @@
 <?
-class Template extends RheinaufCMS
+class Template
 {
 	var $template;
 	var $parts= array();

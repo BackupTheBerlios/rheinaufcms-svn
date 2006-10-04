@@ -136,7 +136,7 @@ window.focus();
 			$IMConfig['max_foldersize_mb'] = 0;
 			$IMConfig['allowed_link_extensions'] = array("doc","fla","gif","gz","html","jpg","js","mov","pdf","php","png","ppt","rar","txt","xls","zip","mp3");
 			
-			require_once '../Xinha/contrib/php-xinha.php';
+			require_once $docroot.'/RheinaufCMS/Libraries/Xinha/contrib/php-xinha.php';
 			xinha_pass_to_php_backend($IMConfig);
 		?>
 		}

@@ -42,9 +42,9 @@ class User extends Admin
 		$groups = $this->connection->db_assoc("SELECT * FROM `$this->groups_table`");
 		$this->existent_groups = array();
 
-		foreach ($groups as $modul)
+		foreach ($groups as $group)
 		{
-			$this->existent_groups[] = $modul['Name'];
+			$this->existent_groups[] = $group['Name'];
 		}
 	}
 	function event_listen()
@@ -77,13 +77,13 @@ class User extends Admin
 
 	function edit_user_update()
 	{
-		$edit_user_name = $_POST['edit_user_name'];
-		$edit_user_pass = $_POST['edit_user_pass'];
-		$edit_user_mail = $_POST['edit_user_mail'];
-		$edit_user_gruppe = rawurldecode($_POST['gruppe']);
+		$edit_user_name = General::input_clean($_POST['edit_user_name'],true);
+		$edit_user_pass = General::input_clean($_POST['edit_user_pass'],true);
+		$edit_user_mail = General::input_clean($_POST['edit_user_mail'],true);
+		$edit_user_gruppe = General::input_clean(rawurldecode($_POST['gruppe']),true);
 		$id = $_POST['edit_user_id'];
 
-		$this->connection->db_query("UPDATE `$this->user_table` SET 	`Name` = '$edit_user_name',
+		$this->connection->db_query("UPDATE `$this->user_table` SET `Name` = '$edit_user_name',
 														`Password` = '$edit_user_pass',
 														`E-Mail` = '$edit_user_mail',
 														`Group` = '$edit_user_gruppe' WHERE `id` = '$id' ");
@@ -91,7 +91,7 @@ class User extends Admin
 
 	function edit_group_update()
 	{
-		$edit_user_gruppe = rawurldecode($_POST['gruppe']);
+		$edit_user_gruppe = General::input_clean(rawurldecode($_POST['gruppe']),true);
 		$edit_user_id = $_POST['id'];
 		$this->connection->db_query("UPDATE `$this->user_table` SET `Group` = '$edit_user_gruppe' WHERE `id` = '$edit_user_id'");
 	}
@@ -136,13 +136,14 @@ class User extends Admin
 
 		$table->add_th(array('Benutzer','E-Mail','Passwort '.$pwshow,'Gruppe'));
 
-		for ($i=0;$i<count($this->existent_users);$i++)
+		foreach($this->existent_users as $user)// ($i=0;$i<count($this->existent_users);$i++)
 		{
-
+			$i = 0;
 			$select = new Select('gruppe');
+			
 			foreach ($this->existent_groups as $group)
 			{
-				if ($this->existent_users[$i]['Group'] == $group) $attr['selected'] = 'selected';
+				if ($user['Group'] == $group) $attr['selected'] = 'selected';
 				else unset($attr['selected']);
 				$select->add_option(rawurlencode($group),$group,$attr);
 			}
@@ -152,29 +153,29 @@ class User extends Admin
 			{
 				$show_password = '*****';
 			}
-			else $show_password = $this->existent_users[$i]['Password'];
+			else $show_password = $user['Password'];
 
 
 			if (isset($_GET['editgroup']))
 			{
 				$id = $_GET['editgroup'];
-				if ($id == $this->existent_users[$i]['id'])
+				if ($id == $user['id'])
 				{
 					$editgroup_submit = $form->add_input('image','submit_edit_group','',array('src'=>$img_apply_path,'alt'=>'Speichern'));
 					$editgroup_submit_id = $form->add_input('hidden','id',$id);
 					$groupshow = $groups_select.$editgroup_submit_id.$editgroup_submit;
 				}
-				else $groupshow = $this->existent_users[$i]['Group'];
+				else $groupshow = $user['Group'];
 			}
-			else $groupshow = $this->existent_users[$i]['Group'];
+			else $groupshow = $user['Group'];
 
 			//$edit_group_button = Html::a($_SERVER['REDIRECT_URL'].'?editgroup='.$this->existent_users[$i]['id'],$img_edit_group);
-			$edit_user_button = Html::a($_SERVER['REDIRECT_URL'].'?edituser='.$this->existent_users[$i]['id'],$img_edit);
-			$delete_user_confirm = array('onclick'=>'return confirm(\'Wollen Sie '.$this->existent_users[$i]['Name'].' wirklich löschen?\')');
-			$delete_user_button = Html::a($_SERVER['REDIRECT_URL'].'?deleteuser='.$this->existent_users[$i]['id'],$img_delete_user,$delete_user_confirm);
+			$edit_user_button = Html::a($_SERVER['REDIRECT_URL'].'?edituser='.$user['id'],$img_edit);
+			$delete_user_confirm = array('onclick'=>'return confirm(\'Wollen Sie '.addcslashes($user['Name'],"'").' wirklich löschen?\')');
+			$delete_user_button = Html::a($_SERVER['REDIRECT_URL'].'?deleteuser='.$user['id'],$img_delete_user,$delete_user_confirm);
 
-			$user_row = array	(	$this->existent_users[$i]['Name'],
-									$this->existent_users[$i]['E-Mail'],
+			$user_row = array	(	$user['Name'],
+									$user['E-Mail'],
 									$show_password,
 									$groupshow,
 									$edit_user_button . $edit_group_button . $delete_user_button
@@ -183,13 +184,13 @@ class User extends Admin
 			if (isset($_GET['edituser']))
 			{
 				$id = $_GET['edituser'];
-				if ($id == $this->existent_users[$i]['id'])
+				if ($id == $user['id'])
 				{
-					$edit_user_form_name = $form->add_input('text','edit_user_name',$this->existent_users[$i]['Name'],array('size'=>'12'));
-					$edit_user_form_pass = $form->add_input('text','edit_user_pass',$this->existent_users[$i]['Password'],array('size'=>'12'));
-					$edit_user_form_mail = $form->add_input('text','edit_user_mail',$this->existent_users[$i]['E-Mail'],array('size'=>'12'));
+					$edit_user_form_name = $form->add_input('text','edit_user_name',$user['Name'],array('size'=>'12'));
+					$edit_user_form_pass = $form->add_input('text','edit_user_pass',$user['Password'],array('size'=>'12'));
+					$edit_user_form_mail = $form->add_input('text','edit_user_mail',$user['E-Mail'],array('size'=>'12'));
 					$edit_user_form_id = $form->add_input('hidden','edit_user_id',$id);
-
+					
 					$edit_user_form_submit = $form->add_input('image','submit_edit_user','Speichern',array('src'=>$img_apply_path,'alt'=>'Speichern'));
 					$user_row = array	(	$img_user	. $edit_user_form_name,
 											$img_mail 	. $edit_user_form_mail,
@@ -201,12 +202,19 @@ class User extends Admin
 			}
 
 			$table->add_td($user_row,array('class'=>(is_int($i/2)) ?   'abwechselnde_flaechen_1': 'abwechselnde_flaechen_2'));
+			$i++;
 		}
 
 		$new_user_link = Html::a($_SERVER['REDIRECT_URL'].'?newuser',$img_new_user.' Benutzer hinzufügen');
 
 		if (isset($_GET['newuser']))
 		{
+			foreach ($this->existent_groups as $group)
+			{
+				$select->add_option(rawurlencode($group),$group);
+			}
+			
+			$groups_select = $select->flush_select();
 			$new_user_form_name = $form->add_input('text','new_user_name','',array('size'=>'12'));
 			$new_user_form_pass = $form->add_input('text','new_user_pass','',array('size'=>'12'));
 			$new_user_form_mail = $form->add_input('text','new_user_mail','',array('size'=>'12'));
