@@ -26,11 +26,12 @@ window.focus();
 
 	xinha_plugins = xinha_plugins ? xinha_plugins :
 	[
+	//'Properties',
 	'CharacterMap',
 	'ContextMenu',
-	'FindReplace',
+	//'FindReplace',
 	//'FullScreen',
-	'ListType',
+	//'ListType',
 	'Stylist',
 	'SuperClean',
 	//'FullPage',
@@ -43,11 +44,8 @@ window.focus();
 	//'Linker',
 	'RheinaufCMSLinker',
 	'DoubleClick',
-	//'InsertPicture',
-	//'LangMarks',
 	'HorizontalRule',
 	'InsertSnippet',
-	//'SaveWord',
 	'SaveSubmit',
 	'SwitchPanels',
 	'OutlineElements'
@@ -102,7 +100,7 @@ window.focus();
 	xinha_config.stripBaseHref = true;
 	xinha_config.baseHref = "<?php print 'http://'. $_SERVER['SERVER_NAME'] ?>";
 
-	xinha_config.ListType.mode = 'panel';
+	//xinha_config.ListType.mode = 'panel';
 	//xinha_config.CharacterMap.mode = 'panel';
 
 	xinha_config.InsertSnippet.css = ['CSS/Screen.css'];
@@ -117,6 +115,34 @@ window.focus();
                'word_edited': 'Word'
     }
 
+	if (xinha_config.ExtendedFileManager) 
+	{
+		with (xinha_config.ExtendedFileManager)
+		{
+		<?php
+			$docroot = preg_replace('/\/$/','',$_SERVER['DOCUMENT_ROOT']);
+			// define backend configuration for the plugin
+			$IMConfig = array();
+			$IMConfig['images_dir'] = $docroot.'/RheinaufCMS/Images/';
+			$IMConfig['images_url'] = '/Images/';
+			$IMConfig['files_dir'] = $docroot.'/RheinaufCMS/Download/';
+			$IMConfig['files_url'] = '/Download/';
+			$IMConfig['max_filesize_kb_image'] = "300";
+			$IMConfig['max_filesize_kb_link'] = "max";
+			
+			$IMConfig['images_enable_styling'] = false;
+			$IMConfig['link_enable_target'] = false;
+			$IMConfig['images_enable_align'] = false;
+			$IMConfig['max_foldersize_mb'] = 0;
+			$IMConfig['allowed_link_extensions'] = array("doc","fla","gif","gz","html","jpg","js","mov","pdf","php","png","ppt","rar","txt","xls","zip","mp3");
+			
+			require_once '../Xinha/contrib/php-xinha.php';
+			xinha_pass_to_php_backend($IMConfig);
+		?>
+		}
+	}
+
+    
     xinha_editors   = HTMLArea.makeEditors(xinha_editors, xinha_config, xinha_plugins);
 
 	xinha_editors.editor.config.stylistLoadStylesheet('/CSS/Screen.css');

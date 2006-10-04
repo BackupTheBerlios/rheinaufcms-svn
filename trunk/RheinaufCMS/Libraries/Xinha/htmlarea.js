@@ -2178,7 +2178,7 @@ HTMLArea.prototype.initIframe = function()
   
   HTMLArea.freeLater(this, '_doc');
   
-  doc.open();
+  doc.open("text/html","replace");
   var html = '';
   if ( !editor.config.fullPage )
   {
@@ -2193,7 +2193,8 @@ HTMLArea.prototype.initIframe = function()
     html += ".htmtableborders, .htmtableborders td, .htmtableborders th {border : 1px dashed lightgrey ! important;} \n";
     html += "</style>\n";
     html += "<style type=\"text/css\">";
-    html += "html, body { border: 0px;  background-color: #ffffff; } \n";
+    html += "html, body { border: 0px;} \n";
+     html += "body {background-color: #ffffff; } \n";
     html += "span.macro, span.macro ul, span.macro div, span.macro p {background : #CCCCCC;}\n";
     html += "</style>\n";
 
@@ -2344,7 +2345,7 @@ HTMLArea.prototype.setFullHTML = function(html)
     }
     var html_re = /<html>((.|\n)*?)<\/html>/i;
     html = html.replace(html_re, "$1");
-    this._doc.open();
+    this._doc.open("text/html","replace");
     this._doc.write(html);
     this._doc.close();
     if ( reac )
@@ -3967,20 +3968,21 @@ HTMLArea.prototype._createLink = function(link)
       {
         try
         {
-          editor._doc.execCommand("createlink", false, param.f_href);
-          a = editor.getParentElement();
-          var sel = editor._getSelection();
-          var range = editor._createRange(sel);
-          if ( !HTMLArea.is_ie )
+          var tmp = HTMLArea.uniq('http://www.example.com/Link');
+          editor._doc.execCommand('createlink', false, tmp);
+
+          // Fix them up
+          var anchors = editor._doc.getElementsByTagName('a');
+          for(var i = 0; i < anchors.length; i++)
           {
-            a = range.startContainer;
-            if ( ! ( /^a$/i.test(a.tagName) ) )
+            var anchor = anchors[i];
+            if(anchor.href == tmp)
             {
-              a = a.nextSibling;
-              if ( a === null )
-              {
-                a = range.startContainer.parentNode;
-              }
+              // Found one.
+              if (!a) a = anchor;
+              anchor.href =  param.f_href;
+              if (param.f_target) anchor.target =  param.f_target;
+              if (param.f_title)  anchor.title =  param.f_title;
             }
           }
         } catch(ex) {}
@@ -6152,9 +6154,16 @@ HTMLArea._postback = function(url, data, handler)
   }
 
   var content = '';
-  for ( var i in data )
+  if (typeof data == 'string')
   {
-    content += (content.length ? '&' : '') + i + '=' + encodeURIComponent(data[i]);
+    content = data;
+  }
+  else if(data != null)
+  {
+    for ( var i in data )
+    {
+      content += (content.length ? '&' : '') + i + '=' + encodeURIComponent(data[i]);
+    }
   }
 
   function callBack()
@@ -6352,13 +6361,25 @@ HTMLArea._loadlang = function(context)
 };
 
 /** Return a localised string.
- * @param string    English language string
+ * @param string    English language string. It can also contain variables in the form "Some text with $variable=replaced text$". 
+ *                  This replaces $variable in "Some text with $variable" with "replaced text"
  * @param context   Case sensitive context name, eg 'HTMLArea' (default), 'TableOperations'...
  * @param replace   Replace $variables in String, eg {foo: 'replaceText'} ($foo in string will be replaced)
  */
 HTMLArea._lc = function(string, context, replace)
 {
   var ret;
+  if (typeof string == 'string') var m = string.match(/\$(.*?)=(.*?)\$/g);
+  if (m) 
+  {
+    if (!replace) replace = {};
+    for (var i = 0;i<m.length;i++)
+    {
+      var n = m[i].match(/\$(.*?)=(.*?)\$/);
+      replace[n[1]] = n[2];
+      string = string.replace(n[0],'$'+n[1]);
+    }
+  }
   if ( _editor_lang == "en" )
   {
     if ( typeof string == 'object' && string.string )

@@ -9,7 +9,7 @@
 // Version 3.0 developed by Mihai Bazon.
 //   http://dynarch.com/mishoo
 //
-// $Id: popup.js 3 2006-08-29 12:15:04Z ray_cologne $
+// $Id: popup.js 594 2006-10-03 16:13:53Z ray $
 HTMLArea = window.opener.HTMLArea;
 
 function getAbsolutePos(el) {
@@ -59,8 +59,16 @@ function __dlg_init(bottom, win_dim) {
     }
     else
     {
-      var x = opener.screenX + (opener.outerWidth - win_dim.width) / 2;
-      var y = opener.screenY + (opener.outerHeight - win_dim.height) / 2;
+      if (!HTMLArea.is_ie)
+      {
+      	var x = opener.screenX + (opener.outerWidth - win_dim.width) / 2;
+        var y = opener.screenY + (opener.outerHeight - win_dim.height) / 2;
+      }
+      else
+      {//IE does not have window.outer... , so center it on the screen at least
+        var x =  (self.screen.availWidth - win_dim.width) / 2;
+        var y =  (self.screen.availHeight - win_dim.height) / 2;	
+      }
       window.moveTo(x,y);
     }
   }
@@ -78,7 +86,7 @@ function __dlg_init(bottom, win_dim) {
 		window.moveTo(x, y);
 	} else {
 		var docElm      = document.documentElement ? document.documentElement : null;    
-		var body_height = body.scrollHeight;
+		var body_height = docElm && docElm.scrollTop ? docElm.scrollHeight : body.scrollHeight;
     
 		window.resizeTo(body.scrollWidth, body_height);
 		var ch = docElm && docElm.clientHeight ? docElm.clientHeight : body.clientHeight;
@@ -125,7 +133,7 @@ function __dlg_close(val) {
 function __dlg_close_on_esc(ev) {
 	ev || (ev = window.event);
 	if (ev.keyCode == 27) {
-		window.close();
+		__dlg_close(null);
 		return false;
 	}
 	return true;

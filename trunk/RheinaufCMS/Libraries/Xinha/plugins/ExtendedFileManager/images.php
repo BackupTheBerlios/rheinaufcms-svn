@@ -65,7 +65,7 @@ $list = $manager->getFiles($relative);
 /**
  * Draw folders and files. Changed by Afru
  */
-function drawDirs_Files($list, &$manager)
+function drawDirs_Files($list, &$manager) 
 {
 	global $relative, $afruViewType, $IMConfig, $insertMode;
 
@@ -107,7 +107,7 @@ function drawDirs_Files($list, &$manager)
     			?>
                 <tr>
         		  <td><img src="<?php print $IMConfig['base_url']; if(is_file('icons/'.$file['ext'].'_small.gif')) echo "icons/".$file['ext']."_small.gif"; else echo $IMConfig['default_listicon']; ?>" alt="" /></td>
-                  <th><a href="#" class="thumb" style="cursor: pointer;" onclick="selectImage('<?php echo $file['relative'];?>', '<?php echo preg_replace('#\..{3,4}$#', '', $entry); ?>', <?php echo $file['image'][0];?>, <?php echo $file['image'][1]; ?>);return false;" title="<?php echo $entry; ?> - <?php echo Files::formatSize($file['stat']['size']); ?>" <?php if ($insertMode == 'image') { ?> onmouseover="showPreview('<?php echo $file['relative'];?>')" onmouseout="showPreview(window.parent.document.getElementById('f_url').value)" <?php } ?> >
+                  <th><a href="#" class="thumb" style="cursor: pointer;" ondblclick="this.onclick();window.top.onOK();" onclick="selectImage('<?php echo $file['relative'];?>', '<?php echo preg_replace('#\..{3,4}$#', '', $entry); ?>', <?php echo $file['image'][0];?>, <?php echo $file['image'][1]; ?>);return false;" title="<?php echo $entry; ?> - <?php echo Files::formatSize($file['stat']['size']); ?>" <?php if ($insertMode == 'image') { ?> onmouseover="showPreview('<?php echo $file['relative'];?>')" onmouseout="showPreview(window.parent.document.getElementById('f_url').value)" <?php } ?> >
         			<?php
         			if(strlen($entry)>$maxNameLength) echo substr($entry,0,$maxNameLength)."..."; else echo $entry;
         			?>
@@ -161,7 +161,7 @@ function drawDirs_Files($list, &$manager)
     			$thisFileNameLength = $maxFileNameLength;
     			?>
                 <div class="thumb_holder" id="holder_<?php echo asc2hex($entry) ?>">
-                  <a href="#" class="thumb" style="cursor: pointer;" onclick="selectImage('<?php echo $file['relative'];?>', '<?php echo preg_replace('#\..{3,4}$#', '', $entry); ?>', <?php echo $file['image'][0];?>, <?php echo $file['image'][1]; ?>);return false;" title="<?php echo $entry; ?> - <?php echo Files::formatSize($file['stat']['size']); ?>">
+                  <a href="#" class="thumb" style="cursor: pointer;" ondblclick="this.onclick();window.top.onOK();" onclick="selectImage('<?php echo $file['relative'];?>', '<?php echo preg_replace('#\..{3,4}$#', '', $entry); ?>', <?php echo $file['image'][0];?>, <?php echo $file['image'][1]; ?>);return false;" title="<?php echo $entry; ?> - <?php echo Files::formatSize($file['stat']['size']); ?>">
                     <img src="<?php print $manager->getThumbnail($file['relative']); ?>" alt="<?php echo $entry; ?> - <?php echo Files::formatSize($file['stat']['size']); ?>" />
                   </a>
                   <div class="edit">
@@ -189,7 +189,7 @@ function drawDirs_Files($list, &$manager)
 /**
  * No directories and no files.
  */
-function drawNoResults()
+function drawNoResults() 
 {
 ?>
 <div class="noResult">No Files Found</div>
@@ -199,10 +199,10 @@ function drawNoResults()
 /**
  * No directories and no files.
  */
-function drawErrorBase(&$manager)
+function drawErrorBase(&$manager) 
 {
 ?>
-<div class="error"><span>Invalid base directory:</span> <?php echo $manager->config['images_dir']; ?></div>
+<div class="error"><span>Invalid base directory:</span> <?php echo $manager->getImagesDir(); ?></div>
 <?php
 }
 
@@ -243,14 +243,14 @@ function asc2hex ($temp)
 	init = function()
 	{
         __dlg_translate('ExtendedFileManager');
-
+        
 		hideMessage();
 
 		<?php
 		if(isset($uploadStatus) && !is_numeric($uploadStatus) && !is_bool($uploadStatus))
-		echo 'alert(i18n("'.$uploadStatus.'"));';
+		echo "alert(i18n('$uploadStatus'));";
 		else if(isset($uploadStatus) && $uploadStatus==false)
-		echo 'alert("Unable to upload File. \nEither Maximum file size ['.($insertMode == 'image' ? $IMConfig['max_filesize_kb_image'] : $IMConfig['max_filesize_kb_link'] ).'Kb] exceeded or\nFolder doesn\'t have write permission.");';
+		echo 'alert(i18n("Unable to upload File. \nEither Maximum file size [$max_size='.($insertMode == 'image' ? $IMConfig['max_filesize_kb_image'] : $IMConfig['max_filesize_kb_link'] ).'$ KB] exceeded or\nFolder doesn\'t have write permission."));';
 		?>
 
 		<?php
@@ -266,8 +266,8 @@ function asc2hex ($temp)
 	//we need to refesh the drop directory list
 	//save the current dir, delete all select options
 	//add the new list, re-select the saved dir.
-	if($refreshDir)
-	{
+	if($refreshDir) 
+	{ 
 		$dirs = $manager->getDirs();
 ?>
 		var selection = topDoc.getElementById('dirPath');
@@ -275,12 +275,12 @@ function asc2hex ($temp)
 
 		while(selection.length > 0)
 		{	selection.remove(0); }
-
+		
 		selection.options[selection.length] = new Option("/","<?php echo rawurlencode('/'); ?>");
 		<?php foreach($dirs as $relative=>$fullpath) { ?>
 		selection.options[selection.length] = new Option("<?php echo $relative; ?>","<?php echo rawurlencode($relative); ?>");
 		<?php } ?>
-
+		
 		for(var i = 0; i < selection.length; i++)
 		{
 			var thisDir = selection.options[i].text;
@@ -289,13 +289,13 @@ function asc2hex ($temp)
 				selection.selectedIndex = i;
 				break;
 			}
-		}
+		}		
 <?php } ?>
 	}
-
-	function editImage(image)
+    
+	function editImage(image) 
 	{
-		var url = "<?php print $IMConfig['backend_url']; ?>__function=editor&img="+image;
+		var url = "<?php print $IMConfig['backend_url']; ?>__function=editor&img="+image+"&mode=<?php print $insertMode ?>";
         Dialog(url, function(param)
 		{
 			if (!param) { // user must have pressed Cancel
@@ -316,7 +316,7 @@ function asc2hex ($temp)
 // Koto: why emptying? commented out
 //if(window.top.document.getElementById('manager_mode').value=="image")
 //emptyProperties();
-<?php if(isset($diskInfo)) echo 'updateDiskMesg("'.$diskInfo.'");'; ?>
+<?php if(isset($diskInfo)) echo 'updateDiskMesg(i18n(\''.$diskInfo.'\'));'; ?>
 //-->
 </script>
 

@@ -20,8 +20,14 @@
  *
  *	Best of Luck :) Afru.
  */
-if(isset($_REQUEST['mode'])) $insertMode=$_REQUEST['mode'];
-if(!isset($insertMode)) $insertMode="image";
+ 
+/*
+ *	Getting the mode for further differentiation
+ */
+
+if(empty($insertMode))
+    $insertMode="image";
+
 /**
 * Default backend URL
 *
@@ -52,8 +58,10 @@ $IMConfig['base_url'] = '';
 		   PHP must be able to create files in this directory.
 		   Able to create directories is nice, but not necessary.
 */
-if ($insertMode == 'link') $IMConfig['images_dir'] = $_SERVER['DOCUMENT_ROOT'].'/RheinaufCMS/Download/';
-else $IMConfig['images_dir'] = $_SERVER['DOCUMENT_ROOT'].'/RheinaufCMS/Images/';
+$IMConfig['images_dir'] = 'demo_images';
+//You may set a different directory for the link mode; if you don't, the above setting will be used for both modes
+//$IMConfig['files_dir'] = 'demo_files';
+
 /*
  The URL to the above path, the web browser needs to be able to see it.
  It can be protected via .htaccess on apache or directory permissions on IIS,
@@ -62,8 +70,8 @@ else $IMConfig['images_dir'] = $_SERVER['DOCUMENT_ROOT'].'/RheinaufCMS/Images/';
  for this directory (i.e. disable PHP, Perl, CGI). We only want to store assets
  in this directory and its subdirectories.
 */
-if ($insertMode == 'link') $IMConfig['images_url'] = '/Download/';
-else $IMConfig['images_url'] = '/Images/';
+$IMConfig['images_url'] = str_replace( "backend.php", "", $_SERVER["PHP_SELF"] ) . "demo_images";
+//$IMConfig['files_url'] = 'url/to/files_dir';
 
 /*
   Possible values: true, false
@@ -89,21 +97,20 @@ View type when the File manager is in insert image mode.
 Valid values are "thumbview" and "listview".
 */
 
-
-
+    
 if ($insertMode == 'image')
 	$IMConfig['view_type'] = "thumbview";
-
+	
 else if($insertMode == "link")
 	$IMConfig['view_type'] = "listview";
 
 $IMConfig['insert_mode'] = $insertMode;
 
-/*
+/* 
  Possible values: 'GD', 'IM', or 'NetPBM'
 
  The image manipulation library to use, either GD or ImageMagick or NetPBM.
- If you have safe mode ON, or don't have the binaries to other packages,
+ If you have safe mode ON, or don't have the binaries to other packages, 
  your choice is 'GD' only. Other packages require Safe Mode to be off.
 */
 define('IMAGE_CLASS', 'GD');
@@ -206,35 +213,74 @@ $IMConfig['use_color_pickers'] = true;
 /*
   Possible values: true, false
 
+ TRUE -  Allow the user to set alt (alternative text) attribute.
+
+ FALSE - No input field for alt attribute will be displayed.
+
+ NOTE: The alt attribute is _obligatory_ for images, so <img alt="" /> will be inserted
+      if 'images_enable_alt' is set to false
+*/
+$IMConfig['images_enable_alt'] = true;
+
+/*
+  Possible values: true, false
+
+ TRUE -  Allow the user to set title attribute (usually displayed when mouse is over element).
+
+ FALSE - No input field for title attribute will be displayed.
+
+*/
+$IMConfig['images_enable_title'] = false;
+
+/*
+  Possible values: true, false
+
+ TRUE -  Allow the user to set align attribute.
+
+ FALSE - No selection box for align attribute will be displayed.
+
+*/
+$IMConfig['images_enable_align'] = true;
+
+/*
+  Possible values: true, false
+
+ TRUE -  Allow the user to set margin, padding, and border styles for the image
+
+ FALSE - No styling input fields will be displayed.
+
+*/
+$IMConfig['images_enable_styling'] = true;
+
+/*
+  Possible values: true, false
+
+ TRUE -   Allow the user to set target attribute for link (the window in which the link will be opened).
+
+ FALSE - No selection box for target attribute will be displayed.
+
+*/
+$IMConfig['link_enable_target'] = true;
+/*
+  Possible values: true, false
+
   TRUE - Allow the user to upload files.
 
   FALSE - No uploading allowed.
 */
 $IMConfig['allow_upload'] = true;
 
-/* Maximum upload file size in Kilobytes */
+/* Maximum upload file size
 
-function return_kbytes($val) {
-   $val = trim($val);
-   $last = strtolower($val{strlen($val)-1});
-   switch($last) {
-       // The 'G' modifier is available since PHP 5.1.0
-       case 'g':
-           $val *= 1024;
-       case 'm':
-           $val *= 1024;
-     /*  case 'k':
-           $val *= 1024;*/
-   }
+  Possible values: number, "max"
 
-   return $val;
-}
+  number - maximum size in Kilobytes.
 
-$post_max_size = ini_get('post_max_size');
-$post_max_size = return_kbytes($post_max_size);
-$IMConfig['max_filesize_kb_image'] = $post_max_size;
+  "max"  - the maximum allowed by the server (the value is retrieved from the server configuration).
+*/
+$IMConfig['max_filesize_kb_image'] = 2000;
 
-$IMConfig['max_filesize_kb_link'] = $post_max_size;
+$IMConfig['max_filesize_kb_link'] = 5000;
 
 /* Maximum upload folder size in Megabytes. Use 0 to disable limit */
 $IMConfig['max_foldersize_mb'] = 0;
@@ -246,7 +292,7 @@ Available icons are for "doc,fla,gif,gz,html,jpg,js,mov,pdf,php,png,ppt,rar,txt,
 */
 
 $IMConfig['allowed_image_extensions'] = array("jpg","gif","png","bmp");
-$IMConfig['allowed_link_extensions'] = array("jpg","gif","js","php","pdf","zip","rar","txt","psd","png","html","swf","xml","xls","mp3");
+$IMConfig['allowed_link_extensions'] = array("jpg","gif","js","php","pdf","zip","txt","psd","png","html","swf","xml","xls");
 
 
 /*
@@ -273,8 +319,17 @@ $IMConfig['thumbnail_height'] = 84;
 $IMConfig['tmp_prefix'] = '.editor_';
 
 
-// If config specified from front end, merge it
-if(isset($_REQUEST['backend_config']))
+// Standard PHP Backend Data Passing
+//  if data was passed using xinha_pass_to_php_backend() we merge the items
+//  provided into the Config
+require_once(realpath(dirname(__FILE__) . '/../../contrib/php-xinha.php'));
+if($passed_data = xinha_read_passed_data())
+{
+  $IMConfig = array_merge($IMConfig, $passed_data);
+  $IMConfig['backend_url'] .= xinha_passed_data_querystring() . '&';
+}
+// Deprecated config passing, don't use this way any more!
+elseif(isset($_REQUEST['backend_config']))
 {
   if(get_magic_quotes_gpc()) {
     $_REQUEST['backend_config'] = stripslashes($_REQUEST['backend_config']);
@@ -306,7 +361,15 @@ if(isset($_REQUEST['backend_config']))
   $IMConfig['backend_url'] .= "backend_config_secret_key_location=" . rawurlencode($_REQUEST['backend_config_secret_key_location']) . '&';
 
 }
+if ($IMConfig['max_filesize_kb_link'] == "max")
+{
+  $IMConfig['max_filesize_kb_link'] = upload_max_filesize_kb();
+}
 
+if ($IMConfig['max_filesize_kb_image'] == "max")
+{
+  $IMConfig['max_filesize_kb_image'] = upload_max_filesize_kb();
+}
 // END
 
 ?>

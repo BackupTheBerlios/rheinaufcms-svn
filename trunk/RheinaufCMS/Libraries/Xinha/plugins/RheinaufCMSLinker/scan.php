@@ -1,11 +1,23 @@
-<?php  session_start();
+<?php
     // /home/username/foo/public_html/
-    $dir = dirname(__FILE__)."/../../../..";
-    $include      = '';//'/\.(php|shtml|html|htm|shtm|cgi|txt|doc|pdf|rtf|xls|csv)$/';
-    $exclude      = '/\.(php|shtml|html|htm|shtm|cgi)$/';
-    $dirinclude   = '/Download/';
+    $dir          = dirname(__FILE__)."/../..";
+    $include      = '/\.(php|shtml|html|htm|shtm|cgi|txt|doc|pdf|rtf|xls|csv)$/';
+    $exclude      = '';
+    $dirinclude   = '';
     $direxclude   = '/(^|\/)[._]|htmlarea/'; // Exclude the htmlarea tree by default
 
+    // New backend config data passing
+    //  if data was passed using xinha_pass_to_backend() we extract and use it
+    //  as the items above    
+    require_once(realpath(dirname(__FILE__) . '/../../contrib/php-xinha.php'));
+    if($passed_data = xinha_read_passed_data())
+    {
+      extract($passed_data);      
+    }
+
+    // Old deprecated backend config data passing
+    //  not described because you shouldn't use it.
+    //------------------------------------------------------------------------    
     $hash = '';
     foreach(explode(',', 'dir,include,exclude,dirinclude,direxclude') as $k)
     {
@@ -22,7 +34,7 @@
 
     if($hash)
     {
-     
+      session_start();
       if(!isset($_SESSION[sha1($hash)]))
       {
         ?>
@@ -31,10 +43,12 @@
         exit;
       }
     }
+    //------------------------------------------------------------------------
+
 
     function scan($dir, $durl = '')
     {
-     global $include, $exclude, $dirinclude, $direxclude;
+      global $include, $exclude, $dirinclude, $direxclude;
       static $seen = array();
 
       $files = array();
@@ -72,16 +86,13 @@
         }
       }
       @closedir($dh);
-	
-
       return dirsort($files);
     }
 
     
 function dbnavi()
     {
-     
-	return $_SESSION['RheinaufCMSLinker'];
+     return $_SESSION['RheinaufCMSLinker'];
     }
 
     function dirsort($files)
@@ -92,79 +103,10 @@ function dbnavi()
 
     function dircomp($a, $b)
     {
-      if(is_array($a)) $a = $a[0];
-      if(is_array($b)) $b = $b[0];
+      if(is_array($a)) $a = array_shift($a);
+      if(is_array($b)) $b = array_shift($b);
       return strcmp(strtolower($a), strtolower($b));
     }
-
-    function to_js($var, $tabs = 0)
-    {
-      if(is_numeric($var))
-      {
-        return $var;
-      }
-
-      if(is_string($var))
-      {
-        return "'" . js_encode($var) . "'";
-      }
-
-      if(is_array($var))
-      {
-        $useObject = false;
-        foreach(array_keys($var) as $k) {
-            if(!is_numeric($k)) $useObject = true;
-        }
-        $js = array();
-        foreach($var as $k => $v)
-        {
-          $i = "";
-          if($useObject) {
-            if(preg_match('#[a-zA-Z]+[a-zA-Z0-9]*#', $k)) {
-              $i .= "$k: ";
-            } else {
-              $i .= "'$k': ";
-            }
-          }
-          $i .= to_js($v, $tabs + 1);
-          $js[] = $i;
-        }
-        if($useObject) {
-            $ret = "{\n" . tabify(implode(",\n", $js), $tabs) . "\n}";
-        } else {
-            $ret = "[\n" . tabify(implode(",\n", $js), $tabs) . "\n]";
-        }
-        return $ret;
-      }
-
-      return 'null';
-    }
-
-    function tabify($text, $tabs)
-    {
-      if($text)
-      {
-        return str_repeat("  ", $tabs) . preg_replace('/\n(.)/', "\n" . str_repeat("  ", $tabs) . "\$1", $text);
-      }
-    }
-
-    function js_encode($string)
-    {
-      static $strings = "\\,\",',%,&,<,>,{,},@,\n,\r";
-
-      if(!is_array($strings))
-      {
-        $tr = array();
-        foreach(explode(',', $strings) as $chr)
-        {
-          $tr[$chr] = sprintf('\x%02X', ord($chr));
-        }
-        $strings = $tr;
-      }
-
-      return strtr($string, $strings);
-    }
-
-
-    echo to_js(array_merge(dbnavi(),scan($dir)));
+   
+    echo xinha_to_js(array_merge(scan($dir),dbnavi()));
 ?>

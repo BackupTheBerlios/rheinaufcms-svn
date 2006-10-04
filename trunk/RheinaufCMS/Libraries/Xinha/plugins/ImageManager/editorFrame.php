@@ -2,7 +2,7 @@
 /**
  * The frame that contains the image to be edited.
  * @author $Author$
- * @version $Id: editorFrame.php 3 2006-08-29 12:15:04Z ray_cologne $
+ * @version $Id: editorFrame.php 26 2004-03-31 02:35:21Z Wei Zhuo $
  * @package ImageManager
  */
 

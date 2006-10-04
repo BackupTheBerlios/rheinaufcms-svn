@@ -2,7 +2,7 @@
 /**
  * Show a list of images in a long horizontal table.
  * @author $Author$
- * @version $Id: images.php 3 2006-08-29 12:15:04Z ray_cologne $
+ * @version $Id: images.php 27 2004-04-01 08:31:57Z Wei Zhuo $
  * @package ImageManager
  */
 

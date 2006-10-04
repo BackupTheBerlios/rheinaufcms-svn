@@ -2,7 +2,7 @@
 /**
  * The PHP Image Editor user interface.
  * @author $Author$
- * @version $Id: editor.php 3 2006-08-29 12:15:04Z ray_cologne $
+ * @version $Id: editor.php 26 2004-03-31 02:35:21Z Wei Zhuo $
  * @package ImageManager
  */
 
@@ -25,7 +25,6 @@ _backend_url = "<?php print $IMConfig['backend_url']; ?>";
 	<link href="<?php print $IMConfig['base_url'];?>assets/editor.css" rel="stylesheet" type="text/css" />	
 <script type="text/javascript" src="<?php print $IMConfig['base_url'];?>assets/slider.js"></script>
 <script type="text/javascript" src="<?php print $IMConfig['base_url'];?>assets/popup.js"></script>
-<script type="text/javascript" src="../../popups/popup.js"></script>
 <script type="text/javascript">
 /*<![CDATA[*/
 	window.resizeTo(673, 531);

@@ -2,7 +2,7 @@
 /**
  * File Utilities.
  * @author $Author$
- * @version $Id: Files.php 3 2006-08-29 12:15:04Z ray_cologne $
+ * @version $Id: Files.php 26 2004-03-31 02:35:21Z Wei Zhuo $
  * @package ImageManager
  */
 
@@ -14,7 +14,7 @@ define('FILE_COPY_OK', 103);
 /**
  * File Utilities
  * @author $Author$
- * @version $Id: Files.php 3 2006-08-29 12:15:04Z ray_cologne $
+ * @version $Id: Files.php 26 2004-03-31 02:35:21Z Wei Zhuo $
  * @package ImageManager
  * @subpackage files
  */
@@ -206,9 +206,9 @@ class Files
 		if($size < 1024) 
 			return $size.' bytes';	
 		else if($size >= 1024 && $size < 1024*1024) 
-			return sprintf('%01.2f',$size/1024.0).' Kb';	
+			return sprintf('%01.2f',$size/1024.0).' KB';
 		else
-			return sprintf('%01.2f',$size/(1024.0*1024)).' Mb';	
+			return sprintf('%01.2f',$size/(1024.0*1024)).' MB';
 	}
 
 	/**

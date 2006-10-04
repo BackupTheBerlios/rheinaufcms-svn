@@ -10,7 +10,7 @@
 // Version 3.0 developed by Mihai Bazon for InteractiveTools.
 //   http://dynarch.com/mishoo
 //
-// $Id: full-page.js 3 2006-08-29 12:15:04Z ray_cologne $
+// $Id: full-page.js 419 2005-10-31 05:33:41Z mokhet $
 
 function FullPage(editor) {
 	this.editor = editor;

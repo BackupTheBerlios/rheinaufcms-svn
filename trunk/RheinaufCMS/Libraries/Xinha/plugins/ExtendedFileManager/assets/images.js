@@ -72,6 +72,7 @@ function emptyProperties()
     var topDoc = window.top.document;
     topDoc.getElementById('f_url').value = '';
     topDoc.getElementById('f_alt').value = '';
+    topDoc.getElementById('f_title').value = '';
     topDoc.getElementById('f_width').value = '';
     topDoc.getElementById('f_margin').value = '';
     topDoc.getElementById('f_height').value = '';
@@ -112,7 +113,8 @@ function selectImage(filename, alt, width, height)
     if(topDoc.getElementById('manager_mode').value=="image")
     {
         var obj = topDoc.getElementById('f_url');  obj.value = filename;
-        var obj = topDoc.getElementById('f_alt'); obj.value = alt;
+        obj = topDoc.getElementById('f_alt'); obj.value = alt;
+        obj = topDoc.getElementById('f_title'); obj.value = alt;
 
         if(width==0 && height==0) toggleImageProperties(true);
         else
@@ -184,7 +186,7 @@ function showMessage(newMessage)
         if(message.firstChild)
             message.removeChild(message.firstChild);
 
-        message.appendChild(topDoc.createTextNode(i18n(newMessage)));
+        message.appendChild(topDoc.createTextNode(newMessage));
 
         messages.style.display = "block";
     }
@@ -214,7 +216,7 @@ function addEvent(obj, evType, fn)
 
 function confirmDeleteFile(file)
 {
-    if(confirm(file + "\n\n" + i18n("Delete file?")))
+    if(confirm(i18n('Delete file "$file=' + file +'$"?')))
         return true;
 
     return false;
@@ -228,7 +230,7 @@ function confirmDeleteDir(dir, count)
         return false;
     }
 
-    if(confirm(i18n(dir + "\n\n" + i18n("Delete folder?"))))
+    if(confirm(i18n('Delete folder "$dir=' + dir +'$"?')))
         return true;
 
     return false;

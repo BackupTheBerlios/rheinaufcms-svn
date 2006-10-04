@@ -2,7 +2,7 @@
 /**
  * Create thumbnails.
  * @author $Author$
- * @version $Id: Thumbnail.php 3 2006-08-29 12:15:04Z ray_cologne $
+ * @version $Id: Thumbnail.php 26 2004-03-31 02:35:21Z Wei Zhuo $
  * @package ImageManager
  */
 
@@ -12,7 +12,7 @@ require_once('Transform.php');
 /**
  * Thumbnail creation
  * @author $Author$
- * @version $Id: Thumbnail.php 3 2006-08-29 12:15:04Z ray_cologne $
+ * @version $Id: Thumbnail.php 26 2004-03-31 02:35:21Z Wei Zhuo $
  * @package ImageManager
  * @subpackage Images
  */

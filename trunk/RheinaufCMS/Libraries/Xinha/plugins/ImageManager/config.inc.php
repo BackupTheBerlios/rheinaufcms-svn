@@ -1,8 +1,8 @@
-<?php if (!isset($_SESSION)) session_start();
+<?php
 /**
  * Image Manager configuration file.
  * @author $Author$
- * @version $Id: config.inc.php 3 2006-08-29 12:15:04Z ray_cologne $
+ * @version $Id: config.inc.php 27 2004-04-01 08:31:57Z Wei Zhuo $
  * @package ImageManager
  *
  * @todo change all these config values to defines()
@@ -21,7 +21,7 @@
 *
 * URL to use for unified backend.
 *
-* The ?__plugin=ImageManager& is required.
+* The ?__plugin=ImageManager& is required. 
 */
 
 $IMConfig['backend_url'] = "backend.php?__plugin=ImageManager&";
@@ -46,7 +46,7 @@ $IMConfig['base_url'] = '';
 * File system path to the directory you want to manage the images
 * for multiple user systems, set it dynamically.
 *
-* NOTE: This directory requires write access by PHP. That is,
+* NOTE: This directory requires write access by PHP. That is, 
 * PHP must be able to create files in this directory.
 * Able to create directories is nice, but not necessary.
 *
@@ -55,23 +55,8 @@ $IMConfig['base_url'] = '';
 */
 
 // $IMConfig['images_dir'] = "/some/path/to/images/directory;
-/*include($_SERVER['DOCUMENT_ROOT'].'/RheinaufCMS/Classes/RheinaufFile.php');
-if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/RheinaufCMS/Images/'.$_SESSION['rubrik']))
-{
-	RheinaufFile::mkdir($_SERVER['DOCUMENT_ROOT'].'/RheinaufCMS/Images/'.$_SESSION['rubrik']);
-	RheinaufFile::chmod($_SERVER['DOCUMENT_ROOT'].'/RheinaufCMS/Images/'.$_SESSION['rubrik'],777);
-}
-if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/RheinaufCMS/Images/'.$_SESSION['rubrik'].'/'.$_SESSION['seite']))
-{
-	RheinaufFile::mkdir($_SERVER['DOCUMENT_ROOT'].'/RheinaufCMS/Images/'.$_SESSION['rubrik'].'/'.$_SESSION['seite']);
-	RheinaufFile::chmod($_SERVER['DOCUMENT_ROOT'].'/RheinaufCMS/Images/'.$_SESSION['rubrik'].'/'.$_SESSION['seite'],777);
-}
 
-$IMConfig['images_dir'] = $_SERVER['DOCUMENT_ROOT'].'/RheinaufCMS/Images/'.$_SESSION['rubrik'].'/'.$_SESSION['seite'].'/';
-*/
-
-$IMConfig['images_dir'] = $_SERVER['DOCUMENT_ROOT'].'/RheinaufCMS/Images/';
-
+$IMConfig['images_dir'] = "demo_images";
 
 // -------------------------------------------------------------------------
 
@@ -94,9 +79,7 @@ $IMConfig['images_dir'] = $_SERVER['DOCUMENT_ROOT'].'/RheinaufCMS/Images/';
 // try to figure out the URL of the sample images directory. For your installation
 // you will probably want to keep images in another directory.
 
-//$IMConfig['images_url'] = '/Images/'.rawurlencode($_SESSION['rubrik']).'/'.rawurlencode($_SESSION['seite']).'/';
-
-$IMConfig['images_url'] = '/Images/';
+$IMConfig['images_url'] = str_replace( "backend.php", "", $_SERVER["PHP_SELF"] ) . "demo_images";
 
 // -------------------------------------------------------------------------
 
@@ -123,10 +106,10 @@ $IMConfig['safe_mode'] = false;
 * Possible values: 'GD', 'IM', or 'NetPBM'
 *
 * The image manipulation library to use, either GD or ImageMagick or NetPBM.
-* If you have safe mode ON, or don't have the binaries to other packages,
+* If you have safe mode ON, or don't have the binaries to other packages, 
 * your choice is 'GD' only. Other packages require Safe Mode to be off.
 *
-* DEFAULT: GD is probably the most likely to be available.
+* DEFAULT: GD is probably the most likely to be available. 
 */
 
 $IMConfig['IMAGE_CLASS'] = 'GD';
@@ -149,7 +132,7 @@ $IMConfig['IMAGE_TRANSFORM_LIB_PATH'] ='/usr/bin/';
 // C:/"Program Files"/ImageMagick-5.5.7-Q16/
 
 // -------------------------------------------------------------------------
-//                OPTIONAL SETTINGS
+//                OPTIONAL SETTINGS 
 // -------------------------------------------------------------------------
 
 /**
@@ -169,7 +152,7 @@ $IMConfig['thumbnail_prefix'] = '.';
 *
 * Thumbnail can also be stored in a directory, this directory
 * will be created by PHP. If PHP is in safe mode, this parameter
-*  is ignored, you can not create directories.
+*  is ignored, you can not create directories. 
 *
 *  If you do not want to store thumbnails in a directory, set this
 *  to false or empty string '';
@@ -245,8 +228,8 @@ $IMConfig['allow_upload'] = true;
 *
 * Possible values: true, false
 *
-* TRUE - If set to true, uploaded files will be validated based on the
-*        function getImageSize, if we can get the image dimensions then
+* TRUE - If set to true, uploaded files will be validated based on the 
+*        function getImageSize, if we can get the image dimensions then 
 *        I guess this should be a valid image. Otherwise the file will be rejected.
 *
 * FALSE - All uploaded files will be processed.
@@ -297,16 +280,22 @@ $IMConfig['ViewMode'] = 'thumbs';
 ////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-// If config specified from front end, merge it
-if(isset($_REQUEST['backend_config']))
+// Standard PHP Backend Data Passing
+//  if data was passed using xinha_pass_to_php_backend() we merge the items
+//  provided into the Config
+require_once(realpath(dirname(__FILE__) . '/../../contrib/php-xinha.php'));
+if($passed_data = xinha_read_passed_data())
+{
+  $IMConfig = array_merge($IMConfig, $passed_data);
+  $IMConfig['backend_url'] .= xinha_passed_data_querystring() . '&';
+}
+// Deprecated config passing, don't use this way any more!
+elseif(isset($_REQUEST['backend_config']))
 {
   if(get_magic_quotes_gpc()) {
     $_REQUEST['backend_config'] = stripslashes($_REQUEST['backend_config']);
   }
-
+  
   // Config specified from front end, check that it's valid
   session_start();
   $secret = $_SESSION[$_REQUEST['backend_config_secret_key_location']];
@@ -316,7 +305,7 @@ if(isset($_REQUEST['backend_config']))
     die("Backend security error.");
   }
 
-  $to_merge = unserialize(rawurldecode($_REQUEST['backend_config']));
+  $to_merge = unserialize($_REQUEST['backend_config']);
   if(!is_array($to_merge))
   {
     die("Backend config syntax error.");
