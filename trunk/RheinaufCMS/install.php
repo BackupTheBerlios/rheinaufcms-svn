@@ -140,6 +140,7 @@ class RheinaufCMS_Install
 	{
 		print '
 		<h1>Installation RheinaufCMS</h1>
+		<p>Die Installation legt automatisch die nötigen Datenbankstrukturen an, setzt Zugriffsrechte für Verzeichnisse und schreibt die Zugangsdaten in die Konfigurationsdatei.</p>
 		<p>bitte tragen sie die folgenden Angaben ein</p>
 		    <form action="install.php" method="post">
       <table>
@@ -151,10 +152,13 @@ class RheinaufCMS_Install
           <td>
             <input type="text" name="project_name" />
           </td>
+		  <td class="advice">
+		  Geben Sie hier einen Namen für das Projekt an. Dieser Name wird intern verwendet, und erscheint beispielsweise auch im Stantardtemplate als Title der HTML-Seiten.
+		  </td>
         </tr>
         <tr>
 
-          <td colspan="2">
+          <td colspan="3">
             <strong>Datenbank</strong>
           </td>
         </tr>
@@ -163,9 +167,10 @@ class RheinaufCMS_Install
             Datenbankserver
           </td>
           <td>
-
             <input type="text" name="db_server" />
           </td>
+		  <td class="advice">z.B. \'localhost\', oder \'mysql4.domain.xy\' (meist vom Provider vergeben)
+		  </td>
         </tr>
         <tr>
           <td>
@@ -173,8 +178,9 @@ class RheinaufCMS_Install
           </td>
           <td>
             <input type="text" name="db_name" />
-
           </td>
+		  <td class="advice">Name der Datenbank, z.B \'db1234\'. (oft vom Provider vergeben)
+		  </td>
         </tr>
         <tr>
           <td>
@@ -183,7 +189,8 @@ class RheinaufCMS_Install
           <td>
             <input type="text" name="db_user" />
           </td>
-
+		<td class="advice">Benutzername mit dem sich RheinaufCMS an der Datenbank anmelden soll, z.B \'db1234\'. (oft vom Provider vergeben) Bitte Groß- und Kleinschreibung beachten
+		  </td>
         </tr>
         <tr>
           <td>
@@ -192,10 +199,12 @@ class RheinaufCMS_Install
           <td>
             <input type="text" name="db_pass" />
           </td>
+		  <td class="advice">Zum obigen Datenbankbenutzer gehöriges Kennwort. Bitte Groß- und Kleinschreibung beachten (oft vom Provider vergeben)
+		  </td>
         </tr>
 
         <tr>
-          <td colspan="2">
+          <td colspan="3">
             <strong>FTP</strong>
           </td>
         </tr>
@@ -207,6 +216,8 @@ class RheinaufCMS_Install
           <td>
             <input type="text" name="ftp_server" />
           </td>
+		  <td class="advice">z.B. ftp.domain.xy (oft vom Provider vergeben)
+		  </td>
         </tr>
         <tr>
           <td>
@@ -228,7 +239,7 @@ class RheinaufCMS_Install
           </td>
         </tr>
         <tr>
-          <td colspan="2">
+          <td colspan="3">
             <strong>Sonstiges</strong>
           </td>
         </tr>
@@ -237,12 +248,16 @@ class RheinaufCMS_Install
           <td>
             Stammnutzer
           </td>
-          <td>
+          <td colspan="2">
             Login 
             <input type="text" name="admin_name" /> 
             Passwort
             <input type="text" name="admin_pass" /> 
           </td>
+		  </tr>
+		  <tr>
+		  <td class="advice" colspan="3">Bitte notieren! Mit diesen Daten loggen Sie sich im nächsten Schritt als Administrator ins RheinaufCMS ein.
+		  </td>
         </tr>
         <tr>
 
@@ -251,7 +266,13 @@ class RheinaufCMS_Install
           </td>
         </tr>
       </table>
-    </form>';
+    </form>
+	<p>
+
+Nach der Installation wird jeder Aufruf der Domain \'Ihre-Domain.xy\' auf die Startseite des CMS geleitet. Eine eventuell vorhanden index.html wird ignoriert.</p> 
+
+<p>Zur Verwaltung des CMS gelangen Sie über den nach der Installation erscheinenden Link \'weiter zum Login\'.
+Direkte Aufrufe sind über \'Ihre-Domain.xy/Admin\' möglich. Unter Angabe der vorher vergebenen Zugangsdaten für den Stammnutzer (Username und Passwort) erhalten Sie Zugriff auf die RheinaufCMS-Kommandozentrale. Hier definieren sie unter anderem die Navigationsstruktur der Site legen Inhalte an.';
 	
 	}
 }
@@ -260,17 +281,32 @@ class RheinaufCMS_Install
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-   <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+   <meta http-equiv="Content-type" content="text/html; charset=ISO-8859-1" />
     <title>RheinaufCMS Installation</title>
     <style type="text/css">
 body {
-background-color:rgb(214, 223, 231);
 padding:25px;
-font-family: sans-serif;
-font-size: 0.8em;
+font-family: Arial, Helvetica, sans-serif;
+	background-color:whitesmoke;
+	background-image:url(./Images/admin_logo.png);
+	background-repeat:no-repeat;
+	background-position:top right;
 }
+
+table {
+width:800px;
+}
+
+p {
+width:600px;
+}
+
 input {
-border:1px solid gray;
+border:1px solid grey;
+}
+td.advice {
+font-size: 0.8em;
+color:grey;
 }
 </style>
   </head>
