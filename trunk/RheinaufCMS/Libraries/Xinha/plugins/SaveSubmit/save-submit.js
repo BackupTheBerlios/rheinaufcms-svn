@@ -54,7 +54,7 @@ SaveSubmit.prototype.onGenerate = function() {
 			    return self.onEvent(HTMLArea.is_ie ? self.editor._iframe.contentWindow.event : event);
 			    });
 
-	//this.tmp_file_present();
+	this.tmp_file_present();
 };
 
 SaveSubmit.prototype.onEvent = function(ev) {
@@ -129,10 +129,6 @@ SaveSubmit.prototype.save =  function(editor) {
 			{
 				alert(state.message);
 			}		
-		};
-		removeMessage = function() { self.removeMessage()} ;
-		window.setTimeout("removeMessage()",1000);
-
 	});
 	HTMLArea._getback(editor._textArea.form.action+'&nohtml&workingvmenu',function(getback){if (getback)  eval(getback)});
 };

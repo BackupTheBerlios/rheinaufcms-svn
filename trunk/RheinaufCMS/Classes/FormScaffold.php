@@ -34,12 +34,13 @@ class FormScaffold extends RheinaufCMS
 		$GLOBALS['input_id'] = (isset($GLOBALS['input_id'])) ? $GLOBALS['input_id'] :0;
 		$this->table = $table;
 		$this->connection = ($db_connection != '') ? $db_connection : new RheinaufDB();
+/*		
 		if ($path_information != '')
 		{
 			$this->extract_to_this($path_information);
 			$this->path_information = $path_information;
 		}
-		else $this->pfad();
+		else $this->pfad();*/
 		$this->construct_array();
 		$this->scripts();
 	}

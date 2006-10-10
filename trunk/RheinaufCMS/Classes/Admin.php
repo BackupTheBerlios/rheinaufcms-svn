@@ -29,9 +29,7 @@ class Admin extends RheinaufCMS
     	$this->seite = $this->uri_components[1];
 
 		if (!isset($_SESSION['RheinaufCMS_User'])) $this->login('',false);
-		$this->installed_modules = General::multi_unserialize($this->connection->db_assoc("SELECT * FROM `$this->admin_module_table` ORDER BY `id` ASC"));
-
-
+		$this->installed_modules = $this->connection->db_assoc("SELECT * FROM `$this->admin_module_table` ORDER BY `id` ASC");
 
 		if ($_SESSION['RheinaufCMS_User']['Group'] == 'dev')
 		{
@@ -57,10 +55,10 @@ class Admin extends RheinaufCMS
 
 		}
 
-
 		foreach ($this->installed_modules as $module)
 		{
-			include_once(INSTALL_PATH.'/Classes/Admin/'.$module['Name'].'.php');
+			$file = (is_file (INSTALL_PATH .'/'. $module['File'])) ? INSTALL_PATH .'/'. $module['File'] : INSTALL_PATH.'/Classes/Admin/'.$module['Name'].'.php'; 
+			include_once($file);
 		}
 
 
@@ -117,7 +115,7 @@ class Admin extends RheinaufCMS
 		if ($allowed_modules == 0) $return_string .= 'Ihre Zugangsberechtigung gilt nicht für diesen Bereich.';
 		$return_string .= $menu->menu_print();
 
-		return Html::h('1',PROJECT_NAME.' Verwaltungs Bereich').'Guten Tag, '.$_SESSION['RheinaufCMS_User']['Name'].'. '.Html::a('/Admin?logout='.$_SESSION['RheinaufCMS_User']['Name'],'(Abmelden)',array('style'=>'font-size:9px')).Html::div($return_string,array('id'=>'admin'));
+		return Html::h('1',PROJECT_NAME.' Verwaltungsbereich').'Guten Tag, '.$_SESSION['RheinaufCMS_User']['Name'].'. '.Html::a('/Admin?logout='.$_SESSION['RheinaufCMS_User']['Name'],'(Abmelden)',array('style'=>'font-size:9px')).Html::div($return_string,array('id'=>'admin'));
 	}
 
 }

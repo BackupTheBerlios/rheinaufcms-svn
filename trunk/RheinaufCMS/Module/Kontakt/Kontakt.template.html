@@ -1,16 +1,6 @@
-<!--Pre-->
-<img class="kleinillu" id="illustration" alt="Aufmacher" src="/Images/Jugend/aufmacher160.jpg" />
-<div class="box-mitte">
-  <h1>Fragen an Supabud</h1>
-  <p>Duden fließt durch ihren Ort und versorgt sie mit den nötigen Regelialien. Es ist ein paradiesmat werkstatt.jpgisches Land, in dem einem gebratene Satzteile in den Mund fliegen. Nicht einmal von der allmächtigen Interpunktion werden die Blindtexte.
-  </p>
-  <h2 class="zwischenueberschrift">Kontaktformular</h2>
-
-<!--/Pre-->
 <!--Formular-->
-
-<form action="" method="post">
-	<table id="kontaktformular">
+<form action="{SELF_URL}" method="post">
+	<table id="{If:id}">
     <tr>
       <td class="spalte1">Name:</td>
       <td><input name="Name" type="text" size="30" maxlength="40" /></td>
@@ -21,29 +11,21 @@
     </tr>
     <tr>
       <td class="spalte1">Betreff:</td>
-      <td><input name="Betreff" type="text" size="30" maxlength="40" /></td>
+      <td><input name="Betreff" type="text" size="30" maxlength="40" {IfNotEmpty:betreff(value="[betreff]")}/></td>
     </tr>
-  	<tr><td colspan="2"><textarea name="Mailtext" cols="50" rows="10"></textarea></td></tr>
+  	<tr><td colspan="2"><textarea name="Mailtext" cols="50" rows="10">{If:content}</textarea></td></tr>
   	<tr><td colspan="2"> <input type="checkbox" name="copy" /> Ich möchte eine Kopie dieser Mail erhalten</td></tr>
   	<tr><td colspan="2"> <input type="submit" value="Abschicken"/></td></tr>
   </table>
 </form>
 <!--/Formular-->
 <!--Danke-->
-  <div class="message_box"> 
-        <p>Vielen Dank, Deine Anfrage ist bei uns angekommen.</p>  
-	</div> 
+  <div class="message_box">
+        <p>Vielen Dank, Deine Anfrage ist bei uns angekommen.</p>
+	</div>
 <!--/Danke-->
 <!--Fehler-->
-<div class="message_box"> 
-        <p class="rot">Beim Versand ist ein Fehler aufgetreten. Bitte kontrolliere noch einmal, ob Deine Adresse richtig geschrieben ist. Im Zweifelsfall schicke uns bitte eine Mail an <a href="mailto:info@buddy-ev.de">info@buddy-ev.de</a></p>  
-	</div> 
+<div class="message_box">
+        <p class="rot">Beim Versand ist ein Fehler aufgetreten. Bitte kontrolliere noch einmal, ob Deine Adresse richtig geschrieben ist. Im Zweifelsfall schicke uns bitte eine Mail an <a href="mailto:info@buddy-ev.de">info@buddy-ev.de</a></p>
+	</div>
 <!--/Fehler-->
-
-<!--Post-->
-<h2 class="zwischenueberschrift">Hier kannst Du ältere Fragen lesen</h2>
-
- <p>Duden fließt durch ihren Ort und versorgt sie mit den nötigen Regelialien. Es ist ein paradiesmat werkstatt.jpgisches Land, in dem einem gebratene Satzteile in den Mund fliegen. Nicht einmal von der allmächtigen Interpunktion werden die Blindtexte.
-  </p>
-  </div>
-<!--/Post-->

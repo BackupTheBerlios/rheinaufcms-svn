@@ -3,6 +3,9 @@ $long_name = 'Module';
 class Module extends Admin 
 {
 	var $return;
+	var $installableModules = array();
+	var $available_modules = array();
+	var $installed  = array();
 	function Module($db_connection,$path_information)
 	{
 		$this->images['plus'] = Html::img('/'.INSTALL_PATH . '/Classes/Admin/Icons/16x16/edit_add.png','Hinzufügen');
@@ -10,16 +13,20 @@ class Module extends Admin
 		$this->extract_to_this($path_information);
 		$this->path_information = $path_information;
 
-		
-		$this->admin_installed = $this->connection->db_assoc("SELECT * FROM `RheinaufCMS>Admin>Module` ORDER BY `id` ASC");
-		$this->frontend_installed = $this->connection->db_assoc("SELECT * FROM `RheinaufCMS>Module` ORDER BY `id` ASC");
-		
 		$this->event_listen();		
 	}
 	
 	function show()
 	{
+		$this->return = Html::h(2,'Modulverwaltung');
 		if (!$this->check_right('Module')) return Html::div('Sie haben kein Recht diese Aktion auszuführen!',array('class'=>'rot'));
+		
+		if (isset($_GET['admin_reihenfolge'])) $this->admin_module_reorder();
+		else if (isset($_POST['admin_module_reorder'])) $this->reorder_apply('RheinaufCMS>Admin>Module');
+		else 
+		{
+			$this->module_table();
+		}
 		
 		return $this->return;
 	}
@@ -28,190 +35,146 @@ class Module extends Admin
 	{
 		if (!$this->check_right('Module')) return Html::div('Sie haben kein Recht diese Aktion auszuführen!',array('class'=>'rot'));
 		
-		if (isset($_GET['newadmin'])) $this->admin_install(rawurldecode($_GET['newadmin']));
-		else if (isset($_GET['newfrontend'])) $this->frontend_install(rawurldecode($_GET['newfrontend']));
-		
-		else if (isset($_GET['admin_reihenfolge'])) $this->admin_module_reorder();
-		else if (isset($_POST['admin_module_reorder'])) $this->reorder_apply('RheinaufCMS>Admin>Module');
-		else 
-		{
-			$this->admin_module_table();
-			$this->frontend_module_table();
-		}
+		if (isset($_POST['install']) && $_POST['installable']) $this->install(rawurldecode($_POST['installable']));
+		if (isset($_POST['uninstall']) && $_POST['installed']) $this->uninstall(rawurldecode($_POST['installed']));
 	}
-	
-	function admin_module_table()
+	function module_table()
 	{
+		$this->installed = $this->connection->db_assoc("SELECT * FROM `RheinaufCMS>Module` ORDER BY `id` ASC");
+		$this->available_modules = RheinaufFile::dir_array(INSTALL_PATH.'/Module',false,'php');
+
+		foreach ($this->available_modules as $module)
+		{
+			if ($module != 'Navi.php') include_once($module);
+			$class_name = preg_replace('/\.php/','',$module);
+			if (is_callable(array($class_name,'about')))
+			{
+				eval('$module_about = '.$class_name.'::about();');
+				switch ($module_about['type'])
+				{
+					case 'inPage':
+						$this->inPageModules[] = $module_about;
+					break;
+					case 'installable':
+						$this->installableModules[] = $module_about;
+					break;
+				}
+			}
+		}
+		//print_r($this->inPageModules);
+		//print_r($this->installableModules);
+
 				
-		$this->admin_not_installed = RheinaufFile::dir_array(INSTALL_PATH.'/Classes/Admin',false,'php');
-		$return_string ='';
-		$table = new Table(1);
-		$table->add_caption('Backend-Module');
 		
+		$return_string ='';
+		$this->return .= Html::h(3,'Installierbare Module');
+		$table = new Table(2);
+		$table->add_th(array('Installierbare Module','Installierte Module'));
+		$form = new Form();
+		$form->form_tag(SELF_URL);
 		$installed_modules = array();
-		foreach ($this->admin_installed as $installed)
+		foreach ($this->installed as $installed)
 		{
 			$installed_modules[] = $installed['Name'];
 		}
 	
-		foreach ($this->admin_not_installed as $not_installed)
+		$installables_select = new Select('installable',array('size'=>'10','style'=>'width:150px'));
+		
+		foreach ($this->installableModules as $modul)
 		{
-			
-			$not_installed = preg_replace('#(.*?).php$#',"$1",$not_installed);
-			if (!in_array($not_installed,$installed_modules))
+
+			if (!in_array($modul['Name'],$installed_modules))
 			{
-				$table->add_td(array('<em>'.$not_installed.'</em>'.Html::a('/Admin/Module?newadmin='.rawurlencode($not_installed),'&gt;&gt;',array('title'=>'Installieren'))));
+				$installables_select->add_option(rawurlencode($modul['Name']),$modul['Name']);
 			}
-		
 		}
-		
-		foreach ($this->admin_installed as $installed)
+		$installed_select = new Select('installed',array('size'=>'10','style'=>'width:150px'));
+		foreach ($installed_modules as $modul)
 		{
-			$table->add_td(array($installed['Name']));
+			$installed_select->add_option(rawurlencode($modul),$modul);
 		}
-		$this->return = $table->flush_table();
-	}	
-	
-	function frontend_module_table()
-	{
-				
-		$this->frontend_not_installed = RheinaufFile::dir_array(INSTALL_PATH.'/Module',false,'php');
-		$return_string ='';
-		$table = new Table(1);
-		$table->add_caption('Frontend-Module');
+		$table->add_td(array($installables_select->flush_select(),$installed_select->flush_select()));
+		$install_submit =  Form::add_input('submit','install','Installieren');
+		$uninstall_submit =  Form::add_input('submit','uninstall','Deinstallieren');
+		$table->add_td(array($install_submit,$uninstall_submit),array('style'=>'text-align:center'));
 		
-		$installed_modules = array();
-		foreach ($this->frontend_installed as $installed)
-		{
-			$installed_modules[] = $installed['Name'];
-		}
-	
-		foreach ($this->frontend_not_installed as $not_installed)
-		{
-			
-			$not_installed = preg_replace('#(.*?).php$#',"$1",$not_installed);
-			if (!in_array($not_installed,$installed_modules))
-			{
-				$table->add_td(array('<em>'.$not_installed.'</em>'.Html::a('/Admin/Module?newfrontend='.rawurlencode($not_installed),'&gt;&gt;',array('title'=>'Installieren'))));
-			}
+		$form->add_custom($table->flush_table());
 		
-		}
+		$this->return .= $form->flush_form();
 		
-		foreach ($this->frontend_installed as $installed)
+		$this->return .= Html::h(3,'Aufruf über Template');
+		
+		$table = new Table(2,array('style'=>'width:500px'));
+		$table->add_th(array('Modul','Einbindung'));
+		foreach ($this->inPageModules as $module)
 		{
-			$table->add_td(array($installed['Name']));
+			$table->add_td(array(Html::bold($module['Name']),$module['Usage']));
 		}
 		$this->return .= $table->flush_table();
 	}
-	
-	function admin_install($module,$extern = false)
+
+	function install($module)
 	{
-		include_once(INSTALL_PATH.'/Classes/Admin/'.$module.'.php');
-		$icon_path = 'Classes/Admin/Icons/32x32/'.$icon;
-		$long_name = $long_name;
-		$id = count($this->admin_installed);
+		include_once($module.'.php');
 		$class = new $module ();
 		
-		if (method_exists($class,'install') && !$extern)
+		if (method_exists($class,'install'))
 		{
-			$class->install();
-		}
-		else 
-		{
-			$this->connection->db_query("INSERT INTO `RheinaufCMS>Admin>Module` 	( `id` , `Name` ,`LongName`, `Icon` )
-															VALUES  ('$id', '$module','$long_name', '$icon_path')");
+			$this->return .= $class->install($this);
 		}
 	}
-	
-	function frontend_install($module)
+	function uninstall($module)
 	{
-		$this->navi = General::multi_unserialize($this->connection->db_assoc("SELECT * FROM `RheinaufCMS>Navi`"));
-		$name = rawurldecode($module);
-		if (!isset($_GET['newrubrik']))
+		include_once($module.'.php');
+		$class = new $module ();
+		
+		if (method_exists($class,'uninstall'))
 		{
-			$return = Html::p('Bitte wählen Sie unter welcher Rubrik diese Modul eingeordnet werden soll.');
+			$this->return .= $class->uninstall($this);
+		}
+	}
+	function register_frontend($name)
+	{
 			
-			for ($i=0;$i<count($this->navi);$i++)
-			{
-				$return .= Html::div(Html::a('/Admin/Module?newrubrik='.$i.'&amp;newfrontend='.$module,$this->navi[$i]['Rubrik']));
-			}
-			$return .= Html::div(Html::a('/Admin/Module?newrubrik='.$i.'&amp;newfrontend='.$module,$this->images['plus'].' Neue Rubrik'));
-			$this->return = $return;
-			return;
-		}
-		else 
-		{
-			if ($_GET['newrubrik'] == count($this->navi))
-			{
-				$this->new_rubrik_create($name,count($this->navi));
-			}
-			else
-			{
-				$this->new_page_create($name,$_GET['newrubrik']);
-			}
-		}
-		
-		include_once(INSTALL_PATH.'/Module/'.$module.'.php');
-
-		
-		$id = count($this->frontend_installed);
-		$class = new $module ($this->connection,$this->path_information);
-		if (method_exists($class,'install') && !$extern)
-		{
-			$class->install();
-		}
-		
 		$this->connection->db_query("INSERT INTO `RheinaufCMS>Module` 	( `id` , `Name`)
-															VALUES  ('$id', '$module')");
-				
+															VALUES  ('', '$name')");
 	}
 	
-	function new_rubrik_create($name,$id)
+	function unregister_frontend($name)
 	{
-		$new_name = $name;
-		$show = '1';
-		$new_subnavi = array();
-		$new_subnavi['id'] = '0';
-		$new_subnavi['ext_link'] = '';
-		$new_subnavi['Seite'] = 'index';
-		$new_subnavi['Show'] = '1';
-		
-		
-		$subnavi = serialize(array($new_subnavi));
-		
-		$this->connection->db_query("INSERT INTO `RheinaufCMS>Navi` ( `id` , `Rubrik` , `Subnavi`, `Show`,`ext_link`, `Modul` )
-							VALUES ('$id', '$new_name', '$subnavi','$Show','','$new_name')");
-		
 			
-			
-		$navi_edit = new NaviEdit($this->connection,$this->path_information);
-		$navi_edit->htaccess_update();
+		$this->connection->db_query("DELETE FROM `RheinaufCMS>Module` WHERE	`Name` = '$name'");
+		$this->connection->db_query("DELETE FROM `RheinaufCMS>Rechte` WHERE	`ModulName` = '$name'");
 	}
 	
-	function new_page_create($name,$id)
+	function register_backend($values)
 	{
-		$navi_id =$id;
-		$rubrik_id = $this->navi[$navi_id]['id'];
-		$rubrik_name = $this->navi[$navi_id]['Rubrik'];		
-		$new_name = $name;
-		$Show = '1';
-		$new_id = count($this->navi[$navi_id]['Subnavi']);
-		$new_subnavi = array();
-		$new_subnavi['id'] = $new_id;
-		$new_subnavi['ext_link'] = '';
-		$new_subnavi['Seite'] = $new_name;
-		$new_subnavi['Show'] = $Show;
-		$new_subnavi['Modul'] = $name;
+		$module = $values['Name'];
+		$long_name = $values['LongName'];
+		$icon_path = $values['Icon'];
+		$file = $values['File'];
 		
-		$this->navi[$navi_id]['Subnavi'][] = $new_subnavi;
-		$subnavi = serialize($this->navi[$navi_id]['Subnavi']);
-		
-		$this->connection->db_query("UPDATE `RheinaufCMS>Navi` SET `Subnavi` = '$subnavi' WHERE `id` = '$rubrik_id' ");
-		
-		$navi_edit = new NaviEdit($this->connection,$this->path_information);
-		$navi_edit->htaccess_update();
+		$this->connection->db_query("INSERT INTO `RheinaufCMS>Admin>Module` 	( `id` , `Name` ,`LongName`, `Icon`,`File` )
+															VALUES  ('', '$module','$long_name', '$icon_path','$file')");
 	}
 	
+	function unregister_backend($name)
+	{
+			
+		$this->connection->db_query("DELETE FROM `RheinaufCMS>Admin>Module` WHERE	`Name` = '$name'");
+		$this->connection->db_query("DELETE FROM `RheinaufCMS>Rechte` WHERE	`ModulName` = '$name'");
+	}
+	
+
+	function register_rights($values)
+	{
+		$id = $values['id'];
+		$ModulName = $values['ModulName'];
+		$RechtName = $values['RechtName'];
+		$this->connection->db_query("INSERT INTO `RheinaufCMS>Rechte` ( `id` , `ModulName` ,`RechtName`)
+										 VALUES ('$id',  '$ModulName', '$RechtName');");
+	}
+
 	function admin_module_reorder()
 	{
 		$array_to_reorder = $this->admin_installed;

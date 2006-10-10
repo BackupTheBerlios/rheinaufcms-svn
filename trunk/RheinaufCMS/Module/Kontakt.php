@@ -1,10 +1,20 @@
 <?php
 class Kontakt extends RheinaufCMS
 {
-	function  Kontakt($empfaenger)
+	var $empfaenger;
+	var $betreff;
+	var $text;
+	var $linktext;
+	var $id;
+
+	function  Kontakt($empfaenger,$betreff,$text,$linktext='',$id='')
 	{
 		$this->connection = new RheinaufDB();
 		$this->empfaenger = $empfaenger;
+		$this->betreff = $betreff;
+		$this->text = str_replace('\n',"\n",$text);
+		$this->linktext = $linktext;
+		$this->id = $id;
 		$this->event_listen();
 	}
 
@@ -14,6 +24,9 @@ class Kontakt extends RheinaufCMS
 
 		$return_string ='';
 		$vars =array();
+		if ($this->text) $vars['content'] = $this->text;
+		if ($this->betreff) $vars['betreff'] = $this->betreff;
+
 		if (!$this->mail_sent) $return_string .= $page->parse_template('Formular',$vars);
 		else $return_string .= $page->parse_template('Danke',$vars);
 		return $return_string;
@@ -31,8 +44,8 @@ class Kontakt extends RheinaufCMS
 
 		$regex = array(
 					 		'email' => '/^[0-9a-z.+-]{2,}\@[0-9a-z.-]{2,}\.[a-z]{2,6}$/i',
-					 		'name_betreff' => '/^[[:print:]]+$/',
-					 		'text' => '/^[[:print:][:space:]]+$/s'
+					 		'name_betreff' => '/^[[:print:]]{3,}$/',
+					 		'text' => '/^[[:print:][:space:]].*$/s'
 						);
 
 		$betreff = General::input_clean($_POST['Betreff'],false,true);
@@ -48,14 +61,14 @@ class Kontakt extends RheinaufCMS
 
 		$datum = date("d.m.");
 		$uhr = date("H:i");
-		$betreff .=' (via Kontaktformular)';
+		$betreff .=' ('.PROJECT_NAME.' Kontaktformular)';
 
 		$mail_header="From: $absender <$email>\n";
 		if ($_POST['copy'])
 		{
 			$mail_header .= "cc: $absender <$email>\n";
 		}
-		$mail_header .= "X-Mailer: powered by PHP\n";
+		$mail_header .= "X-Mailer: RheinaufCMS powered by PHP\n";
 		if (mail($empfaenger, $betreff, $text, $mail_header)) $this->mail_sent =true;
 
 	}

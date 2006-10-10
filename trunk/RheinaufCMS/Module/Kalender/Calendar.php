@@ -255,19 +255,19 @@ class Calendar
 
     	$s .= "<table class=\"calendar\">\n";
     	$s .= "<tr>\n";
-    	$s .= "<td align=\"center\" valign=\"top\">" . (($prevMonth == "") ? "&nbsp;" : "<a href=\"$prevMonth\">&lt;&lt;</a>")  . "</td>\n";
-    	$s .= "<td align=\"center\" valign=\"top\" class=\"calendarHeader\" colspan=\"5\">$header</td>\n";
-    	$s .= "<td align=\"center\" valign=\"top\">" . (($nextMonth == "") ? "&nbsp;" : "<a href=\"$nextMonth\">&gt;&gt;</a>")  . "</td>\n";
+    	$s .= "<td>" . (($prevMonth == "") ? "&nbsp;" : "<a href=\"$prevMonth\">&lt;&lt;</a>")  . "</td>\n";
+    	$s .= "<td class=\"calendarHeader\" colspan=\"5\">$header</td>\n";
+    	$s .= "<td>" . (($nextMonth == "") ? "&nbsp;" : "<a href=\"$nextMonth\">&gt;&gt;</a>")  . "</td>\n";
     	$s .= "</tr>\n";
 
     	$s .= "<tr>\n";
-    	$s .= "<td align=\"center\" valign=\"top\" class=\"calendarHeader\">" . $this->dayNames[($this->startDay)%7] . "</td>\n";
-    	$s .= "<td align=\"center\" valign=\"top\" class=\"calendarHeader\">" . $this->dayNames[($this->startDay+1)%7] . "</td>\n";
-    	$s .= "<td align=\"center\" valign=\"top\" class=\"calendarHeader\">" . $this->dayNames[($this->startDay+2)%7] . "</td>\n";
-    	$s .= "<td align=\"center\" valign=\"top\" class=\"calendarHeader\">" . $this->dayNames[($this->startDay+3)%7] . "</td>\n";
-    	$s .= "<td align=\"center\" valign=\"top\" class=\"calendarHeader\">" . $this->dayNames[($this->startDay+4)%7] . "</td>\n";
-    	$s .= "<td align=\"center\" valign=\"top\" class=\"calendarHeader\">" . $this->dayNames[($this->startDay+5)%7] . "</td>\n";
-    	$s .= "<td align=\"center\" valign=\"top\" class=\"calendarHeader\">" . $this->dayNames[($this->startDay+6)%7] . "</td>\n";
+    	$s .= "<td class=\"calendarHeader\">" . $this->dayNames[($this->startDay)%7] . "</td>\n";
+    	$s .= "<td class=\"calendarHeader\">" . $this->dayNames[($this->startDay+1)%7] . "</td>\n";
+    	$s .= "<td class=\"calendarHeader\">" . $this->dayNames[($this->startDay+2)%7] . "</td>\n";
+    	$s .= "<td class=\"calendarHeader\">" . $this->dayNames[($this->startDay+3)%7] . "</td>\n";
+    	$s .= "<td class=\"calendarHeader\">" . $this->dayNames[($this->startDay+4)%7] . "</td>\n";
+    	$s .= "<td class=\"calendarHeader\">" . $this->dayNames[($this->startDay+5)%7] . "</td>\n";
+    	$s .= "<td class=\"calendarHeader\">" . $this->dayNames[($this->startDay+6)%7] . "</td>\n";
     	$s .= "</tr>\n";
 
     	// We need to work out what date to start at so that the first appears in the correct column
@@ -320,29 +320,29 @@ class Calendar
 
         $s .= "<table class=\"calendar\" border=\"0\">\n";
         $s .= "<tr>";
-    	$s .= "<td align=\"center\" valign=\"top\" align=\"left\">" . (($prev == "") ? "&nbsp;" : "<a href=\"$prev\">&lt;&lt;</a>")  . "</td>\n";
-        $s .= "<td class=\"calendarHeader\" valign=\"top\" align=\"center\">" . (($this->startMonth > 1) ? $year . " - " . ($year + 1) : $year) ."</td>\n";
-    	$s .= "<td align=\"center\" valign=\"top\" align=\"right\">" . (($next == "") ? "&nbsp;" : "<a href=\"$next\">&gt;&gt;</a>")  . "</td>\n";
+    	$s .= "<td>" . (($prev == "") ? "&nbsp;" : "<a href=\"$prev\">&lt;&lt;</a>")  . "</td>\n";
+        $s .= "<td class=\"calendarHeader\">" . (($this->startMonth > 1) ? $year . " - " . ($year + 1) : $year) ."</td>\n";
+    	$s .= "<td>" . (($next == "") ? "&nbsp;" : "<a href=\"$next\">&gt;&gt;</a>")  . "</td>\n";
         $s .= "</tr>\n";
         $s .= "<tr>";
-        $s .= "<td class=\"calendar\" valign=\"top\">" . $this->getMonthHTML(0 + $this->startMonth, $year, 0) ."</td>\n";
-        $s .= "<td class=\"calendar\" valign=\"top\">" . $this->getMonthHTML(1 + $this->startMonth, $year, 0) ."</td>\n";
-        $s .= "<td class=\"calendar\" valign=\"top\">" . $this->getMonthHTML(2 + $this->startMonth, $year, 0) ."</td>\n";
+        $s .= "<td class=\"calendar\>" . $this->getMonthHTML(0 + $this->startMonth, $year, 0) ."</td>\n";
+        $s .= "<td class=\"calendar\">" . $this->getMonthHTML(1 + $this->startMonth, $year, 0) ."</td>\n";
+        $s .= "<td class=\"calendar\">" . $this->getMonthHTML(2 + $this->startMonth, $year, 0) ."</td>\n";
         $s .= "</tr>\n";
         $s .= "<tr>\n";
-        $s .= "<td class=\"calendar\" valign=\"top\">" . $this->getMonthHTML(3 + $this->startMonth, $year, 0) ."</td>\n";
-        $s .= "<td class=\"calendar\" valign=\"top\">" . $this->getMonthHTML(4 + $this->startMonth, $year, 0) ."</td>\n";
-        $s .= "<td class=\"calendar\" valign=\"top\">" . $this->getMonthHTML(5 + $this->startMonth, $year, 0) ."</td>\n";
+        $s .= "<td class=\"calendar\">" . $this->getMonthHTML(3 + $this->startMonth, $year, 0) ."</td>\n";
+        $s .= "<td class=\"calendar\">" . $this->getMonthHTML(4 + $this->startMonth, $year, 0) ."</td>\n";
+        $s .= "<td class=\"calendar\">" . $this->getMonthHTML(5 + $this->startMonth, $year, 0) ."</td>\n";
         $s .= "</tr>\n";
         $s .= "<tr>\n";
-        $s .= "<td class=\"calendar\" valign=\"top\">" . $this->getMonthHTML(6 + $this->startMonth, $year, 0) ."</td>\n";
-        $s .= "<td class=\"calendar\" valign=\"top\">" . $this->getMonthHTML(7 + $this->startMonth, $year, 0) ."</td>\n";
-        $s .= "<td class=\"calendar\" valign=\"top\">" . $this->getMonthHTML(8 + $this->startMonth, $year, 0) ."</td>\n";
+        $s .= "<td class=\"calendar\">" . $this->getMonthHTML(6 + $this->startMonth, $year, 0) ."</td>\n";
+        $s .= "<td class=\"calendar\">" . $this->getMonthHTML(7 + $this->startMonth, $year, 0) ."</td>\n";
+        $s .= "<td class=\"calendar\">" . $this->getMonthHTML(8 + $this->startMonth, $year, 0) ."</td>\n";
         $s .= "</tr>\n";
         $s .= "<tr>\n";
-        $s .= "<td class=\"calendar\" valign=\"top\">" . $this->getMonthHTML(9 + $this->startMonth, $year, 0) ."</td>\n";
-        $s .= "<td class=\"calendar\" valign=\"top\">" . $this->getMonthHTML(10 + $this->startMonth, $year, 0) ."</td>\n";
-        $s .= "<td class=\"calendar\" valign=\"top\">" . $this->getMonthHTML(11 + $this->startMonth, $year, 0) ."</td>\n";
+        $s .= "<td class=\"calendar\">" . $this->getMonthHTML(9 + $this->startMonth, $year, 0) ."</td>\n";
+        $s .= "<td class=\"calendar\">" . $this->getMonthHTML(10 + $this->startMonth, $year, 0) ."</td>\n";
+        $s .= "<td class=\"calendar\">" . $this->getMonthHTML(11 + $this->startMonth, $year, 0) ."</td>\n";
         $s .= "</tr>\n";
         $s .= "</table>\n";
 

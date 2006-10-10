@@ -22,7 +22,7 @@ class Gruppen extends Admin
 
 
 		$this->group_table_update();
-		$this->rechte = $this->connection->db_assoc("SELECT * FROM `$this->rechte_table` ORDER BY `Frontend_Backend`,  `ModulName` ASC, `RechtName` ASC ");
+		$this->rechte = $this->connection->db_assoc("SELECT * FROM `$this->rechte_table` ORDER BY `ModulName` ASC, `RechtName` ASC ");
 
 		$this->event_listen();
 	}
