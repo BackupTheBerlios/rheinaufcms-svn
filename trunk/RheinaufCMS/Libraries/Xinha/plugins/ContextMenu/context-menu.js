@@ -6,7 +6,7 @@
 // Distributed under the same terms as HTMLArea itself.
 // This notice MUST stay intact for use (see license.txt).
 //
-// $Id: context-menu.js 559 2006-08-25 16:52:10Z ray $
+// $Id: context-menu.js 597 2006-10-16 16:15:34Z ray $
 
 HTMLArea.loadStyle("menu.css", "ContextMenu");
 
@@ -272,7 +272,9 @@ ContextMenu.prototype.getContextMenu = function(target) {
 ContextMenu.prototype.popupMenu = function(ev) {
 	var self = this;
 	if (this.currentMenu)
-		this.currentMenu.parentNode.removeChild(this.currentMenu);
+	{
+		this.closeMenu();
+	}
 	function getPos(el) {
 		var r = { x: el.offsetLeft, y: el.offsetTop };
 		if (el.offsetParent) {

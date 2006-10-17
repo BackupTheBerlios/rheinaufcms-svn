@@ -113,8 +113,8 @@ SaveSubmit.prototype.save =  function(editor) {
 	this.buildMessage();
 	var self =this;
 	var textareaname = editor._textArea.name;
-	var post = new Object();
-	post[textareaname] = editor.getHTML();
+	var post = {};
+	post[textareaname] =  editor.outwardHtml(editor.getHTML());
 	HTMLArea._postback(editor._textArea.form.action+'&nohtml', post, function(getback) {
 
 		if (getback) {
@@ -128,7 +128,10 @@ SaveSubmit.prototype.save =  function(editor) {
 			else
 			{
 				alert(state.message);
-			}		
+			}
+			removeMessage = function() { self.removeMessage()} ;
+			window.setTimeout("removeMessage()",1000);
+		}		
 	});
 	HTMLArea._getback(editor._textArea.form.action+'&nohtml&workingvmenu',function(getback){if (getback)  eval(getback)});
 };

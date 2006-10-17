@@ -1,9 +1,9 @@
-<?php
+<?php session_start();
     // /home/username/foo/public_html/
-    $dir          = dirname(__FILE__)."/../..";
+    $dir          = preg_replace('/\/$/','',$_SERVER['DOCUMENT_ROOT']).'/RheinaufCMS/';
     $include      = '/\.(php|shtml|html|htm|shtm|cgi|txt|doc|pdf|rtf|xls|csv)$/';
     $exclude      = '';
-    $dirinclude   = '';
+    $dirinclude   = '/Download/';
     $direxclude   = '/(^|\/)[._]|htmlarea/'; // Exclude the htmlarea tree by default
 
     // New backend config data passing

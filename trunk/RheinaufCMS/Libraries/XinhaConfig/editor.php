@@ -48,7 +48,10 @@ window.focus();
 	'InsertSnippet',
 	'SaveSubmit',
 	'SwitchPanels',
-	'OutlineElements'
+	'OutlineElements',
+	//'CustomPage'
+	'SmartReplace',
+	'CustomUtils'
 	];
 	     // THIS BIT OF JAVASCRIPT LOADS THE PLUGINS, NO TOUCHING  :)
 	     if(!HTMLArea.loadPlugins(xinha_plugins, xinha_init)) return;
@@ -89,7 +92,7 @@ window.focus();
 	    ["separator","insertorderedlist","insertunorderedlist"],
 	    ["separator","inserthorizontalrule","createlink","insertimage","inserttable"],
 	    ["separator","undo","redo","selectall"], (HTMLArea.is_gecko ? [] : ["cut","copy","paste","overwrite"]),
-	    ["separator","killword","removeformat","toggleborders","separator","htmlmode","about","showhelp"]
+	    ["separator","killword","removeformat","toggleborders","separator","htmlmode","about"]
  	 ];
 
  	//xinha_config.flowToolbars = false;
@@ -115,6 +118,9 @@ window.focus();
                'word_edited': 'Word'
     }
 
+    xinha_config.editId = 'content';
+	xinha_config.bodyInnerHTML = '<div id="wrapper"><div id="content"></div></div>';
+	
 	if (xinha_config.ExtendedFileManager) 
 	{
 		with (xinha_config.ExtendedFileManager)
@@ -147,7 +153,12 @@ window.focus();
 
 	xinha_editors.editor.config.stylistLoadStylesheet('/CSS/Screen.css');
 	xinha_editors.editor.config.stylistLoadStylesheet('/Libraries/XinhaConfig/editor.css');
-
+	
+	<?php if(is_file('../../CSS/Styles.css'))
+			{
+				print "	xinha_editors.editor.config.stylistLoadStylesheet('/CSS/Styles.css');";
+			}
+	?>
 	<?php if(is_file('../../CSS/'.$_SESSION['rubrik'].'.css'))
 			{
 				$rubrik = $_SESSION['rubrik'];
@@ -174,13 +185,7 @@ window.focus();
 
 	window.onload = xinha_init;
 
-	function debug (object) {
-		for (var i in object) {
 
-				alert(i + '=>' + object[i]);
-				if (!confirm('weiter')) break;
-		}
-	}
 
 	function save(xinha_object,action) {
 
@@ -198,13 +203,4 @@ window.focus();
 		xinha_object.setHTML(getback);
 													}
 		});
-	}
-	function catchClose(xinha_object) {
-		var editor = xinha_object;
-		var savesubmit = editor.plugins.SaveSubmit.instance;
-		if (!savesubmit.changed) return true;
-		if (confirm('Sie haben noch ungespeicherte Änderungen.\nWollen Sie die Seite jetzt speichern?')) {
-			savesubmit.save(editor);
-			alert('Bitte warten Sie einige Sekunden bis das Speichern abgeschlossen ist und klicken dann OK.');
-		}
 	}

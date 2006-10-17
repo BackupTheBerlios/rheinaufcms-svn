@@ -143,7 +143,7 @@ class SeiteEdit extends Admin
 		$_SESSION['docroot'] = DOCUMENT_ROOT;
 
 		$editor_page = new Html();
-		$editor_page->body_attributes=array('onunload'=>'catchClose(xinha_editors.editor)');
+		//$editor_page->body_attributes=array('onunload'=>'catchClose(xinha_editors.editor)');
 		$title = 'Editor für '.PROJECT_NAME.' -> '.$rubrik .' -> '.$seite;
 		$title .= ($wokingversion) ? ' (Arbeitsversion)' :' (Liveversion)';
 		$editor_page->title = $title;
@@ -320,7 +320,8 @@ class SeiteEdit extends Admin
 
 		$js = '';
 
-		$js .="var revert_ul = document.getElementById('workingvmenu');
+		$js .=" try {
+		var revert_ul = document.getElementById('workingvmenu');
 		var a,li;
 		while (revert_ul.hasChildNodes())
 		{
@@ -347,6 +348,8 @@ class SeiteEdit extends Admin
 				";
 			}
 		}
+		$js .= "} catch (e) {}";
+		
 		return $js;
 	}
 	function view_menu()
@@ -354,9 +357,8 @@ class SeiteEdit extends Admin
 		$list = new HtmlList();
 
 		$list->add_li(Html::a('javascript:;','Panels',array('onclick'=>"xinha_editors.editor.plugins.SwitchPanels.instance.buttonPress()")));
-		$list->add_li(Html::a('javascript:;','Elementumrahmung',array('onclick'=>"xinha_editors.editor.plugins.OutlineElements.instance.toggleAll()")));
-		//$list->add_li(Html::a('javascript:;','Absätze zusammenfassen',array('onclick'=>"xinha_editors.editor.plugins.OutlineElements.instance.uniteParagraphs()")));
-
+		$list->add_li(Html::a('javascript:;','Elementumrahmung',array('onclick'=>"xinha_editors.editor.plugins.OutlineElements.instance.toggleActivity()")));
+		
 		return $list->flush_list();
 	}
 	function save()
@@ -448,6 +450,7 @@ class SeiteEdit extends Admin
 		$array = array();
 		for ($i= 0; $i<count($this->navi);$i++)
 		{
+			if($this->navi[$i]['Rubrik'] == 'Admin') continue;
 			$array[$i]['url'] = '/'.$this->path_encode($this->I18n_get_real($this->navi[$i]['Rubrik']));
 			$array[$i]['children'] = array();
 			for ($j=0;$j<count($this->navi[$i]['Subnavi']);$j++)

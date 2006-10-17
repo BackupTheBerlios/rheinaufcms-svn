@@ -5,18 +5,15 @@
 
    <title>{IfNotEmpty:projekt_name([projekt_name])} - {IfNotEmpty:title([title])}</title>
 	<link rel="stylesheet" href="/RheinaufCMS/CSS/Screen.css" media="screen" type="text/css" />
-	<!--[if IE]>
-	   <link rel="stylesheet" href="/RheinaufCMS/CSS/ie_zusatz.css" type="text/css" />
-	<![endif]-->
-	{IfNotEmpty:other_css([other_css])}
+
+	{If:other_css}
 	
-	<meta name="author" content="Buddy-e.V." />
 	{IfNotEmpty:keywords(<meta name="keywords" content="[keywords]" />)}
 	{IfNotEmpty:description(<meta name="description" content="[description]" />)}
 	
 	<meta http-equiv="imagetoolbar" content="no" />
 
-	{IfNotEmpty:scripts([scripts])}
+	{If:scripts}
 </head>
 
 <body>

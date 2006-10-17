@@ -7,7 +7,7 @@ class Kontakt extends RheinaufCMS
 	var $linktext;
 	var $id;
 
-	function  Kontakt($empfaenger,$betreff,$text,$linktext='',$id='')
+	function  Kontakt($empfaenger,$betreff='',$text='',$linktext='',$id='') //@TODO: show on click
 	{
 		$this->connection = new RheinaufDB();
 		$this->empfaenger = $empfaenger;
