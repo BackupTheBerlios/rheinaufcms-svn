@@ -5,7 +5,7 @@ border:0;
 body {
 	font-family: Arial, Helvetica, sans-serif;
 	background-color:whitesmoke;
-	background-image:url(Images/admin_logo.png);
+	background-image:url(/Images/admin_logo.png);
 	background-repeat:no-repeat;
 	background-position:top right;
 }
@@ -108,10 +108,10 @@ a.active, .button {
 .button:hover {
 	padding:2px 3px 1px 1px ;
 }
-.abwechselnde_flaechen_1 {
+.abwechselnde_flaechen_1,.alt_row_0 {
 	background-color:rgb(160, 154, 255);
 }
-.abwechselnde_flaechen_2 {
+.abwechselnde_flaechen_2,.alt_row_1 {
 	background-color:rgb(195, 172, 227);
 }
 .klein {
