@@ -20,9 +20,10 @@ class Scaffold extends RheinaufCMS
 	var $upload_folder; #Spaltenname
 	var $submit_button;
 	var $order_by;
-	var $order_dir;
+	var $order_dir = 'asc';
 	var $group_by;
 	var $results_per_page;
+	var $results_per_page_cookie_name = 'results_per_page';
 	var $datumsformat; #'tag_lang','tag_kurz','kein_tag'
 	var $enable_search_for = array(); #Spaltennamen
 	var $search_combine =  ' AND ';
@@ -36,6 +37,7 @@ class Scaffold extends RheinaufCMS
 		$this->connection = ($db_connection != '') ? $db_connection : new RheinaufDB();
 		
 		$this->construct_array();
+		$this->scripts();
 	}
 
 	function show()
@@ -84,32 +86,37 @@ class Scaffold extends RheinaufCMS
 		else
 		{
 			$order_by = ($this->order_by) ? $this->order_by : 'id';
-			$order_dir = ($this->order_dir) ? $this->order_dir : 'ASC';
-			$results_per_page = ($this->results_per_page) ? $this->results_per_page : '';
-			$start_by = ($_GET['start']) ? $_GET['start'] : $_GET['start'] = 0;
-
-			$order = ($_GET['order']) ? "&amp;order=".$_GET['order']: '';
-
+			
 			if ($_GET['dir'] == 'desc')
 			{
-				$auf = 'Aufsteigend';
-				$ab =  Html::bold(Html::italic('Absteigend'));
 				$order_dir = 'DESC';
-				$desc = '&amp;dir=asc';
 			}
 			else if ($_GET['dir'] == 'asc')
 			{
-				$auf =  Html::bold(Html::italic('Aufsteigend'));
-				$ab = 'Absteigend';
 				$order_dir = 'ASC';
-				$desc ='&amp;dir=desc';
 			}
 			else
 			{
-				$order_dir = 'ASC';
-				$desc ='&amp;dir=desc';
+				$order_dir = ($this->order_dir) ? $this->order_dir : 'ASC';
 			}
+						
+			if ($_GET['results_per_page'])
+			{
+				$results_per_page = $this->results_per_page = $_GET['results_per_page'];
+				setcookie($this->results_per_page_cookie_name,$_GET['results_per_page'],10000000000,'/');
+			}
+			else if ($_COOKIE[$this->results_per_page_cookie_name])
+			{
+				$results_per_page = $this->results_per_page = $_COOKIE[$this->results_per_page_cookie_name];
+			}
+			else 
+			{
+				$results_per_page = $this->results_per_page;
+			}
+			
+			$start_by = ($_GET['start']) ? $_GET['start'] : $_GET['start'] = 0;
 
+			$order = ($_GET['order']) ? "&amp;order=".$_GET['order']: '';
 
 			$where = array();
 
@@ -141,19 +148,23 @@ class Scaffold extends RheinaufCMS
 			$group_by = ($this->group_by) ? "GROUP BY `$this->group_by`" :'';
 
 			$order = ($_GET['order']) ? rawurldecode($_GET['order']) : $order_by;
+			
 			if ($this->sql =='')
 			{
 			 	$sql = "SELECT * FROM `$db_table` $where $group_by ORDER BY `$order` $order_dir";
 			}
 			else $sql = $this->sql;
 
+			$num_rows = $this->num_rows = $this->connection->db_num_rows($sql);
+			if (!$results_per_page) $results_per_page = $this->results_per_page = $num_rows;
 			if ($results_per_page || $start_by)
 			{
-				$num_rows = $this->num_rows = $this->connection->db_num_rows($sql);
-				if (!$results_per_page) $results_per_page = $num_rows;
+				$num_rows = $this->num_rows = $this->connection->db_num_rows($sql);	
 				$sql .= " LIMIT $start_by,$results_per_page";
 			}
 			$result = $this->result = $this->connection->db_assoc($sql);
+			
+			
 		}
 
 		if (!$template || $make_template)
@@ -164,27 +175,45 @@ class Scaffold extends RheinaufCMS
 
 			foreach ($this->cols_array as $key => $col)
 			{
-				$type = $col['type'];
-				$name  = $col['name'];
-
-				$name = ($_GET['order'] == $col['name']) ? Html::bold(Html::italic($col['name'])) : $col['name'];
-				$desc = ($_GET['order'] == $col['name']) ? (($_GET['dir'] == 'desc' )?  '&amp;dir=asc' : '&amp;dir=desc') : 	'&amp;dir=desc';
-
-				$button = Html::a(SELF_URL.'?'.$this->implode_GET().'&amp;order='.rawurlencode($col['name']).$desc,$name);
+				$type = $this->cols_array[$key]['type'];
+				$button = '{'.$key.'_sort}';
 				if ($type != 'ignore' && $type != 'hidden')
 				{
-					//$new_template .= "{IfNotEmpty:$key(<tr><td>$name</td><td>[$key]</td></tr>)}\n";
 					$head .="<th>$button</th>";
 					$body .= "<td>{If:$key}</td>";
 				}
 			}
 
 			$search =  (count($this->enable_search_for)) ?  $this->search_form() : ''; 
+			$colspan = count($this->cols_array);
 			$new_template = '';
-			$new_template .= "<!--PRE-->\n$search\n<table>\n<thead><tr>$head</tr></thead>\n<tbody><!--/PRE-->\n";
+			$new_template .= '
+<!--PAGINATION-->
+<form method="get" action="{SELF_URL}">
+
+{num_entries} Einträge auf {num_pages} Seiten | Seite {this_page} 
+{IfNotEmpty:prev_url(<a href="[prev_url]" class="button">Zurück</a>)}
+{IfNotEmpty:next_url(<a href="[next_url]" class="button">Weiter</a>)}
+&nbsp;&nbsp;&nbsp;Zeige <input type="text" size="2" name="results_per_page" id="results_per_page" value="{results_per_page}" style="text-align:center"/> Einträge pro Seite
+<input type="submit" value="Aktualisieren" /> 
+
+{If:get_vars}
+</form>
+<!--/PAGINATION-->';
+$new_template .= "
+<!--PRE-->
+$search
+<table>
+<thead>
+{IfNotEmpty:pagination(<tr><td colspan=\"$colspan\">[pagination]<td></tr>)}
+<tr>$head</tr>
+</thead>
+<tbody>
+<!--/PRE-->
+";
 			$new_template .= "<!--LOOP-->\n<tr class=\"{If:alt_row}\">$body<td>{If:edit_btns}</td></tr>\n<!--/LOOP-->\n";
 
-			$colspan = count($this->cols_array);
+			
 			$new_template .="<!--POST-->\n</tbody><tfoot><tr><td colspan=\"$colspan\">{If:new_btn}</td></tr></tfoot></table>\n<!--/POST-->\n";
 			if ($make_template) RheinaufFile::write_file($template,$new_template);
 			$template = $new_template;
@@ -192,9 +221,59 @@ class Scaffold extends RheinaufCMS
 
 		$template = new Template($template);
 		$return_string = '';
+
 		foreach ($this->enable_search_for as $search_field)
 		{
 			$vars[$search_field."_search_value"] = $_GET[rawurlencode($search_field)];
+			$vars['get_vars'] = $this->GET_2_input($this->enable_search_for);
+		
+		}
+
+		$pag['num_pages'] = $pages = $this->get_pages();
+		$pag['num_entries'] = $num_rows;
+		
+		$pag['prev_url'] = ($prev = $this->prev_link()) ? SELF_URL.'?'.$this->GET_2_url('start').'&amp;'.$prev :'';
+		$pag['next_url'] = ($next = $this->next_link()) ? SELF_URL.'?'.$this->GET_2_url('start').'&amp;'.$next :'';
+		
+		$pag['this_page'] = $this->get_page();
+		$pag['get_vars'] = $this->GET_2_input('results_per_page');
+		$pag['results_per_page'] = $results_per_page;
+		$vars['pagination'] = $template->parse_template('PAGINATION',$pag);
+			
+		foreach ($this->cols_array as $key => $value)
+		{
+			$name = $this->cols_array[$key]['name'];
+			
+			if ($_GET['order'] == $key )
+			{
+				if ($_GET['dir'] == 'asc') $name .= '&uArr;' ;
+				else $name .= '&dArr;';
+				$dir = ($_GET['dir'] == 'desc') ? 'asc' : 'desc';
+			}
+			else if (!isset($_GET['order'])&& $key == $this->order_by) 
+			{
+				if ($this->order_dir == 'ASC')
+				{
+					$name .= '&uArr;' ;
+					$dir = 'desc';
+				}
+				else
+				{
+					$name .= '&dArr;';
+					$dir = 'asc';
+				}
+			}
+			else 
+			{
+				$dir = ($this->order_dir == 'ASC') ? 'asc' : 'desc';
+			}
+			$vars[$key.'_sort'] = Html::a(SELF_URL.'?'.$this->GET_2_url(array('order','dir')).'&amp;order='.rawurlencode($key).'&amp;dir='.$dir,$name,array('class'=>'button','style'=>'display:block'));
+		}
+		
+		if ($this->edit_enabled)
+		{
+			$icons['new'] = Html::img('/'.INSTALL_PATH.'/Classes/Admin/Icons/16x16/edit_add.png','');
+			$vars['new_btn']  = Html::a(SELF_URL.'?new',$icons['new']. 'Eintrag hinzufügen');
 		}
 		$return_string .= $template->parse_template('PRE',$vars);
 		$alternatig_rows = 0;
@@ -215,11 +294,11 @@ class Scaffold extends RheinaufCMS
 				{
 					$entry[$key] = rawurlencode($value);
 				}
-				elseif (!$this->cols_array[$key]['html']) $entry[$key] = htmlspecialchars($value);
+				elseif ($this->cols_array[$key]['type'] != 'textarea') $entry[$key] = htmlspecialchars($value);
 
-				if ($this->cols_array[$key]['type'] == 'textarea')
+				if ($this->cols_array[$key]['type'] == 'textarea' && !$this->cols_array[$key]['html'])
 				{
-					$entry[$key] = nl2br($value);
+					$entry[$key] = nl2br(htmlspecialchars($value));
 				}
 				if ($transform = $this->cols_array[$key]['transform'])
 				{
@@ -236,19 +315,11 @@ class Scaffold extends RheinaufCMS
 				$btns['delete'] = Html::a(SELF_URL.'?delete='.$entry['id'],$icons['delete'],array('title'=>'Eintrag löschen','onclick'=>'return delete_confirm(\''.$entry['id'].'\')'));
 
 				$entry['edit_btns'] .= implode(' ',$btns);
-				
-				$icons['new'] = Html::img('/'.INSTALL_PATH.'/Classes/Admin/Icons/16x16/edit_add.png','');
-				$entry['new_btn']   .= Html::a(SELF_URL.'?new',$icons['new']. 'Eintrag hinzufügen');
 			}
 
 			$entry['alt_row'] = ' alt_row_'.$alternatig_rows;
 			$return_string .= $template->parse_template('LOOP',$entry);
 			$alternatig_rows = ($alternatig_rows == 1) ? 0 : 1;
-		}
-		if ($this->edit_enabled)
-		{
-			$icons['new'] = Html::img('/'.INSTALL_PATH.'/Classes/Admin/Icons/16x16/edit_add.png','');
-			$vars['new_btn']  = Html::a(SELF_URL.'?new',$icons['new']. 'Eintrag hinzufügen');
 		}
 		$return_string .= $template->parse_template('POST',$vars);
 		return $return_string;
@@ -265,17 +336,14 @@ class Scaffold extends RheinaufCMS
 			$inputs .= Form::add_label($id,$name).' ';
 			$inputs .= Form::add_input('text',$input_name,"{If:".$search_field."_search_value}");
 		}
-		foreach ($_GET as $key => $value)
-		{
-			if ($key == 'r' || $key == 's' || in_array(rawurldecode($key),$this->enable_search_for)) continue;
-			$inputs .= Form::add_input('hidden',$key,$value);
-		}
+		$inputs .= "{If:get_vars}\n";
 		$inputs .= Form::add_input('submit','Filter');
 		$form = new Form();
 		$form->form_tag(SELF_URL,'get');
 		$form->fieldset($inputs,$legend);
 		return $form->flush_form();
 	}
+	
 	function next_link()
 	{
 		if ($this->results_per_page)
@@ -314,8 +382,8 @@ class Scaffold extends RheinaufCMS
 	function list_navigation()
 	{
 		$nav = array();
-		if ($prev = $this->prev_link()) $nav[0] = Html::a(SELF_URL.'?'.$this->implode_GET().'&amp;'.$prev,'Zurück');
-		if ($next = $this->next_link()) $nav[1] = Html::a(SELF_URL.'?'.$this->implode_GET().'&amp;'.$next,'Weiter');
+		if ($prev = $this->prev_link()) $nav[0] = Html::a(SELF_URL.'?'.$this->GET_2_url().'&amp;'.$prev,'Zurück');
+		if ($next = $this->next_link()) $nav[1] = Html::a(SELF_URL.'?'.$this->GET_2_url().'&amp;'.$next,'Weiter');
 		return implode(' | ',$nav);
 	}
 	function get_pages($sql='')
@@ -339,8 +407,6 @@ class Scaffold extends RheinaufCMS
 
 	function make_form($edit ='')
 	{
-		
-		$this->edit_scripts();
 		if ($edit)
 		{
 			$values = $this->get_entry($edit);
@@ -723,7 +789,7 @@ class Scaffold extends RheinaufCMS
 			$this->cal_script_loaded = true;
 		}
 	}
-	function edit_scripts()
+	function scripts()
 	{
 		if ($GLOBALS['scaff_edit_scripts_loaded']) return;
 		$GLOBALS['scaff_edit_scripts_loaded'] =true;
@@ -753,16 +819,29 @@ class Scaffold extends RheinaufCMS
 			var required_fields = [];
 			');
 	}
-	function implode_GET ()
+	function GET_2_url ($skip = '')
 	{
 		$return = array();
+		if (!is_array($skip)) $skip = array($skip);
 		foreach ($_GET as $key => $value)
 		{
-			if ($key == 'r' || $key == 's') continue;
+			if ($key == 'r' || $key == 's' || in_array($key,$skip)) continue;
 			$value = rawurlencode($value);
 			$return[] = "$key=$value";
 		}
 		return implode('&amp;',$return);
+	}
+	function GET_2_input ($skip = '')
+	{
+		$return = array();
+		if (!is_array($skip)) $skip = array($skip);
+		foreach ($_GET as $key => $value)
+		{
+			if ($key == 'r' || $key == 's' || in_array($key,$skip)) continue;
+			$value = rawurlencode($value);
+			$return[] = Form::add_input('hidden',$key,$value);
+		}
+		return implode("\n",$return);
 	}
 	
 	function add_search_field ($col_name)
