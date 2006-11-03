@@ -1,7 +1,7 @@
 /*------------------------------------------*\
- OutlineElements for Xinha
+ SmartReplace for Xinha
  _______________________
-    
+     
 \*------------------------------------------*/
 
 function SmartReplace(editor) {
@@ -12,11 +12,11 @@ function SmartReplace(editor) {
 	
 	cfg.registerButton({
 	id       : "smartreplace",
-	tooltip  : this._lc("Smart Replace"),
+	tooltip  : this._lc("SmartReplace"),
 	image    : _editor_url+"plugins/SmartReplace/img/smartquotes.gif",
 	textMode : false,
 	action   : function(editor) {
-			self.toggleActivity(editor);
+			self.dialog(editor);
 		}
 	});
 	cfg.addToolbarElement("smartreplace", "htmlmode", 1);
@@ -42,8 +42,16 @@ HTMLArea.Config.prototype.SmartReplace =
 	'defaultActive' : true,
 	'quotes' : null//[String.fromCharCode(187),String.fromCharCode(171),String.fromCharCode(8250),String.fromCharCode(8249)]
 }
-SmartReplace.prototype.toggleActivity = function() {
-	this.active = this.active ? false : true;
+SmartReplace.prototype.toggleActivity = function(newState) 
+{
+	if (typeof newState != 'undefined')
+	{
+		this.active = newState;
+	}
+	else
+	{
+		this.active = this.active ? false : true;		
+	}
 	this.editor._toolbarObjects.smartreplace.state("active", this.active);
 }
 
@@ -81,7 +89,7 @@ SmartReplace.prototype.onGenerate = function() {
 		this.closingQuote  = this._lc("ClosingSingleQuote");
     }
  	
-	if (this.openingQuotes == 'OpeningDoubleQuotes') //English style as default
+	if (this.openingQuotes == 'OpeningDoubleQuotes') //If nothing else is defined, English style as default
 	{
 		this.openingQuotes = String.fromCharCode(8220);
 		this.closingQuotes = String.fromCharCode(8221);
@@ -100,16 +108,17 @@ SmartReplace.prototype.keyEvent = function(ev)
 
 	if (charCode == 32) //space bar
 	{
-		return this.smartDash(ev)
+		return this.smartDash()
 	}
 	if ( key == '"' || key == "'")
 	{
-		return this.smartQuotes(ev,key);
+		HTMLArea._stopEvent(ev);
+		return this.smartQuotes(key);
 	}
 	return true;
 }
 
-SmartReplace.prototype.smartQuotes = function(ev,kind)
+SmartReplace.prototype.smartQuotes = function(kind)
 {
 	if (kind == "'")
 	{
@@ -123,13 +132,12 @@ SmartReplace.prototype.smartQuotes = function(ev,kind)
 	}
 	
 	var editor = this.editor;
-	HTMLArea._stopEvent(ev);
 		
-	var sel = this.editor._getSelection();
+	var sel = editor._getSelection();
 	
 	if (HTMLArea.is_ie)
 	{
-		var r = this.editor._createRange(sel);
+		var r = editor._createRange(sel);
 		if (r.text !== '')
 		{
 			r.text = '';
@@ -151,24 +159,24 @@ SmartReplace.prototype.smartQuotes = function(ev,kind)
 	{
 		if (!sel.isCollapsed)
 		{
-			this.editor.insertNodeAtSelection(document.createTextNode(''));
+			editor.insertNodeAtSelection(document.createTextNode(''));
 		}
 		if (sel.anchorOffset > 0) sel.extend(sel.anchorNode,sel.anchorOffset-1);
 		
 		if(sel.toString().match(/\S/))
 		{
 			sel.collapse(sel.anchorNode,sel.anchorOffset);
-			this.editor.insertNodeAtSelection(document.createTextNode(closing));
+			editor.insertNodeAtSelection(document.createTextNode(closing));
 		}
 		else
 		{
 			sel.collapse(sel.anchorNode,sel.anchorOffset);
-			this.editor.insertNodeAtSelection(document.createTextNode(opening));
+			editor.insertNodeAtSelection(document.createTextNode(opening));
 		}
 	}
 }
 
-SmartReplace.prototype.smartDash = function(ev)
+SmartReplace.prototype.smartDash = function()
 {
 	var editor = this.editor;
 	var sel = this.editor._getSelection();
@@ -191,4 +199,57 @@ SmartReplace.prototype.smartDash = function(ev)
 		}
 		sel.collapse(sel.anchorNode,sel.anchorOffset);
 	}
+}
+
+SmartReplace.prototype.replaceAll = function()
+{
+	var doubleQuotes = [
+							'&quot;',
+							String.fromCharCode(8220),
+							String.fromCharCode(8221),
+							String.fromCharCode(8222),
+							String.fromCharCode(187),
+							String.fromCharCode(171)
+							
+						];
+	var singleQuotes = [
+							"'",
+							String.fromCharCode(8216),
+							String.fromCharCode(8217),
+							String.fromCharCode(8218),
+							String.fromCharCode(8250),
+							String.fromCharCode(8249)
+						];
+	
+	var html = this.editor.getHTML();
+	var reOpeningDouble = new RegExp ('(\\s|^|>)('+doubleQuotes.join('|')+')(\\S)','g');
+	html = html.replace(reOpeningDouble,'$1'+this.openingQuotes+'$3');
+	
+	var reOpeningSingle = new RegExp ('(\\s|^|>)('+singleQuotes.join('|')+')(\\S)','g');
+	html = html.replace(reOpeningSingle,'$1'+this.openingQuote+'$3');
+	
+	var reClosingDouble = new RegExp ('(\\S)('+doubleQuotes.join('|')+')','g');
+	html = html.replace(reClosingDouble,'$1'+this.closingQuotes);
+	
+	var reClosingSingle = new RegExp ('(\\S)('+singleQuotes.join('|')+')','g');
+	html = html.replace(reClosingSingle,'$1'+this.closingQuote);
+	
+	var reDash    = new RegExp ('( |&nbsp;)(-)( |&nbsp;)','g');
+	html = html.replace(reDash,' '+String.fromCharCode(8211)+' ');
+	
+	this.editor.setHTML(html);
+}
+SmartReplace.prototype.dialog = function()
+{
+	var self = this;
+	var action = function (param)
+	{
+		self.toggleActivity(param.enable); 
+		if (param.convert)
+		{
+			self.replaceAll();
+		}
+	}
+	var init = this;
+	Dialog(_editor_url+'plugins/SmartReplace/popups/dialog.html', action, init);
 }

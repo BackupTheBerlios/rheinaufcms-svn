@@ -110,6 +110,7 @@ function HTMLArea(textarea, config)
       textarea = HTMLArea.getElementById('textarea', textarea);
     }
     this._textArea = textarea;
+    this._textArea.spellcheck = false;
        
     // Before we modify anything, get the initial textarea size
     this._initial_ta_size =
@@ -367,6 +368,10 @@ HTMLArea.Config = function()
   this.colorPickerGranularity = 18;
   // position of color picker from toolbar button
   this.colorPickerPosition = 'bottom,right';
+  // set to true to show websafe checkbox in picker
+  this.colorPickerWebSafe = false;
+  // number of recent colors to remember
+  this.colorPickerSaveColors = 20;
 
   /** CUSTOMIZING THE TOOLBAR
    * -------------------------
@@ -1636,6 +1641,30 @@ HTMLArea.prototype.generate = function ()
         return true;
       }
     );
+
+    //add onsubmit handlers for textareas that don't have one 
+    // doesn't work in IE!!
+   /* if ( !textarea.form.xinha_submit )
+    {
+      textarea.form.xinha_submit = textarea.form.submit;
+      textarea.form.submit = function()
+      {
+        for ( var i = this.elements.length; i--; )
+        {
+          var element = this.elements[i];
+          if ( element.type != 'textarea' ) continue;
+          for ( var a = __htmlareas.length; a--; )
+          {
+            var editor = __htmlareas[a];
+            if ( editor && editor._textArea == element)
+            {
+              element.value = editor.outwardHtml(editor.getHTML());
+            }
+          }
+        }
+        this.xinha_submit();
+      };
+    }*/
   }
 
   // add a handler for the "back/forward" case -- on body.unload we save
@@ -4242,20 +4271,31 @@ HTMLArea.prototype._colorSelector = function(cmdID)
 {
   var editor = this;	// for nested functions
   var btn = editor._toolbarObjects[cmdID].element;
+  var initcolor;
   if ( cmdID == 'hilitecolor' )
   {
     if ( HTMLArea.is_ie )
     {
       cmdID = 'backcolor';
+      initcolor = HTMLArea._colorToRgb(editor._doc.queryCommandValue("backcolor"));
+    }
+    else
+    {
+      initcolor = HTMLArea._colorToRgb(editor._doc.queryCommandValue("hilitecolor"));
     }
     // @todo : useCSS is deprecated, see ticket #619
-    if ( HTMLArea.is_gecko )
+    //[wymsy]: mozilla bug #279330 has been fixed, I don't think we need this any more
+  /*  if ( HTMLArea.is_gecko )
     {
       try
       {
-        editor._doc.execCommand('useCSS', false, false); //switch on useCSS (mozilla bug #279330)
+     //   editor._doc.execCommand('useCSS', false, false); //switch on useCSS (mozilla bug #279330)
       } catch (ex) {}
-    }
+    }*/
+  }
+  else
+  {
+  	initcolor = HTMLArea._colorToRgb(editor._doc.queryCommandValue("forecolor"));
   }
   var cback = function(color) { editor._doc.execCommand(cmdID, false, color); };
   if ( HTMLArea.is_ie )
@@ -4267,8 +4307,15 @@ HTMLArea.prototype._colorSelector = function(cmdID)
       editor._doc.execCommand(cmdID, false, color);
     };
   }
-  var picker = new colorPicker({cellsize:editor.config.colorPickerCellSize,callback:cback,granularity:editor.config.colorPickerGranularity});
-  picker.open(editor.config.colorPickerPosition, btn);
+  var picker = new colorPicker(
+  {
+  	cellsize:editor.config.colorPickerCellSize,
+  	callback:cback,
+  	granularity:editor.config.colorPickerGranularity,
+  	websafe:editor.config.colorPickerWebSafe,
+  	savecolors:editor.config.colorPickerSaveColors
+  });
+  picker.open(editor.config.colorPickerPosition, btn, initcolor);
 };
 
 // the execCommand function (intercepts some commands and replaces them with
@@ -5159,7 +5206,7 @@ HTMLArea.prototype.fixRelativeLinks = function(html)
 {
   if ( typeof this.config.stripSelfNamedAnchors != 'undefined' && this.config.stripSelfNamedAnchors )
   {
-    var stripRe = new RegExp(document.location.href.replace(HTMLArea.RE_Specials, '\\$1') + '(#[^\'" ]*)', 'g');
+    var stripRe = new RegExp(document.location.href.replace(/&/g,'&amp;').replace(HTMLArea.RE_Specials, '\\$1') + '(#[^\'" ]*)', 'g');
     html = html.replace(stripRe, '$1');
   }
 

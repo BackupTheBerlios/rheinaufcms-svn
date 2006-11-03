@@ -28,7 +28,7 @@ window.focus();
 	[
 	//'Properties',
 	'CharacterMap',
-	'ContextMenu',
+	//'ContextMenu',
 	//'FindReplace',
 	//'FullScreen',
 	//'ListType',
@@ -53,6 +53,7 @@ window.focus();
 	'SmartReplace',
 	'CustomUtils'
 	];
+	
 	     // THIS BIT OF JAVASCRIPT LOADS THE PLUGINS, NO TOUCHING  :)
 	     if(!HTMLArea.loadPlugins(xinha_plugins, xinha_init)) return;
 
@@ -106,7 +107,7 @@ window.focus();
 	//xinha_config.ListType.mode = 'panel';
 	//xinha_config.CharacterMap.mode = 'panel';
 
-	xinha_config.InsertSnippet.css = ['CSS/Screen.css'];
+	xinha_config.InsertSnippet.css = ['/CSS/Screen.css'];
 	xinha_config.InsertSnippet.showInsertVariable =true;
     xinha_config.InsertSnippet.snippets = '/RheinaufCMS/Libraries/XinhaConfig/snippets.php';
 
@@ -115,12 +116,10 @@ window.focus();
 	xinha_config.SuperClean.show_dialog = true;
     xinha_config.SuperClean.filters = {
                'tidy': HTMLArea._lc('General tidy up and correction of some problems.', 'SuperClean'),
-               'word_edited': 'Word'
+          //     'word_edited': 'Word'
     }
 
-    xinha_config.editId = 'content';
-	xinha_config.bodyInnerHTML = '<div id="wrapper"><div id="content"></div></div>';
-	
+   
 	if (xinha_config.ExtendedFileManager) 
 	{
 		with (xinha_config.ExtendedFileManager)

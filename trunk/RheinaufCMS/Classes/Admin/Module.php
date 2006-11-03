@@ -4,6 +4,7 @@ class Module extends Admin
 {
 	var $return;
 	var $installableModules = array();
+	var $inPageModules = array();
 	var $available_modules = array();
 	var $installed  = array();
 	function Module($db_connection,$path_information)

@@ -8,10 +8,12 @@ body {
 	background-image:url(/Images/admin_logo.png);
 	background-repeat:no-repeat;
 	background-position:top right;
+	font-size:0.8em;
 }
 a { text-decoration:none}
 
 h1 {
+
 	margin-bottom:10px;
 }
 
@@ -34,14 +36,16 @@ a.block:hover {
 }
 table {
 	min-width:400px;
+	border: 1px solid rgb(220, 220, 220);
 }
+
 td {
-	font-size:0.8em;
+	font-size:0.85em;
 	vertical-align:top;
 
 }
 th {
-	font-size:0.7em;
+	font-size:0.6em;
 	font-weight:bold;
 	vertical-align:top;
 	text-align:left;
@@ -49,6 +53,8 @@ th {
 
 input,select,fieldset,textarea {
 	border:1px gray solid;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:1em;
 }
 fieldset {
 background-color:whitesmoke;
@@ -60,8 +66,7 @@ input [type=image],option {
 	border:0;
 }
 ul {
-	list-style:none;
-	padding:0;
+	
 }
 li ul {
 	padding-left:1em;
@@ -70,18 +75,19 @@ li ul {
 	float:left;
 	margin-right:50px;
 	width:100px;
-
 }
 
-
-#admin_content {
+#content {
 background-color:white;
-
+background-repeat:no-repeat;  
+opacity:0.9;
 filter:Alpha(opacity=90);
--moz-opacity:0.9;
 border:1px solid;
 border-color:  ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+margin:30px auto;
+padding:80px;
 }
+
 
 #groups_table td,th {
 text-align:center;
@@ -90,30 +96,80 @@ text-align:center;
 	width:50px;
 }
 .menu_item {
-
 	text-align:center;
 	font-size:10px;
 }
-a.active, .button {
-	background-color:rgb(160, 154, 255);
-	color: rgb(255,255,255);
-	border: 2px solid rgb(0, 52, 85);
+/*----Button & pseudo-buttons---*/
+a.active, .button, input[type=submit],button {
+	background-color:rgb(235, 235, 245);
+	color: black;
+	border: 1px solid;
+	border-color:ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
 	border-left: none;
+	cursor:default;
 }
-.button {
-	padding:1px 4px 2px 0px ;
+
+.button, input[type=submit],button {
+	padding:1px 4px 2px 4px ;
 	font-size:11px;
-	border: 1px solid rgb(0, 52, 85);
+	border: 1px solid;
+	border-color:ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+}
+.button:hover,input[type=submit]:hover,button:hover {
+	/* padding:2px 3px 1px 5px ; */
+	border-color: ButtonShadow ButtonHighlight ButtonHighlight ButtonShadow ;
+}
+.button:focus,input[type=submit]:focus,button:focus,.button:active,input[type=submit]:active,button:active  {
+	background-color:rgb(205, 205, 205);
+}
+.button:focus,input[type=submit]:focus,.button:active  {
+	padding:2px 3px 1px 5px ;
+}
+
+/*----Double it for IE6---*/
+a.active, .button  {
+	background-color:rgb(235, 235, 245);
+	color: black;
+	border: 1px solid;
+	border-color:ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+	border-left: none;
+	cursor:default;
+}
+
+.button {
+	padding:1px 4px 2px 4px ;
+	font-size:11px;
+	border: 1px solid;
+	border-color:ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
 }
 .button:hover {
-	padding:2px 3px 1px 1px ;
+	/* padding:2px 3px 1px 5px ; */
+	border-color: ButtonShadow ButtonHighlight ButtonHighlight ButtonShadow ;
 }
+.button:focus,.button:active {
+	background-color:rgb(205, 205, 205);
+}
+.button:focus  {
+	padding:2px 3px 1px 5px ;
+}
+
+/*---------------------------------------------------------------------------*/
+
 .abwechselnde_flaechen_1,.alt_row_0 {
-	background-color:rgb(160, 154, 255);
+	background-color:rgb(245, 245, 245);
+}
+.alt_row_0.alt_col {
+	background-color:rgb(235, 235, 235);
 }
 .abwechselnde_flaechen_2,.alt_row_1 {
-	background-color:rgb(195, 172, 227);
+	background-color:white
+}
+.alt_row_1.alt_col {
 }
 .klein {
 	font-size:10px;
+}
+
+td {
+	padding:4px;
 }

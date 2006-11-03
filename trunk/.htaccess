@@ -19,6 +19,8 @@ RewriteRule ^Download/(.*) RheinaufCMS/Download/$1 [L]
 RewriteRule ^Images/(.*) RheinaufCMS/Images/$1 [L]
 RewriteRule ^CSS/(.*) RheinaufCMS/CSS/$1 [L]
 RewriteRule ^Libraries/(.*) RheinaufCMS/Libraries/$1 [L]
+RewriteRule ^Module/(.*) RheinaufCMS/Module/$1 [L]
+RewriteRule ^Scripts/(.*) RheinaufCMS/Scripts/$1 [L]
 
 RewriteRule \.jpg$ - [L,NC]
 RewriteRule \.gif$ - [L,NC]
