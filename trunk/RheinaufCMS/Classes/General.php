@@ -273,5 +273,18 @@ class General
        mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ) );
 	}
 
+	function trim_array($array)
+	{
+		$t = array();
+		foreach ($array as $key => $value)
+		{
+			if ($value)
+			{
+				if (is_numeric($key)) $t[] = $value;
+				else $t[$key] = $value;
+			}
+		}
+		return $t;
+	}
 }
 ?>

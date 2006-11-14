@@ -50,7 +50,7 @@ class RheinaufCMS
 
 	function ini_sets()
 	{
-		set_include_path(get_include_path().PATH_SEPARATOR.INSTALL_PATH.'/Classes/'.PATH_SEPARATOR.INSTALL_PATH.'/Module/'.PATH_SEPARATOR .INSTALL_PATH.'/Libraries/');
+		set_include_path(get_include_path().PATH_SEPARATOR.INSTALL_PATH.'/Classes/'.PATH_SEPARATOR.INSTALL_PATH.'/Module/'.PATH_SEPARATOR .INSTALL_PATH.'/Libraries/'.PATH_SEPARATOR .INSTALL_PATH.'/Libraries/PEAR/');
 		ini_set('arg_separator.output','&amp;');
 		ini_set('display_errors',1);
 		header('Content-type: text/html;charset=ISO-8859-1');

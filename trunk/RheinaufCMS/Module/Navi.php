@@ -37,7 +37,7 @@ class Navi extends RheinaufCMS
 						{
 							$vars['link'] = $this->navi[$i]['ext_link'];
 						}
-						else $vars['link'] = 'http://'.$_SERVER['SERVER_NAME'].'/'. rawurlencode($this->path_encode($this->navi[$i]['Rubrik'])).'/';
+						else $vars['link'] = '/'. rawurlencode($this->path_encode($this->navi[$i]['Rubrik'])).'/';
 						$vars['navi_class'] =  ($this->navi[$i]['Rubrik'] == $this->rubrik) ? 'navi navi_active' : 'navi';
 
 
@@ -74,7 +74,7 @@ class Navi extends RheinaufCMS
 					$vars['subnavi_link'] = $subnavi[$j]['ext_link'];
 				}
 				else
-				$vars['subnavi_link'] = $this->homepath . '/'. rawurlencode($this->path_encode($this->navi[$i]['Rubrik'])).'/'.rawurlencode($this->path_encode($subnavi[$j]['Seite'])).'/';
+				$vars['subnavi_link'] =  '/'. rawurlencode($this->path_encode($this->navi[$i]['Rubrik'])).'/'.rawurlencode($this->path_encode($subnavi[$j]['Seite'])).'/';
 				$vars['subnavi_class'] = ($subnavi[$j]['Seite'] == $this->seite) ? 'subnavi subnavi_active' : 'subnavi';
 				$subnavi_string .= $this->template->parse_template('SUBNAVI',$vars);
 			}
