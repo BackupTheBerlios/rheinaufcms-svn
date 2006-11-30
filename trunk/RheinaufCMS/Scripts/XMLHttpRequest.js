@@ -21,6 +21,12 @@ function loading()
 	div.appendChild(document.createTextNode('Bitte warten ...'))
 	body.appendChild(div);
 }
+function removeLoading()
+{
+	var loading = document.getElementById("loading");
+	if (loading) loading.parentNode.removeChild(loading);
+}
+
 function httpRequestGET (url, handler)
 {
 	loading();
@@ -142,8 +148,7 @@ function setContent(getback,url) {
 	}
 	document.getElementById('content').innerHTML = getback;
 	
-	var loading = document.getElementById('loading');
-	loading.parentNode.removeChild(loading);
+	removeLoading();
 }
 function evalScripts(getback)
 {

@@ -19,19 +19,21 @@ CREATE TABLE `RheinaufCMS>Admin>Module` (
   `ID` int(11) NOT NULL default '0',
   `Name` text NOT NULL,
   `LongName` text NOT NULL,
-  `Icon` text NOT NULL
-) ENGINE=MyISAM ;
+  `Icon` text NOT NULL,
+  `File` varchar(100) NOT NULL default ''
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 
 --
 -- Daten für Tabelle `RheinaufCMS>Admin>Module`
 --
 
 
-INSERT INTO `RheinaufCMS>Admin>Module` VALUES (0, 'SeiteEdit', 'Seiten bearbeiten', 'Classes/Admin/Icons/32x32/filenew.png');
-INSERT INTO `RheinaufCMS>Admin>Module` VALUES (1, 'NaviEdit', 'Navigation bearbeiten', 'Classes/Admin/Icons/32x32/folder_new.png');
-INSERT INTO `RheinaufCMS>Admin>Module` VALUES (2, 'User', 'User registrieren', 'Classes/Admin/Icons/32x32/edit_user.png');
-INSERT INTO `RheinaufCMS>Admin>Module` VALUES (3, 'Module', 'Module', 'Classes/Admin/Icons/32x32/connect_no.png');
-INSERT INTO `RheinaufCMS>Admin>Module` VALUES (4, 'Gruppen', 'Gruppen verwalten', 'Classes/Admin/Icons/32x32/edit_group.png');
+INSERT INTO `RheinaufCMS>Admin>Module` VALUES (0, 'SeiteEdit', 'Seiten bearbeiten', 'Classes/Admin/Icons/32x32/filenew.png','');
+INSERT INTO `RheinaufCMS>Admin>Module` VALUES (1, 'NaviEdit', 'Navigation bearbeiten', 'Classes/Admin/Icons/32x32/folder_new.png','');
+INSERT INTO `RheinaufCMS>Admin>Module` VALUES (2, 'User', 'User registrieren', 'Classes/Admin/Icons/32x32/edit_user.png','');
+INSERT INTO `RheinaufCMS>Admin>Module` VALUES (3, 'Module', 'Module', 'Classes/Admin/Icons/32x32/connect_no.png','');
+INSERT INTO `RheinaufCMS>Admin>Module` VALUES (4, 'Gruppen', 'Gruppen verwalten', 'Classes/Admin/Icons/32x32/edit_group.png','');
 
 -- --------------------------------------------------------
 
@@ -67,7 +69,6 @@ CREATE TABLE `RheinaufCMS>Module` (
 -- Daten für Tabelle `RheinaufCMS>Module`
 --
 
-INSERT INTO `RheinaufCMS>Module` VALUES (0, 'Admin');
 
 
 -- --------------------------------------------------------

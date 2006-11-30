@@ -10,31 +10,33 @@ function delete_confirm(link) {
 }
 
 function checkform() {
-	var i,e,bgcolor,firstFail,check = true;
-	var bg_color_cache;
+	var i,e,firstFail,check = true;
+	var bg_color_cache  = '';
 	for (i=0;i<required_fields.length;i++)
 	{
 		e = document.getElementById(required_fields[i]);
-		var to_color =  e;
-		bg_color_cache = to_color.style.backgroundColor;
+		bg_color_cache = e.style.backgroundColor;
 		if (e.value == "" || e.value.indexOf("--") != -1)
 		{
 			var group = document.getElementsByName(e.name);
 			check = false;
-			for (i=0;i<group.length;i++)
+		/*	for (j=0;j<group.length;j++)
 			{
 				if (group[i].value) check = true;
-			}
+			}*/
 			if (!check)
 			{
 				if (!firstFail) firstFail = e;
-				to_color.style.backgroundColor = "red";
-
+				e.style.backgroundColor = "red";
 			}
 		}
-		else to_color.style.backgroundColor = bg_color_cache;
+		else e.style.backgroundColor = bg_color_cache;
 	}
-	if (firstFail) firstFail.focus();
+	if (firstFail)
+	{
+		removeLoading();
+		firstFail.focus();
+	}
 	return check;
 }
 var required_fields = [];
@@ -140,10 +142,7 @@ function otherCheck(option,name)
 		input.name = name;
 	td.appendChild(input);
 }
-function handleCondition(el,targetField)
-{
 
-}
 function checkConditions()
 {
 	for (var i = 0; i < conditions.length;i++)
@@ -165,6 +164,48 @@ function checkCondition(condition)
 	}
 	
 }
+
+function confirmDelPic(input)
+{
+	var table = input;
+	var inputs = document.getElementsByName(input.name);
+	var checked = false;
+	for (var i = 0; i < inputs.length;i++)
+	{
+		if (inputs[i].checked) checked = true;
+	}
+	while (table.parentNode && table.tagName.toLowerCase() != "table" && table.parentNode && table.tagName.toLowerCase() != "tbody")
+	{
+		table = table.parentNode;
+	}
+	var btn = document.getElementById("confirmDelPicBtn");
+	if (btn)
+	{
+		btn = btn.parentNode.removeChild(btn);
+		if (checked) table.appendChild(btn);
+	}
+	else
+	{
+		var btn = document.createElement("input");
+			btn.type = "submit";
+			btn.name = "reentry";
+			btn.value = "Löschen bestätigen";
+			
+			var tr = document.createElement("tr");
+				tr.id = "confirmDelPicBtn";
+			table.appendChild(tr);
+			
+			var td = document.createElement("td");
+			tr.appendChild(td);
+			
+			var td = document.createElement("td");
+			tr.appendChild(td);
+						
+			td.appendChild(btn);
+	}
+	
+}
+
 var conditions = [];
 var onLoad = [sizeTextAreas,checkConditions];
 

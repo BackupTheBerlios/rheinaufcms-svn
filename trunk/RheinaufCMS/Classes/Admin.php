@@ -80,7 +80,7 @@ class Admin extends RheinaufCMS
 				$instance = new $class ($this->connection,$this->path_information);
 				if (!$instance->noframe)
 				{
-					$return .= $this->admin_menu();
+					if (!isset($_GET['nomenu'])) $return .= $this->admin_menu();
 				}
 				else parent::noframe ();
 

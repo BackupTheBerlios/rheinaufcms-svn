@@ -1,5 +1,5 @@
 /*------------------------------------------*\
- OutlineElements for Xinha
+ RheinaufCMS CustomUtils for Xinha
  _______________________
     
 \*------------------------------------------*/
@@ -51,7 +51,7 @@ CustomUtils.prototype.onGenerate = function() {
 	//
 };
 CustomUtils.prototype.onUpdateToolbar = function() {
-	 if (/<[^>]*mso/i.test(this.editor._doc.body.innerHTML)) this.editor._wordClean();
+	 if (/<[^>]*class="?mso/i.test(this.editor._doc.body.innerHTML)) this.editor._wordClean();
  }
 function wSize ()
 {
