@@ -31,7 +31,7 @@ class Seite extends RheinaufCMS
 		$rubr_enc = $this->path_encode($this->rubrik);
 		if (is_file(DOCUMENT_ROOT.INSTALL_PATH . '/CSS/'.$rubr_enc.'.css'))
 		{
-				$vars['other_css'] .= '<link rel="stylesheet" href="/'.INSTALL_PATH.'/CSS/'.$rubr_enc.'.css" media="screen" type="text/css" />';
+				$vars['other_css'] .= '<link rel="stylesheet" href="/'.INSTALL_PATH.'/CSS/'.rawurlencode($rubr_enc).'.css" media="screen" type="text/css" />';
 		}
 
 		return $this->template->parse_template('HEADER',$vars);

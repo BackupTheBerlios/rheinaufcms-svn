@@ -10,6 +10,7 @@ function delete_confirm(link) {
 }
 
 function checkform() {
+	if (typeof passcheck != "undefined" && passcheck == true) return true;
 	var i,e,firstFail,check = true;
 	var bg_color_cache  = '';
 	for (i=0;i<required_fields.length;i++)
@@ -18,12 +19,8 @@ function checkform() {
 		bg_color_cache = e.style.backgroundColor;
 		if (e.value == "" || e.value.indexOf("--") != -1)
 		{
-			var group = document.getElementsByName(e.name);
 			check = false;
-		/*	for (j=0;j<group.length;j++)
-			{
-				if (group[i].value) check = true;
-			}*/
+			if (document.getElementById(e.id + '_other') && document.getElementById(e.id + '_other').value != "") check = true;		
 			if (!check)
 			{
 				if (!firstFail) firstFail = e;
@@ -36,6 +33,7 @@ function checkform() {
 	{
 		removeLoading();
 		firstFail.focus();
+		alert('Bitte füllen Sie alle Felder mit einem * aus.');
 	}
 	return check;
 }
@@ -43,12 +41,10 @@ var required_fields = [];
 
 function cancelEdit(button)
 {
-	var form = button;
-	while (form.tagName.toLowerCase() != "form")
-	{
-		form = form.parentNode;
-	}
-	var url = form.action.replace(/#.*/,"");
+	var f = button.form;
+	
+	var url = f.getAttribute("action").replace(/#.*/,"");
+
 	httpRequestGET(url+"&noframe",setContent);
 	return false;
 }
@@ -57,10 +53,23 @@ function resetFilter(el)
 	var form = el.form;
 	for (var i = 0;i<form.elements.length;i++)
 	{
-		form.elements[i].value = '';
+		if (form.elements[i].tagName.toLowerCase() == 'select')
+		{
+			form.elements[i].options[0].selected = true;
+			
+		}
+		else if (form.elements[i].tagName.toLowerCase() == 'input' && form.elements[i].getAttribute("type").toLowerCase() == 'text')
+		{
+			form.elements[i].value = '';
+		}
+		
 	}
-	form.onsubmit();
-	return false;
+	if (typeof form.onsubmit == "function")
+	{
+		form.onsubmit();
+		return false;
+	}
+	else return true;
 }
 
 function hideShowTrsAfter(btn)
@@ -159,7 +168,7 @@ function checkCondition(condition)
 		if (input[j].value == condition.value)
 		{
 			var target = document.getElementsByName(condition.target)[0];
-			target.disabled = !input[j].checked;
+			if (target) target.disabled = !input[j].checked;
 		}
 	}
 	
@@ -207,9 +216,9 @@ function confirmDelPic(input)
 }
 
 var conditions = [];
-var onLoad = [sizeTextAreas,checkConditions];
+var onLoad = [];
 
-if (typeof window.onload == "function") onload.push(window.onload);
+if (typeof window.onload == "function") onLoad.push(window.onload);
 
 window.onload = function ()
 {

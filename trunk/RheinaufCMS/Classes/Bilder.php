@@ -15,7 +15,8 @@ class Bilder
 		$this->output_file = $output_file;
 		if ($image != 'new')
 		{
-			$this->get_image_details($image);
+			$is_img = $this->get_image_details($image);
+			if (!$is_img) return false;
 			$this->get_image($image);
 		}
 		else

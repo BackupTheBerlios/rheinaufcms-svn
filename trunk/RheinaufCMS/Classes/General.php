@@ -96,7 +96,11 @@ class General
 	{
 		if (get_magic_quotes_gpc())
 		{
-			if ($db_escape) $str = $str;
+			if ($db_escape) 
+			{
+				$str = stripslashes($str);
+				$str = mysql_real_escape_string($str);
+			}
 			else $str = stripslashes($str);
 		}
 		else
@@ -240,8 +244,21 @@ class General
 	function alfanum($str)
 	{
 		return preg_replace('/[^a-z0-9]/i','',$str);
+	}	
+	
+	function num($str)
+	{
+		return preg_replace('/[^0-9]/i','',$str);
 	}
-
+	
+	function special_char_convert($str)
+	{
+		$verboten = array('ä','Ä','ö','Ö','ü','Ü','é','è','É','È','á','à','Á','À','ß',' ',':','&','+');
+		$erlaubt = array('ae','Ae','oe','Oe','ue','Ue','e','e','E','E','a','a','A','A','ss', '','','','');
+		$str = str_replace($verboten,$erlaubt,$str);
+		
+		return preg_replace('/^[0-9]*|[^0-9a-z-_.:%[\]]/i','',$str);
+	}
 	function PostToHost($host, $path, $referer, $data_to_send)
 	{
 		$fp = fsockopen($host, 80);

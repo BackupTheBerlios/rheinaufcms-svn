@@ -142,10 +142,7 @@ function httpRequestPOST (url, data, handler)
 function setContent(getback,url) {
 
 	var html = getback;
-	if (html.indexOf('<script') != -1)
-	{
-		httpRequestGET(url+'&script',evalScripts)
-	}
+
 	document.getElementById('content').innerHTML = getback;
 	
 	removeLoading();
