@@ -178,12 +178,12 @@ class Html
 
 	function html_legal_id ($str)
 	{
-		return preg_replace('/^[0-9]|[^0-9a-z-_.:%[\]]/i','',$str);
+		return preg_replace('/^[0-9]*|[^0-9a-z-_.:%[\]]*/i','',$str);
 	}
 
 	function css_legal_classname ($str)
 	{
-		 return preg_replace('/^[0-9\-]|[^0-9a-z_\s\-]/i','',$str);
+		 return preg_replace('/^[0-9\-]*|[^0-9a-z_\s\-]*|[\W]*/i','',$str);
 	}
 
 	function cdata ($str)

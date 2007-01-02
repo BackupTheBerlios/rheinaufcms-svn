@@ -99,7 +99,7 @@ window.focus();
  	//xinha_config.flowToolbars = false;
 	xinha_config.showLoading = true;
 	//xinha_config.only7BitPrintablesInURLs = false;
-
+	xinha_config.stripScripts = false;
 
 	xinha_config.stripBaseHref = true;
 	xinha_config.baseHref = "<?php print 'http://'. $_SERVER['SERVER_NAME'] ?>";

@@ -1,38 +1,56 @@
 <!--EINTRAGEN-->
 <script type="text/javascript">
-	function CheckForm() 
-	{
-		var name = document.getElementById("name");
+function CheckForm() 
+{
+	var form = document.getElementById("neuer_eintrag");
 	
-		if ( name.value == "") 
+	for (var i=0;i<form.elements.length;i++)
+	{
+		form.elements[i].name = form.elements[i].id;
+		if (form.elements[i].name == 'x1' && form.elements[i].value == '')
 		{
-			alert ("Bitte den Namen eingeben!");
-			name.focus();
+			//alert ("Bitte den Namen eingeben!");
+			form.elements[i].style.backgroundColor = 'red';
+			form.elements[i].focus();
 			return false;
 		}
 	}
-		
+	return true;
+}
+	
 </script>
 
 <h2>Neuer Eintrag</h2>
-<form action="G%E4stebuch" method="post" id="neuer_eintrag" onsubmit="return CheckForm();" >
-
+<form action="{SELF_URL}" method="post" id="neuer_eintrag" onsubmit="return CheckForm();" >
+<noscript style="background-color:red;padding:4px">Achtung: Eintragen funktioniert nur mit JavaScript!</noscript>
 <table>
 <tr>
-	<td><label for="name">Name</label><br />
-	  <input type="text" name="name" id="name" size="40" maxlength="100" value="{the_name}" alt="Name" /></td></tr>
-<tr>
-	<td><label for="email">E-Mailadresse</label><br />
-	  <input type="text" name="email" id="email" size="40" maxlength="100" value="{the_email}" alt="E-Mail" /></td>
+	<td>
+	 Name<br />
+	  <input type="text" id="x1" size="40" maxlength="100" value="{If:the_name}" />
+	</td>
 </tr>
 <tr>
-	<td><label for="url">Homepage</label><br />
-	  <input type="text" name="url" id="url" size="40" maxlength="100" value="{the_url}" alt="Homepage" /></td></tr>
+	<td>
+	  E-Mailadresse<br />
+	  <input type="text" id="email" size="40" maxlength="100" value="{If:the_email}" />
+	</td>
+</tr>
 <tr>
-  <td><label for="beitrag">Beitrag</label><br />
-    <textarea name="beitrag"  id="beitrag" cols="50" rows="10">{the_beitrag}</textarea></td></tr>
+	<td>
+	  Homepage<br />
+	  <input type="text" id="url" size="40" maxlength="100" value="{If:the_url}" />
+	</td>
+</tr>
 <tr>
-	<td><p><input name="gb_submit" type="submit" value="Eintragen" />	<input type="hidden" name="state" value="{the_state}" /></p></td>
+  <td>
+   Beitrag<br />
+    <textarea  id="beitrag" cols="50" rows="10">{If:the_beitrag}</textarea>
+  </td>
+</tr>
+<tr>
+	<td><p><input id="gb_submit" type="submit" value="Eintragen" /></p>
+	</td>
 </tr>
 </table>
 
@@ -40,35 +58,35 @@
 </form>
 <!--/EINTRAGEN-->
 <!--HEADER-->
-{script}
+{If:script}
 <h1 id="neu">Gästebuch</h1>
-{eintragen}
+{If:eintragen}
 
 
 <table class="klein">
 <tr>
-	<td style="text-align:left">{prev_page}</td>
+	<td style="text-align:left">{If:prev_page}</td>
 	<td style="text-align:center"><a href="?neu">Neuer Eintrag</a></td>
-	<td style="text-align:right">{next_page}</td>
+	<td style="text-align:right">{If:next_page}</td>
 </tr>
 </table>
 
 
-
+<h2>Einträge</h2>
 <table class="gross" >
 
 <!--/HEADER-->
 
 <!--EINTRÄGE-->
 <tr>
-	<td  class="id" ><strong>{id}</strong></td>
-	<td class="name"><strong>{name}</strong> schrieb am {datum}<br />
-		{email_und_url}
+	<td  class="id" style="padding-right:5px"><h3>{If:id}</h3></td>
+	<td class="name"><strong>{If:name}</strong> schrieb am {If:eintragdatum}<br />
+		{If:email_und_url}
 	</td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td>{beitrag}<br /><br />{admin_elemente}</td>
+	<td>{If:beitrag}<br /><br />{If:admin_elemente}</td>
 </tr>
 
 
@@ -81,9 +99,9 @@
 <table class="klein">
 <tr><td colspan="3"><br /></td></tr>
 <tr>
-	<td align="center">{prev_page}</td>
+	<td align="center">{If:prev_page}</td>
 	<td  align="center">Einträge ab Nr. {seiten} </td>
-	<td align="center">{next_page}</td>
+	<td align="center">{If:next_page}</td>
 </tr>
 </table>
 

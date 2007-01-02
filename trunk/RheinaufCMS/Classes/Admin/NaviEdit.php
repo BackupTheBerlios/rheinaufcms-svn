@@ -800,7 +800,7 @@ function dublette(name,typ)
 		$path = explode('/',$path);
 		foreach ($path as $key => $part)
 		{
-			$path[$key] = rawurlencode($this->path_encode($part));
+			$path[$key] = (!preg_match("/^https?:/",$part)) ? rawurlencode($this->path_encode($part)) : $part;
 		}
 		return implode('/',$path);
 	}

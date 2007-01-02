@@ -4,6 +4,7 @@ $icon = 'date.png';
 class KalenderAdmin extends Admin
 {
 	var $return = '';
+
 	function KalenderAdmin($db_connection,$path_information)
 	{
 		$this->connection = $db_connection;
@@ -12,7 +13,6 @@ class KalenderAdmin extends Admin
 
 		$this->make_scaffold();
 		$this->event_listen();
-
 	}
 	function event_listen()
 	{
@@ -39,7 +39,7 @@ class KalenderAdmin extends Admin
 		$this->scaff->cols_array['DESCRIPTION']['html'] = true;
 
 		$this->scaff->cols_array['LOCATION']['name'] = 'Ort';
-		$this->scaff->cols_array['LOCATION']['value'] = ($_POST['LOCATION']) ? $_POST['LOCATION'] : 'Karl-Häupl-Institut, Düsseldorf';
+		$this->scaff->cols_array['LOCATION']['value'] = ($_POST['LOCATION']) ? $_POST['LOCATION'] : 'Wachsfabrik';
 
 		$this->scaff->cols_array['STATUS']['name'] = 'Status';
 		$this->scaff->cols_array['STATUS']['type'] = 'select';
@@ -77,7 +77,7 @@ class KalenderAdmin extends Admin
 
 		$this->scaff->cols_array['CONTACT']['name'] = 'Kontakt';
 		$this->scaff->cols_array['CONTACT']['type'] = 'email';
-		$this->scaff->cols_array['CONTACT']['value'] = 'Infomail <info@parodontologie.org>';
+		$this->scaff->cols_array['CONTACT']['value'] = '';
 		
 		
 		$this->scaff->cols_array['X-OTHER-VCAL']['type'] = 'hidden';

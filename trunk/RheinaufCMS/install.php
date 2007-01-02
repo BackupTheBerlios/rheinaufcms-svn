@@ -66,15 +66,15 @@ class RheinaufCMS_Install
 	{
 		$config_file = file_get_contents('Config.inc.php');
 		
-		$config_file = preg_replace("/(define\('PROJECT_NAME',').*?('\))/","$1$this->project_name$2",$config_file);
-		$config_file = preg_replace("/(define\('DB_SERVER',').*?('\))/","$1$this->db_server$2",$config_file);
-		$config_file = preg_replace("/(define\('DB_NAME',').*?('\))/","$1$this->db_name$2",$config_file);
-		$config_file = preg_replace("/(define\('DB_USER',').*?('\))/","$1$this->db_user$2",$config_file);
-		$config_file = preg_replace("/(define\('DB_PASS',').*?('\))/","$1$this->db_pass$2",$config_file);
+		$config_file = preg_replace("/(define\('PROJECT_NAME',').*?('\))/","define('PROJECT_NAME','$this->project_name')",$config_file);
+		$config_file = preg_replace("/(define\('DB_SERVER',').*?('\))/","define('DB_SERVER','$this->db_server')",$config_file);
+		$config_file = preg_replace("/(define\('DB_NAME',').*?('\))/","define('DB_NAME','$this->db_name')",$config_file);
+		$config_file = preg_replace("/(define\('DB_USER',').*?('\))/","define('DB_USER','$this->db_user')",$config_file);
+		$config_file = preg_replace("/(define\('DB_PASS',').*?('\))/","define('DB_PASS','$this->db_pass')",$config_file);
 		
-		$config_file = preg_replace("/(define\('FTP_SERVER',').*?('\))/","$1$this->ftp_server$2",$config_file);
-		$config_file = preg_replace("/(define\('FTP_USER',').*?('\))/","$1$this->ftp_user$2",$config_file);
-		$config_file = preg_replace("/(define\('FTP_PASS',').*?('\))/","$1$this->ftp_pass$2",$config_file);
+		$config_file = preg_replace("/(define\('FTP_SERVER',').*?('\))/","define('FTP_SERVER','$this->ftp_server')",$config_file);
+		$config_file = preg_replace("/(define\('FTP_USER',').*?('\))/","define('FTP_USER','$this->ftp_user')",$config_file);
+		$config_file = preg_replace("/(define\('FTP_PASS',').*?('\))/","define('FTP_PASS','$this->ftp_pass')",$config_file);
 		
 		define('USE_FTP',true);
 		define('FTP_SERVER',$this->ftp_server);
