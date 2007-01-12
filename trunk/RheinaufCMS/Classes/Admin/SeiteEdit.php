@@ -149,7 +149,7 @@ class SeiteEdit extends Admin
 		$editor_page->title = $title;
 
 		$editor_page->script(' _editor_url  = "/'.INSTALL_PATH.'/Libraries/Xinha/";_editor_lang = "de";_document_root = "'.DOCUMENT_ROOT.'"');
-		$editor_page->script('',array('src'=>'/'.INSTALL_PATH.'/Libraries/Xinha/htmlarea.js'));
+		$editor_page->script('',array('src'=>'/'.INSTALL_PATH.'/Libraries/Xinha/XinhaCore.js'));
 		$editor_page->script('',array('src'=>'/'.INSTALL_PATH.'/Libraries/XinhaConfig/editor.php'));
 		$editor_page->script("var project_name = '".addslashes(PROJECT_NAME) ."';");
 
@@ -356,8 +356,8 @@ class SeiteEdit extends Admin
 	{
 		$list = new HtmlList();
 
-		$list->add_li(Html::a('javascript:;','Panels',array('onclick'=>"xinha_editors.editor.plugins.SwitchPanels.instance.buttonPress()")));
-		$list->add_li(Html::a('javascript:;','Elementumrahmung',array('onclick'=>"xinha_editors.editor.plugins.OutlineElements.instance.toggleActivity()")));
+		$list->add_li(Html::a('javascript:void(0);','&bull;&nbsp;Panels',array('onclick'=>"xinha_editors.editor.plugins.CustomUtils.instance.togglePanels(this)")));
+		$list->add_li(Html::a('javascript:;','&nbsp;&nbsp;Elementumrahmung',array('onclick'=>"xinha_editors.editor.plugins.CustomUtils.instance.toggleOutlineElements(this)")));
 		
 		return $list->flush_list();
 	}

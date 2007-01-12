@@ -10,7 +10,7 @@ header('Content-type:text/javascript');
 ---------------------------------*/
 
 ?>
-
+_editor_skin = 'silva'; 
 window.moveTo(0,0);
 window.resizeTo(screen.width,screen.height);
 window.focus();
@@ -40,20 +40,17 @@ window.focus();
 	'ExtendedFileManager',
 	//'Forms',
 	'InsertAnchor',
-	//'GetHtml',
-	//'Linker',
-	'RheinaufCMSLinker',
+	'GetHtml',
+	'Linker',
+	//'RheinaufCMSLinker',
 	'DoubleClick',
-	'HorizontalRule',
+	//'HorizontalRule',
 	'InsertSnippet',
 	'SaveSubmit',
-	'SwitchPanels',
-	'OutlineElements',
-	//'CustomPage'
 	'SmartReplace',
-	'CustomUtils'
+	'CustomUtils',
+	//'Properties'
 	];
-	
 	     // THIS BIT OF JAVASCRIPT LOADS THE PLUGINS, NO TOUCHING  :)
 	     if(!HTMLArea.loadPlugins(xinha_plugins, xinha_init)) return;
 
@@ -65,28 +62,7 @@ window.focus();
 
 	xinha_config = xinha_config ? xinha_config : new HTMLArea.Config();
 
-	var x,y;
-
-    if (self.innerHeight) // all except Explorer
-    {
-      x = self.innerWidth;
-      y = self.innerHeight;
-    }
-    else if (document.documentElement && document.documentElement.clientHeight)
-      // Explorer 6 Strict Mode
-    {
-      x = document.documentElement.clientWidth;
-      y = document.documentElement.clientHeight;
-    }
-    else if (document.body) // other Explorers
-    {
-      x = document.body.clientWidth;
-      y = document.body.clientHeight;
-    }
-
-	xinha_config.height = y-30 + 'px';
-	xinha_config.width = x + 'px';
-
+	
 	xinha_config.toolbar =
 	 [
 	    ["formatblock","bold","italic"],
@@ -99,7 +75,7 @@ window.focus();
  	//xinha_config.flowToolbars = false;
 	xinha_config.showLoading = true;
 	//xinha_config.only7BitPrintablesInURLs = false;
-	xinha_config.stripScripts = false;
+
 
 	xinha_config.stripBaseHref = true;
 	xinha_config.baseHref = "<?php print 'http://'. $_SERVER['SERVER_NAME'] ?>";
@@ -107,19 +83,21 @@ window.focus();
 	//xinha_config.ListType.mode = 'panel';
 	//xinha_config.CharacterMap.mode = 'panel';
 
-	xinha_config.InsertSnippet.css = ['/CSS/Screen.css'];
+	xinha_config.InsertSnippet.css = ['CSS/Screen.css'];
 	xinha_config.InsertSnippet.showInsertVariable =true;
     xinha_config.InsertSnippet.snippets = '/RheinaufCMS/Libraries/XinhaConfig/snippets.php';
 
-   // xinha_config.Linker.backend =  _editor_url + 'plugins/Linker/rheinauf_cms_db_scan.php',
+    xinha_config.Linker.backend =  '/RheinaufCMS/Libraries/XinhaConfig/rheinauf_cms_db_scan.php',
 
 	xinha_config.SuperClean.show_dialog = true;
     xinha_config.SuperClean.filters = {
                'tidy': HTMLArea._lc('General tidy up and correction of some problems.', 'SuperClean'),
-          //     'word_edited': 'Word'
+               'word_edited': 'Word'
     }
 
-   
+    xinha_config.editId = 'content';
+	xinha_config.bodyInnerHTML = '<div id="wrapper"><div id="content"></div></div>';
+	
 	if (xinha_config.ExtendedFileManager) 
 	{
 		with (xinha_config.ExtendedFileManager)
