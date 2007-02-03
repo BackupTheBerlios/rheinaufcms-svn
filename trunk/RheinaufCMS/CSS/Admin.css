@@ -173,3 +173,10 @@ a.active, .button  {
 td {
 	padding:4px;
 }
+#loading {
+	font-size:8em;
+	opacity:0.5;
+	filter:Alpha(opacity=50);
+	color:white;
+	background-color:rgb(20, 54, 84);
+}

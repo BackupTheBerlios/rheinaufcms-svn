@@ -395,7 +395,7 @@ class SeiteEdit extends Admin
 			$saved = 'false';
 			$message = 'Beim Speichern ist ein Fehler aufgetreten.\nBitte versuchen Sie es noch einmal.\nSollte sich das Problem nicht beheben lassen, melden Sie es bitte dem Administrator.'; 
 		}
-		print $message = "state = {'saved':$saved,'message':'$message'};";
+		print $message = "{'saved':$saved,'message':'$message'};";
 	}
 	function save_tmp()
 	{

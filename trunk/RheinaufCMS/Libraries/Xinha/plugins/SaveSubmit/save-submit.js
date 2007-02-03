@@ -79,13 +79,14 @@ var _15={};
 _15[_14]=_12.outwardHtml(_12.getHTML());
 Xinha._postback(_12._textArea.form.action+"&nohtml",_15,function(_16){
 if(_16){
-var _17={"saved":false,"message":""};
-eval(_16);
-if(_17.saved==true){
-_13.setMessage(_17.message);
+var s;
+s={"saved":false,"message":""};
+eval("s = "+_16);
+if(s.saved==true){
+_13.setMessage(s.message);
 _13.changedReset();
 }else{
-alert(_17.message);
+alert(s.message);
 }
 removeMessage=function(){
 _13.removeMessage();

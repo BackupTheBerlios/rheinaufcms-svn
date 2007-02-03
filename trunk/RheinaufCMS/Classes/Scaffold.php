@@ -17,7 +17,7 @@ class Scaffold extends RheinaufCMS
 	# $this->cols_array[Spaltenname]['name']
 	#								['type'] ->'text', 'select', 'radio','check', 'textarea', 'upload', 'hidden','custom','timestamp','email','ignore','info'
 	#								['value']
-	#								['options'] (bei 'select') ->array('option1','option2') || string 
+	#								['options'] (bei 'select') ->array('option1','option2') || string
 	#								['options_sort'] -> true || false
 	#								['options_insert_id'] -> true || false
 	#								['other_option']
@@ -33,7 +33,7 @@ class Scaffold extends RheinaufCMS
 									['upload_extensions'] => array('jpg','png')
 									['upload_size'] =>max size KB
 									['upload_efm']
-	
+
 	*/
 	var $cols_array=array();
 	var $re_entry; #true|false
@@ -55,7 +55,7 @@ class Scaffold extends RheinaufCMS
 	var $edit_enabled = false;
 	var $custom_parameter_filter = array();
 	var $input_width = "300px";
-	
+
 	function  Scaffold ($table,$db_connection='')
 	{
 		$this->upload_path = INSTALL_PATH.'/Download/';
@@ -64,7 +64,7 @@ class Scaffold extends RheinaufCMS
 		$this->connection = ($db_connection != '') ? $db_connection : new RheinaufDB();
 		$this->connection->debug = false;
 		$this->construct_array();
-		//if ($this->edit_enabled) 
+		//if ($this->edit_enabled)
 		//{
 			$this->edit_scripts();
 		//}
@@ -115,7 +115,7 @@ class Scaffold extends RheinaufCMS
 				$return .= "\$this->scaff->cols_array['$key']['attributes'] = array('onfocus' => \"growTextArea(this,150)\",'onblur' => \"sizeTextAreasToContent(this,'150px')\");\n\n";
 			}
 			else $return .= "\$this->scaff->cols_array['$key']['attributes'] = '';\n\n";
-			
+
 		}
 		return $return;
 	}
@@ -135,18 +135,18 @@ class Scaffold extends RheinaufCMS
 			if (isset($_REQUEST['reentry'])) return $this->make_form(($_POST['edit_id']) ? $_POST['edit_id'] : $this->last_insert_id);
 			if (isset($_GET['new'])) return $this->make_form();
 		}
-		
+
 		if (isset($_GET['img']))
 		{
 			$this->img_thumb();
 		}
-		if (isset($_GET['export'])) 
+		if (isset($_GET['export']))
 		{
 			$sql = "SELECT * FROM `$db_table`";
 			$result = $this->result = $this->connection->db_assoc($sql);
 			$this->export($result,'id');
 		}
-		
+
 		if ($this->result_array)
 		{
 			$result = $this->result_array;
@@ -154,7 +154,7 @@ class Scaffold extends RheinaufCMS
 		else
 		{
 			$order_by = ($this->order_by) ? $this->order_by : 'id';
-			
+
 			if ($_GET['dir'] == 'desc')
 			{
 				$order_dir = 'DESC';
@@ -167,7 +167,7 @@ class Scaffold extends RheinaufCMS
 			{
 				$order_dir = ($this->order_dir) ? $this->order_dir : 'ASC';
 			}
-						
+
 			if ($_GET['results_per_page'])
 			{
 				$results_per_page = $this->results_per_page = $_GET['results_per_page'];
@@ -177,15 +177,15 @@ class Scaffold extends RheinaufCMS
 			{
 				$results_per_page = $this->results_per_page = $_COOKIE[$this->results_per_page_cookie_name];
 			}
-			else 
+			else
 			{
 				$results_per_page = $this->results_per_page;
 			}
 			$results_per_page = General::input_clean($results_per_page,true);
-			
+
 			$start_by = ($_GET['start']) ? $_GET['start'] : $_GET['start'] = 0;
 			$start_by = General::input_clean($start_by,true);
-			
+
 			foreach ($this->enable_search_for as $col)
 			{
 				if ($_GET[$col])
@@ -217,7 +217,7 @@ class Scaffold extends RheinaufCMS
 
 			$order = ($_GET['order']) ? rawurldecode($_GET['order']) : $order_by;
 			$order = General::input_clean($order,true);
-			
+
 			if ($this->sql =='')
 			{
 			 	$sql = "SELECT * FROM `$db_table` $where $group_by ORDER BY `$order` $order_dir";
@@ -226,11 +226,11 @@ class Scaffold extends RheinaufCMS
 
 			$num_rows = $this->num_rows = $this->connection->db_num_rows($sql);
 			if (!$results_per_page) $results_per_page = $this->results_per_page = $num_rows;
-			
-			
+
+
 			if ($results_per_page || $start_by)
 			{
-				$num_rows = $this->num_rows = $this->connection->db_num_rows($sql);	
+				$num_rows = $this->num_rows = $this->connection->db_num_rows($sql);
 				$sql .= " LIMIT $start_by,$results_per_page";
 			}
 			/*if ($this->last_insert_id)
@@ -270,13 +270,13 @@ class Scaffold extends RheinaufCMS
 				{
 					$head .="<th>$button</th>";
 					$loop .= "<td class=\"$alt_col{If:alt_row}\">{If:$key}</td>";
-					$alt_col = ($alt_col !== '') ? '' : 'alt_col'; 
+					$alt_col = ($alt_col !== '') ? '' : 'alt_col';
 					$colspan++;
 				}
 			}
 			$loop .= "<td class=\"$alt_col{If:alt_row}\">{If:edit_btns}</td>";
 			$loop = "<tr id=\"entry{id}\">$loop</tr>";
-			$search =  (count($this->enable_search_for)) ?  $this->search_form() : ''; 
+			$search =  (count($this->enable_search_for)) ?  $this->search_form() : '';
 
 			$new_template = '';
 			$new_template .= '
@@ -286,9 +286,9 @@ class Scaffold extends RheinaufCMS
 {IfNotEmpty:prev_url(<a href="[prev_url]" class="button" onclick="httpRequestGET(\'[prev_url]&amp;noframe\',setContent);return false">Zurück</a>)}
 {IfNotEmpty:next_url(<a href="[next_url]" class="button" onclick="httpRequestGET(\'[next_url]&amp;noframe\',setContent);return false">Weiter</a>)}
 &nbsp;&nbsp;&nbsp;{If:new_btn}
-&nbsp;&nbsp;&nbsp;{num_entries} Einträge auf {num_pages} Seiten 
+&nbsp;&nbsp;&nbsp;{num_entries} Einträge auf {num_pages} Seiten
 &nbsp;&nbsp;&nbsp;Zeige <input type="text" size="2" name="results_per_page" id="results_per_page" value="{results_per_page}" style="text-align:center"/> Einträge pro Seite
-<input type="submit" value="Aktualisieren" /> 
+<input type="submit" value="Aktualisieren" />
 
 {If:results_per_page_get_vars}
 </form>
@@ -311,7 +311,7 @@ $search
 ";
 			$new_template .= "<!--LOOP-->\n$loop</tr>\n<!--/LOOP-->\n";
 
-			
+
 			$new_template .="<!--POST-->\n</tbody><tfoot><tr><td colspan=\"$colspan\">{If:new_btn}</td></tr></tfoot></table>\n<!--/POST-->\n";
 			if ($make_template) RheinaufFile::write_file($template,$new_template);
 			$template = $new_template;
@@ -331,31 +331,31 @@ $search
 			$icons['new'] = Html::img('/'.INSTALL_PATH.'/Classes/Admin/Icons/16x16/edit_add.png','');
 			$vars['new_btn']  =  Html::a(SELF_URL.'?new&amp;'.$this->GET_2_url(),$icons['new']. 'Eintrag hinzufügen',array('title'=>'Eintrag hinzufügen','class'=>'button'));
 		}
-		
+
 		$vars['num_pages'] = $pages = $this->get_pages();
 		$vars['num_entries'] = $num_rows;
-		
+
 		$vars['prev_url'] = ($prev = $this->prev_link()) ? SELF_URL.'?'.$this->GET_2_url('start').'&amp;'.$prev :'';
 		$vars['next_url'] = ($next = $this->next_link()) ? SELF_URL.'?'.$this->GET_2_url('start').'&amp;'.$next :'';
-		
+
 		$vars['this_page'] = $this->get_page();
 		$vars['results_per_page_get_vars'] = $this->GET_2_input('results_per_page');
 		$vars['results_per_page'] = $results_per_page;
-		
+
 		$vars['page_browser'] = $template->parse_template('PAGE_BROWSER',$vars);
-		$vars['pagination'] = $this->pagination();	
-		
+		$vars['pagination'] = $this->pagination();
+
 		foreach ($this->cols_array as $key => $value)
 		{
 			$name = $this->cols_array[$key]['name'];
-			
+
 			if ($_GET['order'] == $key )
 			{
 				if ($_GET['dir'] == 'asc') $name .= '&uArr;' ;
 				else $name .= '&dArr;';
 				$dir = ($_GET['dir'] == 'desc') ? 'asc' : 'desc';
 			}
-			else if (!isset($_GET['order'])&& $key == $this->order_by) 
+			else if (!isset($_GET['order'])&& $key == $this->order_by)
 			{
 				if ($this->order_dir == 'ASC')
 				{
@@ -368,13 +368,13 @@ $search
 					$dir = 'asc';
 				}
 			}
-			else 
+			else
 			{
 				$dir = ($this->order_dir == 'ASC') ? 'asc' : 'desc';
 			}
 			$vars[$key.'_sort'] = $this->make_btn_link(SELF_URL.'?'.$this->GET_2_url(array('order','dir')).'&amp;order='.rawurlencode($key).'&amp;dir='.$dir,$name,array('class'=>'button','style'=>'display:block'));
 		}
-		
+
 
 		$return_string .= $template->parse_template('PRE',$vars);
 		$alternatig_rows = 0;
@@ -456,7 +456,7 @@ $search
 		$form->fieldset($inputs,$legend);
 		return $form->flush_form();
 	}
-	
+
 	function next_link()
 	{
 		if ($this->results_per_page)
@@ -510,10 +510,10 @@ $search
 		$index = ($index !== null) ? $index +1 : $_GET['start']+1;
 		return ($this->results_per_page) ? ceil($index / $this->results_per_page) : 0;
 	}
-	
+
 	function pagination ()
 	{
-		
+
 		$rows = $this->num_rows;
 		$return_string = '';
 		for ($i = 0;$i<$rows;$i += $this->results_per_page)
@@ -522,7 +522,7 @@ $search
 			{
 				$return_string .= $this->get_page($i).' ';
 			}
-			else 
+			else
 			{
 				$url = SELF_URL.'?start='.$i.'&amp;'.$this->GET_2_url('start');
 				$url = preg_replace('/&amp;$/','',$url);
@@ -543,7 +543,7 @@ $search
 
 	function details($entry)
 	{
-		
+
 	}
 	function make_form($edit ='',$action = null,$action_parameter_filter = array())
 	{
@@ -560,7 +560,7 @@ $search
 		//$url .= ($_GET['edit']) ? '#entry'.$_GET['edit'] : '';
 		$return .= Form::form_tag($url,'post','multipart/form-data',array('onsubmit'=>"loading();return checkform();"));
 		$table = new Table(2,array('class'=>'scaffold'));
-		
+
 		if ($this->show_buttons_above_form)
 		{
 			$input = ($this->submit_button) ? $this->submit_button : Form::add_input('submit','submit','Eintragen',array('class'=>'button'));
@@ -573,7 +573,7 @@ $search
 			$name = $key;
 			$show_name  =  General::wrap_string($col['name'],30);
 			$show_name .= ($col['required']) ? ' *' :'';
-			
+
 			$id = 'input_'.$GLOBALS['input_id'];
 			$encoded_name = rawurlencode($name);
 			$attr_array = $col['attributes'];
@@ -594,8 +594,8 @@ $search
 					$edit_options_btn .= Form::add_input('submit','reentry','Aktualisieren',array('id'=>$id.'_refresh','style'=>'display:none'));
 				}
 			}
-			
-			
+
+
 			if ($name != 'id')
 			{
 				switch ($col['type'])
@@ -614,7 +614,7 @@ $search
 					break;
 					case('select'):
 						$attr_array['id'] = $id;
-						
+
 						$select = new Select($encoded_name,array_merge($attr_array,array('onchange'=>"selectOtherOption('$id','".$col['other_option']."')")));
 						$select->add_option('','--Bitte auswählen--');
 						$attr_array = array();
@@ -647,7 +647,7 @@ $search
 							if (isset($col['condition'][$option]))
 							{
 								$condition = "{input:'".$encoded_name."',value:'".$option."',target:'".$col['condition'][$option]."'}";
-								$input .= Html::script("conditions.push($condition)");	
+								$input .= Html::script("conditions.push($condition)");
 								//$attr_array['onchange'] = "checkCondition($condition)";
 							}
 							else
@@ -695,8 +695,8 @@ $search
 						}
 						else $attr_array['style'] .= "width:$this->input_width;";
 						$attr_array['rows'] = ($col['attributes']['rows']) ? $col['attributes']['rows'] : 10;
-						
-						
+
+
 						$input = Form::add_textarea($encoded_name,$value,$attr_array);//,'cols'=>'35','rows'=>'2','onfocus'=>'textarea_grow(\''.$id.'\')','onblur'=>'textarea_shrink(\''.$id.'\')'));
 						if ($col['options']) $input .= Html::br() . $edit_options_btn;
 						if ($col['html'])
@@ -705,21 +705,21 @@ $search
 						}
 					break;
 					case ('upload'):
-					
+
 						$input ='';
 						$value = $values[$key];
 						$entries = array();
 						if (!is_array($value)) $entries = explode('&delim;',$value);
 						else $entries = $value;
-						
+
 						$upload_folder = '';
 						foreach ($this->upload_folder as $col_name)
 						{
 							$upload_folder .= $values[$col_name];
 						}
 						$upload_folder .= '/';
-						
-						
+
+
 						if (count(General::trim_array($entries)) > 0)
 						{
 							$subtable = new Table(3);
@@ -733,7 +733,7 @@ $search
 								else  $thumb = '';
 								$check = Form::add_input('hidden',$encoded_name.'[]',$file);
 								$check .= Html::br().Form::add_input('checkbox',$encoded_name.'_delfile[]',$file,array("onclick"=>"confirmDelPic(this)")).' Datei löschen';
-								
+
 								$subtable->add_td(array($thumb,$file.$check));
 							}
 							$input .= $subtable->flush_table();
@@ -744,16 +744,16 @@ $search
 						//$input = ($value) ? $value.Form::add_input('hidden',$encoded_name,$value,$attr_array).Html::br().Html::span('Neue Datei verknüpfen:',array('class'=>'klein')).Html::br():'';
 						$input .= Form::add_input('file',$encoded_name.'_upload[]').Form::add_input('submit','reentry','Hochladen');
 						if ($col['upload_extensions'])
-						{				
-							$input .= Html::br() . Html::span("Erlaubte Erweiterungen: ".implode(', ',$col['upload_extensions']),array('class'=>'klein'));				
+						{
+							$input .= Html::br() . Html::span("Erlaubte Erweiterungen: ".implode(', ',$col['upload_extensions']),array('class'=>'klein'));
 						}
 						if ($col['upload_size'])
-						{				
-							$input .= Html::br() . Html::span("Maximale Dateigröße: ".$col['upload_size'] .'KB',array('class'=>'klein'));				
+						{
+							$input .= Html::br() . Html::span("Maximale Dateigröße: ".$col['upload_size'] .'KB',array('class'=>'klein'));
 						}
 					break;
 					case 'EFM':
-						
+
 					break;
 					case ('custom'):
 						$input = $col['custom_input'];
@@ -846,7 +846,7 @@ $search
 				$td_atributes['class'] = ' alt_row_'.$alternatig_rows;
 				if ($col['hidden']) $td_atributes['style'] = 'display:none;';
 				else unset($td_atributes['style']);
-				
+
 				if ($col['info'])
 				{
 					if (!$GLOBALS['toolTipScriptLoaded'])
@@ -861,7 +861,7 @@ $search
 					$info .= Html::script("toolTips.push({trigger : '$trigger_id',source : '$source_id',className : 'tooltip'});");
 				}
 				else $info = '';
-				
+
 				if ($input) $table->add_td(array(Form::add_label($id,$show_name).$info,$input),$td_atributes);
 
 				$GLOBALS['input_id']++;
@@ -902,15 +902,15 @@ $search
 			if ($key != rawurldecode($key))
 			{
 				$_POST[rawurldecode($key)] = $value;
-				unset($_POST[$key]);	
-			}			
+				unset($_POST[$key]);
+			}
 		}
 		foreach ($_FILES as $key => $value)
 		{
 			if ($key != rawurldecode($key))
 			{
 				$_POST[rawurldecode($key)] = $value;
-				unset($_POST[$key]);	
+				unset($_POST[$key]);
 			}
 		}
 		foreach ($this->cols_array as $key => $col)
@@ -918,8 +918,8 @@ $search
 			$field_value = ($_POST[$key]) ? $_POST[$key] : $col['value'];
 
 			$field_value = (!strstr($field_value,'--')) ? $field_value : '';
-			
-			
+
+
 			if ($col['type'] == 'check')
 			{
 				$t = array();
@@ -937,7 +937,7 @@ $search
 				}
 				$field_value = (is_array($field_value)) ? implode('&delim;',General::trim_array( $field_value )) : $field_value;
 			}
-			
+
 			if ($col['type'] == 'timestamp')
 			{
 				$t = Date::unify_timestamp($_POST[$key.'_jahr'].$_POST[$key.'_monat'].$_POST[$key.'_tag'].$_POST[$key.'_stunde'].$_POST[$key.'_minute'].'00');
@@ -964,7 +964,7 @@ $search
 				{
 					$max_upload = $col['upload_size'] * 1024;
 				}
-				
+
 				$field_value = ($_POST[$key]) ? $_POST[$key] :  array();
 				if ($_FILES[$key.'_upload']['name'])
 				{
@@ -989,15 +989,15 @@ $search
 							$f_name = preg_replace("/[^0-9a-z.]/i",'_',$_FILES[$key.'_upload']['name'][$i]);
 							if ($f_name && $upload_extensions && !preg_match("/$upload_extensions/",$f_name))
 							{
-								$GLOBALS['scripts'] .= Html::script('onLoad.push(function() {alert("Dieses Dateiformat ist nicht erlaubt.")})'); 
+								$GLOBALS['scripts'] .= Html::script('onLoad.push(function() {alert("Dieses Dateiformat ist nicht erlaubt.")})');
 								continue;
 							}
 							if ($f_name && $max_upload && $_FILES[$key.'_upload']['size'][$i] > $max_upload)
 							{
 								$GLOBALS['scripts'] .= Html::script('onLoad.push(function() {alert("Die Dateigröße übersteigt das erlaubte Maximum")})');
-								continue;	
+								continue;
 							}
-							
+
 							$file = $this->upload_path .$upload_folder. $f_name;
 							$uploaded_file = $_FILES[$key.'_upload']['tmp_name'][$i];
 							move_uploaded_file($uploaded_file, $file);
@@ -1005,21 +1005,21 @@ $search
 						}
 						//$field_value = (is_array($field_value)) ? implode('&delim;',General::trim_array( $field_value )) : $field_value;
 					}
-					else 
+					else
 					{
 						$f_name = preg_replace("/[^0-9a-z.]/i",'_',$_FILES[$key.'_upload']['name']);
-						
+
 						if ($f_name && $upload_extensions && !preg_match("/$upload_extensions/",$f_name))
 						{
-							$GLOBALS['scripts'] .= Html::script('onLoad.push(function() {alert("Dieses Dateiformat ist nicht erlaubt.")})'); 
+							$GLOBALS['scripts'] .= Html::script('onLoad.push(function() {alert("Dieses Dateiformat ist nicht erlaubt.")})');
 							continue;
 						}
 						if ($f_name && $max_upload && $_FILES[$key.'_upload']['size'] > $max_upload)
 						{
 							$GLOBALS['scripts'] .= Html::script('onLoad.push(function() {alert("Die Dateigröße übersteigt das erlaubte Maximum")})');
-							continue;	
+							continue;
 						}
-						
+
 						$file = $this->upload_path .$upload_folder. $f_name;
 						$uploaded_file = $_FILES[$key.'_upload']['tmp_name'];
 						move_uploaded_file($uploaded_file, $file);
@@ -1030,8 +1030,8 @@ $search
 				{
 					$field_value = array_diff($field_value,$_POST[$key."_delfile"]);
 					foreach ($_POST[$key."_delfile"] as $file)
-					{ 
-						RheinaufFile::delete($this->upload_path .$upload_folder.$file);	
+					{
+						RheinaufFile::delete($this->upload_path .$upload_folder.$file);
 					}
 				}
 			}
@@ -1040,21 +1040,21 @@ $search
 			if ($key == 'id') $field_value =  ($_POST['edit_id'] !== '' ) ? $_POST['edit_id'] :'';
 			$field_value = General::input_clean($field_value,true);
 			$field_values[] = "'".$field_value."'";
-			
+
 			if ($update && isset($_POST[$key])) $update_array[$key] = $field_value;
 		}
 		if ($update)
 		{
 			$this->connection->db_update($this->table,$update_array,"`id` = $update");
 		}
-		else 
+		else
 		{
 			$insert_sql .= implode(', ',$field_values).')';
 			$this->connection->db_query ($insert_sql);
 			$this->last_insert_id = $this->connection->db_last_insert_id();
 		}
 	}
-	
+
 	function delete_entry()
 	{
 		if (!$this->edit_enabled) return ;
@@ -1246,7 +1246,7 @@ $search
 		}
 		return implode("\n",$return);
 	}
-	
+
 	function make_btn_link($url,$content,$attributes)
 	{
 		if (!is_array($attributes)) $attributes = array();
@@ -1267,23 +1267,23 @@ $search
 	{
 		$this->enable_search_for[] = $col_name;
 	}
-	
+
 	function export($result,$ignore = 'id')
 	{
 		if (!is_array($ignore)) $ignore = array($ignore);
-		
+
 		require_once 'Spreadsheet/Excel/Writer.php';
-		
+
 		$workbook = new Spreadsheet_Excel_Writer();
 
 		// sending HTTP headers
 		$workbook->send('export.xls');
-		
+
 		// Creating a worksheet
 		$worksheet =& $workbook->addWorksheet('Excel worksheet');
 		$row = 0;
 		$col = 0;
-		
+
 		foreach ($this->cols_array as $key => $value)
 		{
 			if (in_array($key,$ignore)) continue;
@@ -1302,7 +1302,7 @@ $search
 				$worksheet->write($row,$col, $value);
 				$col++;
 			}
-			
+
 		}
 		$workbook->close();
 		$url = SELF_URL.'?'.$this->GET_2_url(array('export'));
@@ -1310,7 +1310,7 @@ $search
 		header("Location: $url");
 		exit;
 	}
-	
+
 	function insert_custom_after($after,$name,$custom_input)
 	{
 		$temp = array();
@@ -1323,7 +1323,7 @@ $search
 				$temp['custom'.$custom]['name'] = $name;
 				$temp['custom'.$custom]['type'] = 'custom';
 				$temp['custom'.$custom]['custom_input'] = $custom_input;
-				
+
 				$custom++;
 			}
 			else $temp[$key] = $value;
@@ -1333,7 +1333,7 @@ $search
 	function img_thumb()
 	{
 		if (!class_exists('Bilder')) include_once('Bilder.php');
-						
+
 		$url = $this->upload_path . $_GET['img'];
 		$x = $_GET['x'];
 		$img = new Bilder($url);
@@ -1341,7 +1341,7 @@ $search
 		$img->output();
 		exit;
 	}
-	
+
 	function get_options($options_value,$sort = false,$insert_index = false)
 	{
 		if (is_string($options_value))
@@ -1368,7 +1368,7 @@ $search
 		if ($sort) asort($options);
 		return $options;
 	}
-	
+
 	function edit_options()
 	{
 		$context = $this->cols_array[$_GET['editoptions']]['options'];
@@ -1380,21 +1380,21 @@ $search
 		$edit_options_scaff->cols_array['Context']['value'] =  $this->cols_array[$_GET['editoptions']]['options'];
 		$edit_options_scaff->cols_array['Context']['type'] =  'hidden';
 		$edit_options_scaff->sql = "SELECT * FROM `$edit_options_scaff->table` WHERE `Context` = '$context'";
-		
+
 		return $edit_options_scaff->make_table(null,INSTALL_PATH.'/Classes/Scaffold/EditOptions.table.template.html');
 	}
-	
+
 	function create_options_table()
 	{
 		$table_name = $this->table.'>Options';
-		
+
 		$sql = "CREATE TABLE IF NOT EXISTS `$table_name` (
 				  `id` int(11) NOT NULL auto_increment,
 				  `Text` text NOT NULL,
 				  `Context` varchar(50) NOT NULL default '',
 				  PRIMARY KEY  (`id`)
 				) ENGINE=MyISAM DEFAULT CHARSET=latin1;";
-		
+
 		$this->connection->db_query($sql);
 	}
 }
