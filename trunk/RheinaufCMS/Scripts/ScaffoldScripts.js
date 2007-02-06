@@ -1,5 +1,5 @@
 function delete_confirm(link) {
-	if (confirm("Diesen Eintrag löschen?"))
+	if (confirm("Diesen Eintrag lÃ¶schen?"))
 	{
 		var url = link.getAttribute("href");
 		url +=  "&noframe"; 
@@ -33,7 +33,7 @@ function checkform() {
 	{
 		removeLoading();
 		firstFail.focus();
-		alert('Bitte füllen Sie alle Felder mit einem * aus.');
+		alert('Bitte fÃ¼llen Sie alle Felder mit einem * aus.');
 	}
 	return check;
 }
@@ -198,7 +198,7 @@ function confirmDelPic(input)
 		var btn = document.createElement("input");
 			btn.type = "submit";
 			btn.name = "reentry";
-			btn.value = "Löschen bestätigen";
+			btn.value = "LÃ¶schen bestÃ¤tigen";
 			
 			var tr = document.createElement("tr");
 				tr.id = "confirmDelPicBtn";

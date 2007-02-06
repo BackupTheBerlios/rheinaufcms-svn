@@ -13,7 +13,6 @@ body {
 a { text-decoration:none}
 
 h1 {
-
 	margin-bottom:10px;
 }
 
@@ -32,23 +31,44 @@ a.block:hover {
 	padding:11px 9px 9px 11px;
 	background-color:rgb(160, 154, 255);
 	color: rgb(255,255,255);
-
 }
-table {
+table.scaffold  {
 	min-width:400px;
 	border: 1px solid rgb(220, 220, 220);
 }
-
+.scaffold td {
+	padding:4px;
+}
+.scaffold th {
+	border-top:1px solid rgb(220, 220, 220);
+}
+.low_opacity {
+	opacity:0.4;
+filter:Alpha(opacity=40);
+}
+.nowrap {
+	white-space:nowrap;
+}
+#loading {
+	font-size:8em;
+	opacity:0.5;
+	filter:Alpha(opacity=50);
+	color:white;
+	background-color:rgb(20, 54, 84);
+}
 td {
 	font-size:0.85em;
 	vertical-align:top;
-
 }
 th {
 	font-size:0.6em;
 	font-weight:bold;
 	vertical-align:top;
 	text-align:left;
+}
+tfoot td{
+	padding-top:8px;
+	border-top:1px solid rgb(220, 220, 220);
 }
 
 input,select,fieldset,textarea {
@@ -62,9 +82,12 @@ background-color:whitesmoke;
 legend {
 	color:gray;
 }
-input [type=image],option {
-	border:0;
+input[type=image],input[type=checkbox],input[type=radio], option {
+	border:0 !important;
 }
+
+
+
 ul {
 	
 }
@@ -79,13 +102,15 @@ li ul {
 
 #content {
 background-color:white;
+background-image:url(/Images/buddy_schriftzug_50px.gif);
+
 background-repeat:no-repeat;  
 opacity:0.9;
 filter:Alpha(opacity=90);
 border:1px solid;
 border-color:  ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
-margin:30px auto;
-padding:80px;
+margin:0;
+padding:35px 0px;
 }
 
 
@@ -107,6 +132,7 @@ a.active, .button, input[type=submit],button {
 	border-color:ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
 	border-left: none;
 	cursor:default;
+	white-space:nowrap;
 }
 
 .button, input[type=submit],button {
@@ -170,13 +196,19 @@ a.active, .button  {
 	font-size:10px;
 }
 
-td {
-	padding:4px;
+.advice {
+font:9px grey;
 }
-#loading {
-	font-size:8em;
-	opacity:0.5;
-	filter:Alpha(opacity=50);
-	color:white;
-	background-color:rgb(20, 54, 84);
+
+/*-----------------*/
+div#box-mitte {
+
+width: 70% ;
+}
+
+.tooltip {
+	width:250px;
+	background-color:#FFFFCF;
+	border:1px dotted #8F8F86;
+	padding:5px 10px; 
 }

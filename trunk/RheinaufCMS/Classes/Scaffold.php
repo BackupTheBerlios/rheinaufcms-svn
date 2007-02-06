@@ -15,7 +15,7 @@ class Scaffold extends RheinaufCMS
 	var $table;
 	/*
 	# $this->cols_array[Spaltenname]['name']
-	#								['type'] ->'text', 'select', 'radio','check', 'textarea', 'upload', 'hidden','custom','timestamp','email','ignore','info'
+	#								['type'] ->'text', 'select', 'radio','check', 'textarea', 'upload', 'hidden','custom','timestamp','email','ignore','info','changed'
 	#								['value']
 	#								['options'] (bei 'select') ->array('option1','option2') || string
 	#								['options_sort'] -> true || false
@@ -32,7 +32,7 @@ class Scaffold extends RheinaufCMS
 	#								['upload_max_count']
 									['upload_extensions'] => array('jpg','png')
 									['upload_size'] =>max size KB
-									['upload_efm']
+									['info']
 
 	*/
 	var $cols_array=array();
@@ -48,7 +48,7 @@ class Scaffold extends RheinaufCMS
 	var $datumsformat; #'tag_lang','tag_kurz','kein_tag'
 	var $enable_search_for = array(); #Spaltennamen
 	var $search_combine =  ' AND ';
-	var $search_method = 'LIKE %.%'; # '=','LIKE','LIKE %.%','LIKE %.','LIKE .%'
+	var $search_method = 'LIKE %.%'; # '=','>','<','>=','<=','LIKE','LIKE %.%','LIKE %.','LIKE .%'
 	var $use_ajax = true;
 	var $show_buttons_above_form = true;
 	var $enable_events = true;
@@ -131,7 +131,7 @@ class Scaffold extends RheinaufCMS
 				$this->delete_entry();
 			}
 			if ($_GET['edit'] ) return $this->make_form($_GET['edit']);
-			if (isset($_POST['edit_id'])) $this->db_insert();
+			if (isset($_POST['edit_id'])) $this->db_insert($_POST['edit_id']);
 			if (isset($_REQUEST['reentry'])) return $this->make_form(($_POST['edit_id']) ? $_POST['edit_id'] : $this->last_insert_id);
 			if (isset($_GET['new'])) return $this->make_form();
 		}
@@ -139,12 +139,6 @@ class Scaffold extends RheinaufCMS
 		if (isset($_GET['img']))
 		{
 			$this->img_thumb();
-		}
-		if (isset($_GET['export']))
-		{
-			$sql = "SELECT * FROM `$db_table`";
-			$result = $this->result = $this->connection->db_assoc($sql);
-			$this->export($result,'id');
 		}
 
 		if ($this->result_array)
@@ -196,6 +190,10 @@ class Scaffold extends RheinaufCMS
 					switch ($search_method)
 					{
 						case '=':
+						case '<':
+						case '>':
+						case '>=':
+						case '<=':
 						case 'LIKE':
 							$where[] = "`$col` $search_method '$value'";
 						break;
@@ -231,7 +229,7 @@ class Scaffold extends RheinaufCMS
 			if ($results_per_page || $start_by)
 			{
 				$num_rows = $this->num_rows = $this->connection->db_num_rows($sql);
-				$sql .= " LIMIT $start_by,$results_per_page";
+				if (!isset($_GET['allresults'])) $sql .= " LIMIT $start_by,$results_per_page";
 			}
 			/*if ($this->last_insert_id)
 			{
@@ -255,6 +253,12 @@ class Scaffold extends RheinaufCMS
 			$result = $this->result = $this->connection->db_assoc($sql);
 
 		}
+// now we have the result and can do things with it
+		if (isset($_GET['export']))
+		{
+			$this->export($result,'id');
+		}
+
 		if (!$template || $make_template)
 		{
 			$head ='';
@@ -271,7 +275,7 @@ class Scaffold extends RheinaufCMS
 					$head .="<th>$button</th>";
 					$loop .= "<td class=\"$alt_col{If:alt_row}\">{If:$key}</td>";
 					$alt_col = ($alt_col !== '') ? '' : 'alt_col';
-					$colspan++;
+					++$colspan;
 				}
 			}
 			$loop .= "<td class=\"$alt_col{If:alt_row}\">{If:edit_btns}</td>";
@@ -283,11 +287,11 @@ class Scaffold extends RheinaufCMS
 <!--PAGE_BROWSER-->
 <form method="get" action="{SELF_URL}" onsubmit="httpRequestSubmit(this);return false;">
 
-{IfNotEmpty:prev_url(<a href="[prev_url]" class="button" onclick="httpRequestGET(\'[prev_url]&amp;noframe\',setContent);return false">Zur¸ck</a>)}
+{IfNotEmpty:prev_url(<a href="[prev_url]" class="button" onclick="httpRequestGET(\'[prev_url]&amp;noframe\',setContent);return false">Zur√ºck</a>)}
 {IfNotEmpty:next_url(<a href="[next_url]" class="button" onclick="httpRequestGET(\'[next_url]&amp;noframe\',setContent);return false">Weiter</a>)}
 &nbsp;&nbsp;&nbsp;{If:new_btn}
-&nbsp;&nbsp;&nbsp;{num_entries} Eintr‰ge auf {num_pages} Seiten
-&nbsp;&nbsp;&nbsp;Zeige <input type="text" size="2" name="results_per_page" id="results_per_page" value="{results_per_page}" style="text-align:center"/> Eintr‰ge pro Seite
+&nbsp;&nbsp;&nbsp;{num_entries} Eintr√§ge auf {num_pages} Seiten
+&nbsp;&nbsp;&nbsp;Zeige <input type="text" size="2" name="results_per_page" id="results_per_page" value="{results_per_page}" style="text-align:center"/> Eintr√§ge pro Seite
 <input type="submit" value="Aktualisieren" />
 
 {If:results_per_page_get_vars}
@@ -299,14 +303,14 @@ $new_template .= "
 $search
 <table>
 <thead>
-<tr><td colspan=\"$colspan_minus1\">{page_browser}<td><td><a href=\"{SELF_URL}?export\"><img src=\"/RheinaufCMS/Classes/Scaffold/icon_excel_doc.gif\" alt=\"Excel\" title=\"Als Excel-Tabelle speichern\" /></a> </td></tr>
+<tr><td colspan=\"$colspan_minus1\">{page_browser}<td><td><a href=\"{SELF_URL}?export&amp;allresults&amp;{If:export_get_vars}\"><img src=\"/RheinaufCMS/Classes/Scaffold/icon_excel_doc.gif\" alt=\"Excel\" title=\"Ergebnisse als Excel-Tabelle speichern\" /></a> </td></tr>
 {IfNotEmpty:pagination(<tr><td colspan=\"$colspan\">Seite [pagination]<td></tr>)}
 <tr>$head</tr>
 </thead>
 <tbody>
 <!--/PRE-->
 <!--NO_RESULTS-->
-<tr><td colspan=\"$colspan\">Keine Eintr‰ge gefunden<td></tr>
+<tr><td colspan=\"$colspan\">Keine Eintr√§ge gefunden<td></tr>
 <!--/NO_RESULTS-->
 ";
 			$new_template .= "<!--LOOP-->\n$loop</tr>\n<!--/LOOP-->\n";
@@ -329,9 +333,9 @@ $search
 		if ($this->edit_enabled)
 		{
 			$icons['new'] = Html::img('/'.INSTALL_PATH.'/Classes/Admin/Icons/16x16/edit_add.png','');
-			$vars['new_btn']  =  Html::a(SELF_URL.'?new&amp;'.$this->GET_2_url(),$icons['new']. 'Eintrag hinzuf¸gen',array('title'=>'Eintrag hinzuf¸gen','class'=>'button'));
+			$vars['new_btn']  =  Html::a(SELF_URL.'?new&amp;'.$this->GET_2_url(),$icons['new']. 'Eintrag hinzuf?gen',array('title'=>'Eintrag hinzuf?gen','class'=>'button'));
 		}
-
+		$vars['export_get_vars'] = $this->GET_2_url();
 		$vars['num_pages'] = $pages = $this->get_pages();
 		$vars['num_entries'] = $num_rows;
 
@@ -389,13 +393,14 @@ $search
 				{
 					$options[$key] = $this->get_options($this->cols_array[$key]['options'],$this->cols_array[$key]['options_sort'],$this->cols_array[$key]['options_insert_id']);
 					$v = explode('&delim;',$value);
+					$v = General::trim_array($v);
 					$value= array();
 					foreach ($v as $k)
 					{
 						if ( $options[$key][$k]) $value[] = $options[$key][$k];
 						else $value[] = $k;
 					}
-					$value = implode(', ',$value);
+					$value = (count($value)) ? implode(', ',$value) : '';
 				}
 				if ($this->cols_array[$key]['type'] == 'timestamp')
 				{
@@ -423,7 +428,7 @@ $search
 				$icons['delete'] = Html::img('/'.INSTALL_PATH.'/Classes/Admin/Icons/16x16/cancel.png','');
 
 				$btns['edit'] = Html::a(SELF_URL.'?edit='.$entry['id'].'&amp;'.$this->GET_2_url(),$icons['edit'],array('title'=>'Eintrag bearbeiten'));
-				$btns['delete'] = Html::a(SELF_URL.'?delete='.$entry['id'].'&amp;'.$this->GET_2_url('delete','noframe'),$icons['delete'],array('title'=>'Eintrag lˆschen','onclick'=>'return delete_confirm(this,\''.$entry['id'].'\')'));
+				$btns['delete'] = Html::a(SELF_URL.'?delete='.$entry['id'].'&amp;'.$this->GET_2_url('delete','noframe'),$icons['delete'],array('title'=>'Eintrag l√∂schen','onclick'=>'return delete_confirm(this,\''.$entry['id'].'\')'));
 
 				$entry['edit_btns'] .= implode(' ',$btns);
 			}
@@ -445,12 +450,12 @@ $search
 			$name = $this->cols_array[$search_field]['name'];
 			$id = Html::html_legal_id($search_field);
 			$input_name = rawurlencode($search_field);
-			$inputs .= Form::add_label($id,$name).' ';
-			$inputs .= Form::add_input('text',$input_name,"{If:".$search_field."_search_value}",array('id'=>$id));
+			$input = Form::add_input('text',$input_name,"{If:".$search_field."_search_value}",array('id'=>$id));
+			$inputs .= Form::add_label($id,$name.' '.$input,array('class'=>'nowrap'));
 		}
 		$inputs .= "{If:filter_get_vars}\n";
 		$inputs .= Form::add_input('submit','Filter');
-		$inputs .= Form::add_input('submit','','Zur¸cksetzen',array('onclick'=>"this.form.reset();this.form.onsubmit();return false;"));
+		$inputs .= Form::add_input('submit','','Zur√ºcksetzen',array('onclick'=>"this.form.reset();this.form.onsubmit();return false;"));
 		$form = new Form();
 		$form->form_tag('{SELF_URL}','get','',array('onsubmit'=>'httpRequestSubmit(this);return false;'));
 		$form->fieldset($inputs,$legend);
@@ -495,7 +500,7 @@ $search
 	function list_navigation()
 	{
 		$nav = array();
-		if ($prev = $this->prev_link()) $nav[0] = Html::a(SELF_URL.'?'.$this->GET_2_url().'&amp;'.$prev,'Zur¸ck');
+		if ($prev = $this->prev_link()) $nav[0] = Html::a(SELF_URL.'?'.$this->GET_2_url().'&amp;'.$prev,'Zur?ck');
 		if ($next = $this->next_link()) $nav[1] = Html::a(SELF_URL.'?'.$this->GET_2_url().'&amp;'.$next,'Weiter');
 		return implode(' | ',$nav);
 	}
@@ -545,7 +550,7 @@ $search
 	{
 
 	}
-	function make_form($edit ='',$action = null,$action_parameter_filter = array())
+	function make_form($edit ='',$action = null,$action_parameter_filter = array(),$template = null)
 	{
 		if ($edit)
 		{
@@ -571,7 +576,8 @@ $search
 		foreach ($this->cols_array as $key => $col)
 		{
 			$name = $key;
-			$show_name  =  General::wrap_string($col['name'],30);
+			//$show_name  =  General::wrap_string($col['name'],30);
+			$show_name  = $col['name'];
 			$show_name .= ($col['required']) ? ' *' :'';
 
 			$id = 'input_'.$GLOBALS['input_id'];
@@ -616,7 +622,7 @@ $search
 						$attr_array['id'] = $id;
 
 						$select = new Select($encoded_name,array_merge($attr_array,array('onchange'=>"selectOtherOption('$id','".$col['other_option']."')")));
-						$select->add_option('','--Bitte ausw‰hlen--');
+						$select->add_option('','--Bitte ausw√§hlen--');
 						$attr_array = array();
 						if (!in_array($value,$options) && !key_exists($value,$options)) $col['other'] = $value;
 						foreach ($options as $option => $name)
@@ -732,7 +738,7 @@ $search
 								}
 								else  $thumb = '';
 								$check = Form::add_input('hidden',$encoded_name.'[]',$file);
-								$check .= Html::br().Form::add_input('checkbox',$encoded_name.'_delfile[]',$file,array("onclick"=>"confirmDelPic(this)")).' Datei lˆschen';
+								$check .= Html::br().Form::add_input('checkbox',$encoded_name.'_delfile[]',$file,array("onclick"=>"confirmDelPic(this)")).' Datei l?schen';
 
 								$subtable->add_td(array($thumb,$file.$check));
 							}
@@ -741,7 +747,7 @@ $search
 						}
 						if (count(General::trim_array($entries)) >= $col['upload_max_count']) continue;
 						$attr_array['id'] = $id;
-						//$input = ($value) ? $value.Form::add_input('hidden',$encoded_name,$value,$attr_array).Html::br().Html::span('Neue Datei verkn¸pfen:',array('class'=>'klein')).Html::br():'';
+						//$input = ($value) ? $value.Form::add_input('hidden',$encoded_name,$value,$attr_array).Html::br().Html::span('Neue Datei verkn√ºpfen:',array('class'=>'klein')).Html::br():'';
 						$input .= Form::add_input('file',$encoded_name.'_upload[]').Form::add_input('submit','reentry','Hochladen');
 						if ($col['upload_extensions'])
 						{
@@ -749,7 +755,7 @@ $search
 						}
 						if ($col['upload_size'])
 						{
-							$input .= Html::br() . Html::span("Maximale Dateigrˆﬂe: ".$col['upload_size'] .'KB',array('class'=>'klein'));
+							$input .= Html::br() . Html::span("Maximale Dateigr√∂√üe: ".$col['upload_size'] .'KB',array('class'=>'klein'));
 						}
 					break;
 					case 'EFM':
@@ -820,8 +826,8 @@ $search
 
 					break;
 					case 'info':
-						$input = $col['value'];
-						$hidden_inputs .= Form::add_input('hidden',$encoded_name,$value,$attr_array);
+						print $input = $col['value'];
+						//$hidden_inputs .= Form::add_input('hidden',$encoded_name,$value,$attr_array);
 					break;
 					case 'hidden':
 						$attr_array['id'] = $id;
@@ -830,6 +836,9 @@ $search
 					break;
 					case 'ignore':
 					unset ($input);
+					break;
+					case 'changed':
+						$input = Form::add_textarea('',$value,array("disabled"=>"disabled")). Form::add_input('hidden',$encoded_name,$value);
 					break;
 				}
 				if ($col['required'] && $input)
@@ -853,6 +862,7 @@ $search
 					{
 						$GLOBALS['scripts'] .= Html::script(null,array('src'=>'/Libraries/ToolTip/ToolTip.js'));
 						$GLOBALS['scripts'] .= Html::script('onLoad.push(toolTipOnLoad)');
+						$GLOBALS['toolTipScriptLoaded'] =true;
 					}
 					$trigger_id = 'info'.$GLOBALS['input_id'];
 					$source_id = "tooltip".$GLOBALS['input_id'];
@@ -864,7 +874,7 @@ $search
 
 				if ($input) $table->add_td(array(Form::add_label($id,$show_name).$info,$input),$td_atributes);
 
-				$GLOBALS['input_id']++;
+				++$GLOBALS['input_id'];
 			}
 		}
 		$input = ($this->submit_button) ? $this->submit_button : Form::add_input('submit','submit','Eintragen',array('class'=>'button'));
@@ -875,7 +885,13 @@ $search
 		$table->add_td(array(array(2=>$input)));
 		$return .= $table->flush_table();
 		$return .= Form::close_form();
-		return $return;
+		if ($template)
+		{
+			$t = new Template($template);
+			$vars['form'] = $return;
+			return $t->parse_template(null,$vars);
+		}
+		else return $return;
 	}
 
 	function db_insert($update = 0)
@@ -896,7 +912,7 @@ $search
 		$insert_sql .= ") VALUES (";
 
 		$field_values = array();
-
+print_r($_POST);
 		foreach ($_POST as $key => $value)
 		{
 			if ($key != rawurldecode($key))
@@ -923,7 +939,8 @@ $search
 			if ($col['type'] == 'check')
 			{
 				$t = array();
-				for ($i =  0;$i<count($field_value);$i++)
+				$c = count($field_value);
+				for ($i =  0;$i<$c;++$i)
 				{
 					if (strstr($field_value[$i],','))
 					{
@@ -947,6 +964,11 @@ $search
 			{
 				$field_value = $_POST[$key.'_name'];
 				if ($_POST[$key.'_mail']) $field_value .= ' <'.$_POST[$key.'_mail'].'>';
+			}
+			if ($col['type'] == 'changed')
+			{
+				$field_value .= ($_POST[$key]) ? "\n" : '' ;
+				$field_value .= Date::timestamp2datum( Date::now());
 			}
 
 			if ($col['type'] == 'upload')
@@ -984,7 +1006,8 @@ $search
 					}
 					if (is_array($_FILES[$key.'_upload']['name']))
 					{
-						for ($i = 0; $i < count($_FILES[$key.'_upload']['name']);$i++)
+						$c = count($_FILES[$key.'_upload']['name']);
+						for ($i = 0; $i < $c;++$i)
 						{
 							$f_name = preg_replace("/[^0-9a-z.]/i",'_',$_FILES[$key.'_upload']['name'][$i]);
 							if ($f_name && $upload_extensions && !preg_match("/$upload_extensions/",$f_name))
@@ -994,7 +1017,7 @@ $search
 							}
 							if ($f_name && $max_upload && $_FILES[$key.'_upload']['size'][$i] > $max_upload)
 							{
-								$GLOBALS['scripts'] .= Html::script('onLoad.push(function() {alert("Die Dateigrˆﬂe ¸bersteigt das erlaubte Maximum")})');
+								$GLOBALS['scripts'] .= Html::script('onLoad.push(function() {alert("Die Dateigr√∂√üe √ºbersteigt das erlaubte Maximum")})');
 								continue;
 							}
 
@@ -1016,7 +1039,7 @@ $search
 						}
 						if ($f_name && $max_upload && $_FILES[$key.'_upload']['size'] > $max_upload)
 						{
-							$GLOBALS['scripts'] .= Html::script('onLoad.push(function() {alert("Die Dateigrˆﬂe ¸bersteigt das erlaubte Maximum")})');
+							$GLOBALS['scripts'] .= Html::script('onLoad.push(function() {alert("Die Dateigr√∂√üe √ºbersteigt das erlaubte Maximum")})');
 							continue;
 						}
 
@@ -1210,8 +1233,13 @@ $search
 	{
 		if ($GLOBALS['scaff_edit_scripts_loaded']) return;
 		$GLOBALS['scaff_edit_scripts_loaded'] = true;
-
 		$GLOBALS['scripts'] .= Html::script('',array('src'=>'/Scripts/ScaffoldScripts.js'));
+		if (!$GLOBALS['toolTipScriptLoaded'])
+		{
+			$GLOBALS['scripts'] .= Html::script(null,array('src'=>'/Libraries/ToolTip/ToolTip.js'));
+			$GLOBALS['scripts'] .= Html::script('onLoad.push(toolTipOnLoad)');
+			$GLOBALS['toolTipScriptLoaded'] =true;
+		}
 	}
 	function http_request_scripts()
 	{
@@ -1280,7 +1308,7 @@ $search
 		$workbook->send('export.xls');
 
 		// Creating a worksheet
-		$worksheet =& $workbook->addWorksheet('Excel worksheet');
+		$worksheet =& $workbook->addWorksheet(str_replace("RheinaufCMS>",'',$this->table));
 		$row = 0;
 		$col = 0;
 
@@ -1288,26 +1316,26 @@ $search
 		{
 			if (in_array($key,$ignore)) continue;
 			$worksheet->write($row,$col, $key);
-			$col++;
+			++$col;
 		}
 
 		foreach ($result as $key => $entry)
 		{
-			$row++;
+			++$row;
 			$col = 0;
 			foreach ($entry as $row_key => $value)
 			{
 				if (in_array($row_key,$ignore)) continue;
-				$value = preg_replace('/\r?\n/',chr(10),$value);
+				$value = preg_replace('/\r?\n|&delim;/',chr(10),$value);
 				$worksheet->write($row,$col, $value);
-				$col++;
+				++$col;
 			}
 
 		}
 		$workbook->close();
 		$url = SELF_URL.'?'.$this->GET_2_url(array('export'));
 		$url = html_entity_decode($url);
-		header("Location: $url");
+//		header("Location: $url");
 		exit;
 	}
 
@@ -1324,7 +1352,7 @@ $search
 				$temp['custom'.$custom]['type'] = 'custom';
 				$temp['custom'.$custom]['custom_input'] = $custom_input;
 
-				$custom++;
+				++$custom;
 			}
 			else $temp[$key] = $value;
 		}

@@ -6,18 +6,16 @@ function loading()
 	div.id = 'loading';
 	var scrolloffset = scrollOffset();
 	var viewport = viewPort()
+
+	div.style.position = 'absolute';
+	div.style.top = scrolloffset.y  + 'px';
+	div.style.left = scrolloffset.x + 'px';;
+	div.style.width = viewport.width  + 'px';
+	div.style.height = viewport.height  + 'px';
+	div.style.zIndex = 1000;
+	div.style.textAlign = 'center';
+	div.style.paddingTop = viewport.height / 2 - 100 +'px';
 	
-	with (div.style)
-	{
-		position = 'absolute';
-		top = scrolloffset.top  + 'px';
-		left = scrolloffset.left + 'px';;
-		width = viewport.width  + 'px';
-		height = viewport.height  + 'px';
-		zIndex = 1000;
-		textAlign = 'center';
-		paddingTop = viewport.height / 2 - 100 +'px';
-	}
 	div.appendChild(document.createTextNode('Bitte warten ...'))
 	body.appendChild(div);
 }
@@ -25,6 +23,7 @@ function removeLoading()
 {
 	var loading = document.getElementById("loading");
 	if (loading) loading.parentNode.removeChild(loading);
+	if (typeof tooltip.init == "function") tooltip.init();
 }
 
 function httpRequestGET (url, handler)
@@ -151,15 +150,15 @@ function evalScripts(getback)
 {
 	eval(getback);
 }
-function scrollOffset()
+function scrollOffset ()
 {
-	var x,y;
-	if (self.pageYOffset) // all except Explorer
+	var x=0,y=0;
+	if (typeof self.pageYOffset != "undefined") // all except Explorer
 	{
 		x = self.pageXOffset;
 		y = self.pageYOffset;
 	}
-	else if (document.documentElement && document.documentElement.scrollTop)
+	else if (document.documentElement && typeof document.documentElement.scrollTop != "undefined")
 		// Explorer 6 Strict
 	{
 		x = document.documentElement.scrollLeft;
@@ -170,7 +169,7 @@ function scrollOffset()
 		x = document.body.scrollLeft;
 		y = document.body.scrollTop;
 	}
-	return {top:y,left:x}
+	return {x : x, y : y}
 }
 
 function viewPort()
