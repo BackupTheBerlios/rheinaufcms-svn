@@ -79,6 +79,8 @@ class GalerieScaffold extends FormScaffold
 				{
 					$result[$i][$key] = htmlspecialchars($value);
 				}
+
+				$result[$i][$key] = nl2br($value);
 			}
 			$result[$i]['Dateiname'] = rawurlencode($result[$i]['Dateiname']);
 			$result[$i]['Titelbild'] = rawurlencode($result[$i]['Titelbild']);

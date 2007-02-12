@@ -1,0 +1,29 @@
+<!--PRE-->
+
+<br />Bitte wählen Sie die Bilder aus, die Sie diesem Raum hinzufügen möchten
+
+<form action="{action}" method="post">
+<table>
+<tr>
+<td colspan="6"><input type="submit" value="Hinzufügen" class="button" /> <a href="{SELF}" class="button">Zurück</a> {If:pagination}<td></td><td></td><td></td><td></td><td></td>
+</tr>
+<tr>
+<th></th><th>{id_button}</th><th>{Name_button}</th><th>{Jahr_button}</th><th>{Höhe_button}</th><th>{Breite_button}</th><th>{Technik_button}</th><th></th><th></th>
+</tr>
+<!--/PRE-->
+
+<!--LOOP-->
+<tr  class="{alt_row}">
+<td>
+	<input type="checkbox" name="bild[]" value="{id}" />
+</td>
+<td>{id}</td><td>{Name}</td><td>{Jahr}</td><td>{Höhe}</td><td>{Breite}</td><td>{Technik}</td><td><img src="InputPreview?x=100&amp;img={Dateiname}" alt="Vorschau"/></td><td>{If:edit_btns}</td>
+</tr>
+<!--/LOOP-->
+<!--POST-->
+<tr>
+<td colspan="6"><input type="submit" value="Hinzufügen" class="button" /> <a href="{SELF}" class="button">Zurück</a> {If:pagination}<td></td><td></td><td></td><td></td><td></td>
+</tr>
+</table>
+</form>
+<!--/POST-->
