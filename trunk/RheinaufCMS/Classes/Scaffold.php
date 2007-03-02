@@ -43,7 +43,7 @@ class Scaffold extends RheinaufCMS
 	var $order_by;
 	var $order_dir = 'asc';
 	var $group_by;
-	var $results_per_page;
+	var $results_per_page = 30;
 	var $results_per_page_cookie_name = 'results_per_page';
 	var $datumsformat; #'tag_lang','tag_kurz','kein_tag'
 	var $enable_search_for = array(); #Spaltennamen
@@ -119,6 +119,21 @@ class Scaffold extends RheinaufCMS
 		}
 		return $return;
 	}
+	function getSuggestions()
+	{
+		$key = General::input_clean($_GET['key'],true);
+		$value = General::input_clean($_GET['value'],true);
+		
+		$result = $this->connection->db_assoc("SELECT `$key` FROM `$this->table` WHERE `$key` LIKE '$value%' ");
+		$array = array();
+		foreach ($result as $item)
+		{
+			$array[] = $item[$key];
+		}
+		$array = array_unique($array);
+		print General::to_js($array);
+		exit;
+	}
 	function make_table($where='',$template='',$make_template=false,$table_direction = 'horizontal')
 	{
 		$db_table = $this->table;
@@ -134,6 +149,10 @@ class Scaffold extends RheinaufCMS
 			if (isset($_POST['edit_id'])) $this->db_insert($_POST['edit_id']);
 			if (isset($_REQUEST['reentry'])) return $this->make_form(($_POST['edit_id']) ? $_POST['edit_id'] : $this->last_insert_id);
 			if (isset($_GET['new'])) return $this->make_form();
+		}
+		if ($this->enable_events)
+		{
+			if (isset($_GET['getSuggestions'])) return $this->getSuggestions();
 		}
 
 		if (isset($_GET['img']))
@@ -212,7 +231,6 @@ class Scaffold extends RheinaufCMS
 			$where = ($where) ? "WHERE ".implode($this->search_combine,$where) :'';
 
 			$group_by = ($this->group_by) ? "GROUP BY `$this->group_by`" :'';
-
 			$order = ($_GET['order']) ? rawurldecode($_GET['order']) : $order_by;
 			$order = General::input_clean($order,true);
 
@@ -287,11 +305,11 @@ class Scaffold extends RheinaufCMS
 <!--PAGE_BROWSER-->
 <form method="get" action="{SELF_URL}" onsubmit="httpRequestSubmit(this);return false;">
 
-{IfNotEmpty:prev_url(<a href="[prev_url]" class="button" onclick="httpRequestGET(\'[prev_url]&amp;noframe\',setContent);return false">Zur√ºck</a>)}
+{IfNotEmpty:prev_url(<a href="[prev_url]" class="button" onclick="httpRequestGET(\'[prev_url]&amp;noframe\',setContent);return false">Zur¸ck</a>)}
 {IfNotEmpty:next_url(<a href="[next_url]" class="button" onclick="httpRequestGET(\'[next_url]&amp;noframe\',setContent);return false">Weiter</a>)}
 &nbsp;&nbsp;&nbsp;{If:new_btn}
-&nbsp;&nbsp;&nbsp;{num_entries} Eintr√§ge auf {num_pages} Seiten
-&nbsp;&nbsp;&nbsp;Zeige <input type="text" size="2" name="results_per_page" id="results_per_page" value="{results_per_page}" style="text-align:center"/> Eintr√§ge pro Seite
+&nbsp;&nbsp;&nbsp;{num_entries} Eintr‰ge auf {num_pages} Seiten
+&nbsp;&nbsp;&nbsp;Zeige <input type="text" size="2" name="results_per_page" id="results_per_page" value="{results_per_page}" style="text-align:center"/> Eintr‰ge pro Seite
 <input type="submit" value="Aktualisieren" />
 
 {If:results_per_page_get_vars}
@@ -310,7 +328,7 @@ $search
 <tbody>
 <!--/PRE-->
 <!--NO_RESULTS-->
-<tr><td colspan=\"$colspan\">Keine Eintr√§ge gefunden<td></tr>
+<tr><td colspan=\"$colspan\">Keine Eintr‰ge gefunden<td></tr>
 <!--/NO_RESULTS-->
 ";
 			$new_template .= "<!--LOOP-->\n$loop</tr>\n<!--/LOOP-->\n";
@@ -326,14 +344,14 @@ $search
 
 		foreach ($this->enable_search_for as $search_field)
 		{
-			$vars[$search_field."_search_value"] = $_GET[rawurlencode($search_field)];
+			$vars[$search_field."_search_value"] = $_GET[$search_field];
 			$vars['filter_get_vars'] = $this->GET_2_input(array_merge($this->enable_search_for,array('start')));
 		}
 
 		if ($this->edit_enabled)
 		{
 			$icons['new'] = Html::img('/'.INSTALL_PATH.'/Classes/Admin/Icons/16x16/edit_add.png','');
-			$vars['new_btn']  =  Html::a(SELF_URL.'?new&amp;'.$this->GET_2_url(),$icons['new']. 'Eintrag hinzuf?gen',array('title'=>'Eintrag hinzuf?gen','class'=>'button'));
+			$vars['new_btn']  =  Html::a(SELF_URL.'?new&amp;'.$this->GET_2_url(),$icons['new']. 'Eintrag hinzuf¸gen',array('title'=>'Eintrag hinzuf¸gen','class'=>'button'));
 		}
 		$vars['export_get_vars'] = $this->GET_2_url();
 		$vars['num_pages'] = $pages = $this->get_pages();
@@ -428,7 +446,7 @@ $search
 				$icons['delete'] = Html::img('/'.INSTALL_PATH.'/Classes/Admin/Icons/16x16/cancel.png','');
 
 				$btns['edit'] = Html::a(SELF_URL.'?edit='.$entry['id'].'&amp;'.$this->GET_2_url(),$icons['edit'],array('title'=>'Eintrag bearbeiten'));
-				$btns['delete'] = Html::a(SELF_URL.'?delete='.$entry['id'].'&amp;'.$this->GET_2_url('delete','noframe'),$icons['delete'],array('title'=>'Eintrag l√∂schen','onclick'=>'return delete_confirm(this,\''.$entry['id'].'\')'));
+				$btns['delete'] = Html::a(SELF_URL.'?delete='.$entry['id'].'&amp;'.$this->GET_2_url('delete','noframe'),$icons['delete'],array('title'=>'Eintrag lˆschen','onclick'=>'return delete_confirm(this,\''.$entry['id'].'\')'));
 
 				$entry['edit_btns'] .= implode(' ',$btns);
 			}
@@ -450,14 +468,14 @@ $search
 			$name = $this->cols_array[$search_field]['name'];
 			$id = Html::html_legal_id($search_field);
 			$input_name = rawurlencode($search_field);
-			$input = Form::add_input('text',$input_name,"{If:".$search_field."_search_value}",array('id'=>$id));
+			$input = Form::add_input('text',$input_name,"{If:".$search_field."_search_value}",array('id'=>$id,'onkeyup'=>'getSuggestions(event,this)'));
 			$inputs .= Form::add_label($id,$name.' '.$input,array('class'=>'nowrap'));
 		}
 		$inputs .= "{If:filter_get_vars}\n";
 		$inputs .= Form::add_input('submit','Filter');
-		$inputs .= Form::add_input('submit','','Zur√ºcksetzen',array('onclick'=>"this.form.reset();this.form.onsubmit();return false;"));
+		$inputs .= Form::add_input('submit','','Zur¸cksetzen',array('onclick'=>"resetFilter(this);return false;"));
 		$form = new Form();
-		$form->form_tag('{SELF_URL}','get','',array('onsubmit'=>'httpRequestSubmit(this);return false;'));
+		$form->form_tag('{SELF_URL}','get','',array('onsubmit'=>'httpRequestSubmit(this);return false;','autocomplete'=>'off'));
 		$form->fieldset($inputs,$legend);
 		return $form->flush_form();
 	}
@@ -557,7 +575,8 @@ $search
 			$values = $this->get_entry($edit);
 			$edit = (is_array($edit)) ? current($edit) : $edit;
 		}
-		$GLOBALS['scripts'] .= Html::script("onLoad.push(sizeTextAreas);onLoad.push(checkConditions);");
+		$GLOBALS['scripts'] .= Html::script("onLoad.push(checkConditions);");
+		//$GLOBALS['scripts'] .= Html::script("onLoad.push(sizeTextAreas);");
 		$return ='';
 		$url = ($action) ? $action : SELF_URL;
 		$url .= strstr($url,'?') ? '&amp;' : '?';
@@ -614,7 +633,7 @@ $search
 							$attr_array['size'] = $field['length'];
 							$attr_array['maxlength'] = $field['length'];
 						}
-						else $attr_array['style'] .= "width:$this->input_width;";
+						else if (!stristr($attr_array['style'],'width')) $attr_array['style'] .= "width:$this->input_width;";
 
 						$input = Form::add_input('text',$encoded_name,$value,$attr_array);
 					break;
@@ -622,7 +641,7 @@ $search
 						$attr_array['id'] = $id;
 
 						$select = new Select($encoded_name,array_merge($attr_array,array('onchange'=>"selectOtherOption('$id','".$col['other_option']."')")));
-						$select->add_option('','--Bitte ausw√§hlen--');
+						$select->add_option('','--Bitte ausw‰hlen--');
 						$attr_array = array();
 						if (!in_array($value,$options) && !key_exists($value,$options)) $col['other'] = $value;
 						foreach ($options as $option => $name)
@@ -699,7 +718,7 @@ $search
 						{
 							$col['attributes']['cols'];
 						}
-						else $attr_array['style'] .= "width:$this->input_width;";
+						else  if (!stristr($attr_array['style'],'width')) $attr_array['style'] .= "width:$this->input_width;";
 						$attr_array['rows'] = ($col['attributes']['rows']) ? $col['attributes']['rows'] : 10;
 
 
@@ -747,7 +766,7 @@ $search
 						}
 						if (count(General::trim_array($entries)) >= $col['upload_max_count']) continue;
 						$attr_array['id'] = $id;
-						//$input = ($value) ? $value.Form::add_input('hidden',$encoded_name,$value,$attr_array).Html::br().Html::span('Neue Datei verkn√ºpfen:',array('class'=>'klein')).Html::br():'';
+						//$input = ($value) ? $value.Form::add_input('hidden',$encoded_name,$value,$attr_array).Html::br().Html::span('Neue Datei verkn¸pfen:',array('class'=>'klein')).Html::br():'';
 						$input .= Form::add_input('file',$encoded_name.'_upload[]').Form::add_input('submit','reentry','Hochladen');
 						if ($col['upload_extensions'])
 						{
@@ -755,7 +774,7 @@ $search
 						}
 						if ($col['upload_size'])
 						{
-							$input .= Html::br() . Html::span("Maximale Dateigr√∂√üe: ".$col['upload_size'] .'KB',array('class'=>'klein'));
+							$input .= Html::br() . Html::span("Maximale Dateigrˆﬂe: ".$col['upload_size'] .'KB',array('class'=>'klein'));
 						}
 					break;
 					case 'EFM':
@@ -826,7 +845,7 @@ $search
 
 					break;
 					case 'info':
-						print $input = $col['value'];
+						$input = $col['value'];
 						//$hidden_inputs .= Form::add_input('hidden',$encoded_name,$value,$attr_array);
 					break;
 					case 'hidden':
@@ -912,7 +931,7 @@ $search
 		$insert_sql .= ") VALUES (";
 
 		$field_values = array();
-print_r($_POST);
+
 		foreach ($_POST as $key => $value)
 		{
 			if ($key != rawurldecode($key))
@@ -1017,7 +1036,7 @@ print_r($_POST);
 							}
 							if ($f_name && $max_upload && $_FILES[$key.'_upload']['size'][$i] > $max_upload)
 							{
-								$GLOBALS['scripts'] .= Html::script('onLoad.push(function() {alert("Die Dateigr√∂√üe √ºbersteigt das erlaubte Maximum")})');
+								$GLOBALS['scripts'] .= Html::script('onLoad.push(function() {alert("Die Dateigrˆﬂe ¸bersteigt das erlaubte Maximum")})');
 								continue;
 							}
 
@@ -1039,7 +1058,7 @@ print_r($_POST);
 						}
 						if ($f_name && $max_upload && $_FILES[$key.'_upload']['size'] > $max_upload)
 						{
-							$GLOBALS['scripts'] .= Html::script('onLoad.push(function() {alert("Die Dateigr√∂√üe √ºbersteigt das erlaubte Maximum")})');
+							$GLOBALS['scripts'] .= Html::script('onLoad.push(function() {alert("Die Dateigrˆﬂe ¸bersteigt das erlaubte Maximum")})');
 							continue;
 						}
 
@@ -1269,7 +1288,7 @@ print_r($_POST);
 		foreach ($_GET as $key => $value)
 		{
 			if ($key == 'r' || $key == 's' || $key == 'noframe' || in_array($key,$skip)) continue;
-			$value = rawurlencode($value);
+			$value = $value;
 			$return[] = Form::add_input('hidden',$key,$value);
 		}
 		return implode("\n",$return);
