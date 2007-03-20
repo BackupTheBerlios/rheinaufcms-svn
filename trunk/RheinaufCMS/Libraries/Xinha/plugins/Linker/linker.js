@@ -1,6 +1,6 @@
 Linker._pluginInfo={name:"Linker",version:"1.0",developer:"James Sleeman",developer_url:"http://www.gogo.co.nz/",c_owner:"Gogo Internet Services",license:"htmlArea",sponsor:"Gogo Internet Services",sponsor_url:"http://www.gogo.co.nz/"};
 Xinha.loadStyle("dTree/dtree.css","Linker");
-Xinha.Config.prototype.Linker={"backend":_editor_url+"plugins/Linker/scan.php","backend_data":null,"files":null};
+Xinha.Config.prototype.Linker={"treeCaption":document.location.host,"backend":_editor_url+"plugins/Linker/scan.php","backend_data":null,"files":null};
 function Linker(_1,_2){
 this.editor=_1;
 this.lConfig=_1.config.Linker;
@@ -24,7 +24,7 @@ if(!a&&this.editor.selectionEmpty(this.editor.getSelection())){
 alert(this._lc("You must select some text before making a new link."));
 return false;
 }
-var _c={type:"url",href:"http://",target:"",p_width:"",p_height:"",p_options:["menubar=no","toolbar=yes","location=no","status=no","scrollbars=yes","resizeable=yes"],to:"alice@example.com",subject:"",body:"",anchor:""};
+var _c={type:"url",href:"http://www.example.com/",target:"",p_width:"",p_height:"",p_options:["menubar=no","toolbar=yes","location=no","status=no","scrollbars=yes","resizeable=yes"],to:"alice@example.com",subject:"",body:"",anchor:""};
 if(a&&a.tagName.toLowerCase()=="a"){
 var _d=this.editor.fixRelativeLinks(a.getAttribute("href"));
 var m=_d.match(/^mailto:(.*@[^?&]*)(\?(.*))?$/);
@@ -164,7 +164,7 @@ return a;
 }
 return null;
 };
-Linker.prototype.onGenerate=function(){
+Linker.prototype.onGenerateOnce=function(){
 this._dialog=new Linker.Dialog(this);
 };
 Linker.Dialog_dTrees=[];
@@ -220,7 +220,7 @@ var _2a=this.dialog=new Xinha.Dialog(_25.editor,this.html,"Linker");
 var _2b=Xinha.uniq("dTree_");
 this.dTree=new dTree(_2b,_editor_url+"plugins/Linker/dTree/");
 eval(_2b+" = this.dTree");
-this.dTree.add(this.Dialog_nxtid++,-1,project_name+" (Server)",null,"Titel"+"(Server)");
+this.dTree.add(this.Dialog_nxtid++,-1,_25.lConfig.treeCaption,null,_25.lConfig.treeCaption);
 this.makeNodes(_27,0);
 var _2c=this.dialog.getElementById("dTree");
 _2c.innerHTML="";
@@ -228,17 +228,18 @@ _2c.style.position="absolute";
 _2c.style.left=1+"px";
 _2c.style.top=0+"px";
 _2c.style.overflow="auto";
+_2c.style.backgroundColor="white";
 this.ddTree=_2c;
 this.dTree._linker_premade=this.dTree.toString();
 var _2d=this.dialog.getElementById("options");
 _2d.style.position="absolute";
 _2d.style.top=0+"px";
 _2d.style.right=0+"px";
-_2d.style.width=500+"px";
+_2d.style.width=320+"px";
 _2d.style.overflow="auto";
 this.dialog.onresize=function(){
 var h=parseInt(_2a.height)-_2a.getElementById("h1").offsetHeight;
-var w=parseInt(_2a.width)-522;
+var w=parseInt(_2a.width)-322;
 if(w<0){
 w=0;
 }
@@ -351,6 +352,11 @@ _3a[_3a.length]=opt;
 }
 if(_3a.length==0){
 this.dialog.getElementById("anchorfieldset").style.display="none";
+}
+if(_36.href=="http://www.example.com/"&&_36.to=="alice@example.com"){
+this.dialog.getElementById("clear").style.display="none";
+}else{
+this.dialog.getElementById("clear").style.display="";
 }
 var _41=this.dialog;
 var _39=this;

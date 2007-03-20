@@ -9,9 +9,9 @@ _2.addToolbarElement("smartreplace","htmlmode",1);
 }
 SmartReplace._pluginInfo={name:"SmartReplace",version:"1.0",developer:"Raimund Meyer",developer_url:"http://rheinauf.de",c_owner:"Raimund Meyer",sponsor:"",sponsor_url:"",license:"htmlArea"};
 SmartReplace.prototype._lc=function(_5){
-return HTMLArea._lc(_5,"SmartReplace");
+return Xinha._lc(_5,"SmartReplace");
 };
-HTMLArea.Config.prototype.SmartReplace={"defaultActive":true,"quotes":null};
+Xinha.Config.prototype.SmartReplace={"defaultActive":true,"quotes":null};
 SmartReplace.prototype.toggleActivity=function(_6){
 if(typeof _6!="undefined"){
 this.active=_6;
@@ -27,8 +27,8 @@ SmartReplace.prototype.onGenerate=function(){
 this.active=this.editor.config.SmartReplace.defaultActive;
 this.editor._toolbarObjects.smartreplace.state("active",this.active);
 var _7=this;
-HTMLArea._addEvents(_7.editor._doc,["keypress"],function(_8){
-return _7.keyEvent(HTMLArea.is_ie?_7.editor._iframe.contentWindow.event:_8);
+Xinha._addEvents(_7.editor._doc,["keypress"],function(_8){
+return _7.keyEvent(Xinha.is_ie?_7.editor._iframe.contentWindow.event:_8);
 });
 var _9=this.editor.config.SmartReplace.quotes;
 if(_9&&typeof _9=="object"){
@@ -54,13 +54,13 @@ if(!this.active){
 return true;
 }
 var _b=this.editor;
-var _c=HTMLArea.is_ie?ev.keyCode:ev.charCode;
+var _c=Xinha.is_ie?ev.keyCode:ev.charCode;
 var _d=String.fromCharCode(_c);
 if(_c==32){
 return this.smartDash();
 }
 if(_d=="\""||_d=="'"){
-HTMLArea._stopEvent(ev);
+Xinha._stopEvent(ev);
 return this.smartQuotes(_d);
 }
 return true;
@@ -74,9 +74,9 @@ var _f=this.openingQuotes;
 var _10=this.closingQuotes;
 }
 var _11=this.editor;
-var sel=_11._getSelection();
-if(HTMLArea.is_ie){
-var r=_11._createRange(sel);
+var sel=_11.getSelection();
+if(Xinha.is_ie){
+var r=_11.createRange(sel);
 if(r.text!==""){
 r.text="";
 }
@@ -106,9 +106,9 @@ _11.insertNodeAtSelection(document.createTextNode(_f));
 };
 SmartReplace.prototype.smartDash=function(){
 var _14=this.editor;
-var sel=this.editor._getSelection();
-if(HTMLArea.is_ie){
-var r=this.editor._createRange(sel);
+var sel=this.editor.getSelection();
+if(Xinha.is_ie){
+var r=this.editor.createRange(sel);
 r.moveStart("character",-2);
 if(r.text.match(/\s-/)){
 r.text=" "+String.fromCharCode(8211);

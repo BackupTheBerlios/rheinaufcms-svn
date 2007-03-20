@@ -3,15 +3,10 @@ class GalerieScaffold extends FormScaffold
 {
 	var $results_per_page = 8;
 	var $room;
-	function  GalerieScaffold ($table,$db_connection='',$path_information='')
+	function  GalerieScaffold ($table,$db_connection='')
 	{
 		$this->connection = ($db_connection != '') ? $db_connection : new RheinaufDB();
-		if ($path_information != '')
-		{
-			$this->extract_to_this($path_information);
-			$this->path_information = $path_information;
-		}
-		else $this->pfad();
+
 		$this->table = $table;
 //$this->connection->debug = true;
 	}

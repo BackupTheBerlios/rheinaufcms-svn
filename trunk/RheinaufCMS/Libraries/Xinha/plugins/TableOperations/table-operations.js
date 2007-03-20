@@ -375,7 +375,7 @@ var _60=null;
 if(!HTMLArea.is_ie){
 try{
 if(sel.rangeCount<2){
-alert("Please select the cells you want to merge.");
+alert(HTMLArea._lc("Please select the cells you want to merge.","TableOperations"));
 break;
 }
 while(_5e=sel.getRangeAt(i++)){

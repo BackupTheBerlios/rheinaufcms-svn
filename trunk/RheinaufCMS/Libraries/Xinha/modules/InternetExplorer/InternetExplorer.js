@@ -1,4 +1,4 @@
-InternetExplorer._pluginInfo={name:"Internet Explorer",origin:"Xinha Core",version:"$LastChangedRevision: 712 $".replace(/^[^:]*: (.*) \$$/,"$1"),developer:"The Xinha Core Developer Team",developer_url:"$HeadURL: http://svn.xinha.python-hosting.com/trunk/modules/InternetExplorer/InternetExplorer.js $".replace(/^[^:]*: (.*) \$$/,"$1"),sponsor:"",sponsor_url:"",license:"htmlArea"};
+InternetExplorer._pluginInfo={name:"Internet Explorer",origin:"Xinha Core",version:"$LastChangedRevision: 737 $".replace(/^[^:]*: (.*) \$$/,"$1"),developer:"The Xinha Core Developer Team",developer_url:"$HeadURL: http://svn.xinha.python-hosting.com/tags/0.92beta/modules/InternetExplorer/InternetExplorer.js $".replace(/^[^:]*: (.*) \$$/,"$1"),sponsor:"",sponsor_url:"",license:"htmlArea"};
 function InternetExplorer(_1){
 this.editor=_1;
 _1.InternetExplorer=this;
@@ -59,7 +59,7 @@ _9=_9.replace(/<(\/?)del(\s|>|\/)/ig,"<$1strike$2");
 return _9;
 };
 Xinha.prototype.insertNodeAtSelection=function(_a){
-Xinha.notImplemented("insertNodeAtSelection");
+this.insertHTML(_a.outerHTML);
 };
 Xinha.prototype.getParentElement=function(_b){
 if(typeof _b=="undefined"){
@@ -125,9 +125,9 @@ _15.moveToElementText(_13);
 _15.select();
 };
 Xinha.prototype.insertHTML=function(_17){
+this.focusEditor();
 var sel=this.getSelection();
 var _19=this.createRange(sel);
-this.focusEditor();
 _19.pasteHTML(_17);
 };
 Xinha.prototype.getSelectedHTML=function(){

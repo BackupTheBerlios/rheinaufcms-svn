@@ -952,7 +952,10 @@ $search
 		{
 			$field_value = ($_POST[$key]) ? $_POST[$key] : $col['value'];
 
-			$field_value = (!strstr($field_value,'--')) ? $field_value : '';
+			if ($col['type'] == 'select' && strstr($field_value,'--'))
+			{
+				$field_value = '';
+			}
 
 
 			if ($col['type'] == 'check')
@@ -1310,9 +1313,10 @@ $search
 		return $link;
 	}
 
-	function add_search_field ($col_name,$search_method = '%.%')
+	function add_search_field ($col_name,$search_method = '')
 	{
 		$this->enable_search_for[] = $col_name;
+		if ($search_method) $this->cols_array[$col_name]["search_method"] = $search_method;
 	}
 
 	function export($result,$ignore = 'id')

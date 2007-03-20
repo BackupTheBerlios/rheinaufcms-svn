@@ -1,4 +1,4 @@
-HTMLArea.Config.prototype.FormOperations={"multiple_field_format":"php","allow_edit_form":false,"default_form_action":_editor_url+"plugins/FormOperations/formmail.php","default_form_html":HTMLArea._geturlcontent(_editor_url+"plugins/FormOperations/default_form.html")};
+Xinha.Config.prototype.FormOperations={"multiple_field_format":"php","allow_edit_form":false,"default_form_action":_editor_url+"plugins/FormOperations/formmail.php","default_form_html":Xinha._geturlcontent(_editor_url+"plugins/FormOperations/default_form.html")};
 FormOperations._pluginInfo={name:"FormOperations",version:"1.0",developer:"James Sleeman",developer_url:"http://www.gogo.co.nz/",c_owner:"Gogo Internet Services",license:"htmlArea",sponsor:"Gogo Internet Services",sponsor_url:"http://www.gogo.co.nz/"};
 function FormOperations(_1){
 this.editor=_1;
@@ -11,7 +11,7 @@ _1.config.pageStyleSheets.push(_editor_url+"plugins/FormOperations/iframe.css");
 var _2=["separator","insert_form","insert_text_field","insert_textarea_field","insert_select_field","insert_cb_field","insert_rb_field","insert_button"];
 this.editor.config.toolbar.push(_2);
 function pasteAndSelect(_3){
-var id=HTMLArea.uniq("fo");
+var id=Xinha.uniq("fo");
 _3=_3.replace(/^<([^ \/>]+)/i,"<$1 id=\""+id+"\"");
 _1.insertHTML(_3);
 var el=_1._doc.getElementById(id);
@@ -22,7 +22,7 @@ return el;
 }
 var _6=_1.imgURL("buttons.gif","FormOperations");
 FormOperations.prototype._lc=function(_7){
-return HTMLArea._lc(_7,"FormOperations");
+return Xinha._lc(_7,"FormOperations");
 };
 this.editor.config.btnList.insert_form=[this._lc("Insert a Form."),[_6,0,0],false,function(){
 var _8=null;
@@ -55,10 +55,10 @@ pasteAndSelect("<input type=\"submit\" value=\"Send\" />");
 },"form"];
 }
 FormOperations.prototype.onGenerate=function(){
-if(HTMLArea.is_gecko){
+if(Xinha.is_gecko){
 var _9=this.editor;
 var _a=this.editor._doc;
-HTMLArea._addEvents(_a,["mousemove"],function(_b){
+Xinha._addEvents(_a,["mousemove"],function(_b){
 return _9._editorEvent(_b);
 });
 }
@@ -66,25 +66,25 @@ return _9._editorEvent(_b);
 FormOperations.prototype._preparePanel=function(){
 var fo=this;
 if(this.html==false){
-HTMLArea._getback(_editor_url+"plugins/FormOperations/panel.html",function(_d){
+Xinha._getback(_editor_url+"plugins/FormOperations/panel.html",function(_d){
 fo.html=_d;
 fo._preparePanel();
 });
 return false;
 }
-if(typeof HTMLArea.Dialog=="undefined"){
-HTMLArea._loadback(_editor_url+"inline-dialog.js",function(){
+if(typeof Xinha.Dialog=="undefined"){
+Xinha._loadback(_editor_url+"modules/Dialogs/inline-dialog.js",function(){
 fo._preparePanel();
 });
 return false;
 }
-if(typeof HTMLArea.PanelDialog=="undefined"){
-HTMLArea._loadback(_editor_url+"panel-dialog.js",function(){
+if(typeof Xinha.PanelDialog=="undefined"){
+Xinha._loadback(_editor_url+"modules/Dialogs/panel-dialog.js",function(){
 fo._preparePanel();
 });
 return false;
 }
-this.panel=new HTMLArea.PanelDialog(this.editor,"bottom",this.html,"FormOperations");
+this.panel=new Xinha.PanelDialog(this.editor,"bottom",this.html,"FormOperations");
 this.panel.hide();
 this.ready=true;
 };
@@ -188,7 +188,7 @@ this.panel.getElementById("text_value").onkeyup=function(){
 i.value=this.value;
 };
 this.panel.getElementById("text_type").onchange=function(){
-if(!HTMLArea.is_ie){
+if(!Xinha.is_ie){
 i.type=this.options[this.selectedIndex].value;
 }else{
 var _17=fo.editor._doc.createElement("div");
@@ -197,9 +197,9 @@ _17.innerHTML=i.outerHTML.replace(/<INPUT/i,"<input type=\""+this.options[this.s
 }else{
 _17.innerHTML=i.outerHTML.replace(/type="?[a-z]+"?/i,"type=\""+this.options[this.selectedIndex].value+"\"");
 }
-var _18=HTMLArea.removeFromParent(_17.childNodes[0]);
+var _18=Xinha.removeFromParent(_17.childNodes[0]);
 i.parentNode.insertBefore(_18,i);
-HTMLArea.removeFromParent(i);
+Xinha.removeFromParent(i);
 _13=i=_18;
 }
 };
@@ -228,7 +228,7 @@ this.panel.getElementById("cbrd_value").onkeyup=function(){
 i.value=this.value;
 };
 this.panel.getElementById("cbrd_type").onchange=function(){
-if(!HTMLArea.is_ie){
+if(!Xinha.is_ie){
 i.type=this.options[this.selectedIndex].value;
 }else{
 var _1f=fo.editor._doc.createElement("div");
@@ -237,9 +237,9 @@ _1f.innerHTML=i.outerHTML.replace(/<INPUT/i,"<input type=\""+this.options[this.s
 }else{
 _1f.innerHTML=i.outerHTML.replace(/type="?[a-z]+"?/i,"type=\""+this.options[this.selectedIndex].value+"\"");
 }
-var _20=HTMLArea.removeFromParent(_1f.childNodes[0]);
+var _20=Xinha.removeFromParent(_1f.childNodes[0]);
 i.parentNode.insertBefore(_20,i);
-HTMLArea.removeFromParent(i);
+Xinha.removeFromParent(i);
 _1b=i=_20;
 }
 };
@@ -260,7 +260,7 @@ this.panel.getElementById("button_value").onkeyup=function(){
 i.value=this.value;
 };
 this.panel.getElementById("button_type").onchange=function(){
-if(!HTMLArea.is_ie){
+if(!Xinha.is_ie){
 i.type=this.options[this.selectedIndex].value;
 }else{
 var _25=fo.editor._doc.createElement("div");
@@ -269,9 +269,9 @@ _25.innerHTML=i.outerHTML.replace(/<INPUT/i,"<input type=\""+this.options[this.s
 }else{
 _25.innerHTML=i.outerHTML.replace(/type="?[a-z]+"?/i,"type=\""+this.options[this.selectedIndex].value+"\"");
 }
-var _26=HTMLArea.removeFromParent(_25.childNodes[0]);
+var _26=Xinha.removeFromParent(_25.childNodes[0]);
 i.parentNode.insertBefore(_26,i);
-HTMLArea.removeFromParent(i);
+Xinha.removeFromParent(i);
 _21=i=_26;
 }
 };
@@ -342,7 +342,7 @@ i.style.height=parseFloat(h.value)+hu.options[hu.selectedIndex].value;
 var _37=this.panel.getElementById("select_options");
 this.arrayToOpts(this.optsToArray(_2f.options),_37.options);
 this.panel.getElementById("add_option").onclick=function(){
-var txt=prompt("Enter the name for new option.");
+var txt=prompt(Xinha._lc("Enter the name for new option.","FormOperations"));
 if(txt==null){
 return;
 }

@@ -126,6 +126,77 @@ class General
 	{
 		return 'var '.$name.' = new Array(\''.implode("', '",$array)."');\n";
 	}
+	
+	function to_js($var, $tabs = 0)
+	{
+		if(is_numeric($var))
+		{
+			return $var;
+		}
+
+		if(is_string($var))
+		{
+			return "'" . General::js_encode($var) . "'";
+		}
+
+		if(is_array($var))
+		{
+			$useObject = false;
+			foreach(array_keys($var) as $k) {
+				if(!is_numeric($k)) $useObject = true;
+			}
+			$js = array();
+			foreach($var as $k => $v)
+			{
+				$i = "";
+				if($useObject) {
+					if(preg_match('#^[a-zA-Z]+[a-zA-Z0-9]*$#', $k)) {
+						$i .= "$k: ";
+					} else {
+						$i .= "'$k': ";
+					}
+				}
+				$i .= General::to_js($v, $tabs + 1);
+				$js[] = $i;
+			}
+			if($useObject) {
+				$ret = "{\n" . General::tabify(implode(",\n", $js), $tabs) . "\n}";
+			} else {
+				$ret = "[\n" . General::tabify(implode(",\n", $js), $tabs) . "\n]";
+			}
+			return $ret;
+		}
+
+		return 'null';
+	}
+
+	/** Like htmlspecialchars() except for javascript strings. */
+
+	function js_encode($string)
+	{
+		static $strings = "\\,\",',%,&,<,>,{,},@,\n,\r";
+
+		if(!is_array($strings))
+		{
+			$tr = array();
+			foreach(explode(',', $strings) as $chr)
+			{
+				$tr[$chr] = sprintf('\x%02X', ord($chr));
+			}
+			$strings = $tr;
+		}
+
+		return strtr($string, $strings);
+	}
+	function tabify($text, $tabs)
+	{
+		if($text)
+		{
+			return str_repeat("  ", $tabs) . preg_replace('/\n(.)/', "\n" . str_repeat("  ", $tabs) . "\$1", $text);
+		}
+	}
+
+
 	function alert($string)
 	{
 		print '<script type="text/javascript">alert("'.addslashes(str_replace("\n",'\n',$string)).'")</script>';

@@ -1,7 +1,7 @@
 function PopupWin(_1,_2,_3,_4){
 this.editor=_1;
 this.handler=_3;
-var _5=window.open("","__ha_dialog","toolbar=no,menubar=no,personalbar=no,width=600,height=600,left=20,top=40,scrollbars=no,resizable=no");
+var _5=window.open("","__ha_dialog","toolbar=no,menubar=no,personalbar=no,width=600,height=600,left=20,top=40,scrollbars=no,resizable=yes");
 this.window=_5;
 var _6=_5.document;
 this.doc=_6;
@@ -113,7 +113,7 @@ if(HTMLArea.is_gecko){
 _19.window.innerWidth=w;
 _19.window.innerHeight=h;
 }else{
-_19.window.resizeTo(w+8,h+35);
+_19.window.resizeTo(w+8,h+70);
 }
 },25);
 };

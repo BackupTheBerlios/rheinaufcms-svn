@@ -60,8 +60,6 @@ if(HTMLArea.is_ie){
 _e.focusEditor();
 }
 _e.insertHTML(_c);
-_f._isActive=false;
-_e.hidePanel(_e._CharacterMap);
 return false;
 };
 _e._CharacterMap.appendChild(a);

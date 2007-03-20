@@ -29,9 +29,9 @@ f.style.visibility="hidden";
 }
 }
 if(manager_mode=="link"){
-var offsetForInputs=(Xinha.is_ie)?155:140;
+var offsetForInputs=(Xinha.is_ie)?165:150;
 }else{
-var offsetForInputs=(Xinha.is_ie)?220:200;
+var offsetForInputs=(Xinha.is_ie)?230:210;
 }
 init=function(){
 var h=100+250+offsetForInputs;
@@ -394,9 +394,9 @@ imgManager.newFolder(dir,encodeURI(_51));
 }
 function resize(){
 var win=Xinha.viewportSize(window);
-document.getElementById("imgManager").style.height=parseInt(win.y-150-offsetForInputs,10)+"px";
+document.getElementById("imgManager").style.height=parseInt(win.y-130-offsetForInputs,10)+"px";
 return true;
 }
-addEvent(window,"load",init);
 addEvent(window,"resize",resize);
+addEvent(window,"load",init);
 
