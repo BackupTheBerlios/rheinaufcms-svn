@@ -117,11 +117,10 @@ class Module extends Admin
 	function install($module)
 	{
 		include_once($module.'.php');
-		$class = new $module ();
-		
-		if (method_exists($class,'install'))
+		if (is_callable(array($module,'install')))
 		{
-			$this->return .= $class->install($this);
+		  eval('$this->return .= '.$module.'::install($this);');
+		  //$this->return .= $class->install($this);
 		}
 	}
 	function uninstall($module)

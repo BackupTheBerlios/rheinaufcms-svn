@@ -44,6 +44,8 @@ class NaviEdit extends Admin
 		}*/
 		$this->navi = $this->navi_array();
 
+		$this->installed_modules = $this->connection->db_assoc("SELECT * FROM `RheinaufCMS>Module` ORDER BY `id` ASC");
+		
 		$this->event_listen();
 	}
 
@@ -265,6 +267,7 @@ function dublette(name,typ)
 		$this->navi[$id]['Show'] = (isset($_POST['Show'])) ? $_POST['Show'] :'0';
 		$this->navi[$id]['Show_to'] = $this->input_group_array();
 		$this->navi[$id]['ext_link'] = $this->path_adjust($_POST['ext_link']);
+    $this->navi[$id]['Modul'] = $_POST['module'];
 
 		$oldname = General::input_clean($_POST['oldname']);
 		$oldname_encoded = $this->path_encode($this->I18n_get_real($oldname));
@@ -275,7 +278,8 @@ function dublette(name,typ)
 			$path = DOCUMENT_ROOT.INSTALL_PATH.'/Content/';
 			RheinaufFile::rename($path.$oldname_encoded,$path.$name_encoded);
 		}
-		if ($this->I18n_get_real($oldname) == HOMEPAGE)
+		
+		if (HOMEPAGE == $this->I18n_get_real($oldname))
 		{
 			$new_name = $this->I18n_get_real($new_name);
 			$config_file = RheinaufFile::get_file(DOCUMENT_ROOT.INSTALL_PATH.'/Config.inc.php');
@@ -344,7 +348,14 @@ function dublette(name,typ)
 
 
 				$navi_table->add_td(array($id.$old_name.$visble_checkbox,$name_input,$apply_button.$this->buttons['cancel']));
-
+//print $this->navi[$i]['Modul'];
+				$module_select = $this->modules_select(preg_replace("/\(.*/","",$this->navi[$i]['Modul']));
+				
+				if ($module_select) 
+				{
+				  $navi_table->add_td(array('',Html::bold('Modul').Html::br(). $module_select));  
+				}
+				
 				$ext_link_input =  Html::bold('URL ').'(optional) '.Html::br().Form::add_input('text','ext_link',rawurldecode($this->navi[$i]['ext_link']),array('id'=>'ext_link_rubrik'));
 				$navi_table->add_td(array('',$ext_link_input,(isset($_GET['browse'])) ? '' : Html::br(). Html::a($_SERVER['REDIRECT_URL'].'?browse&amp;edit='.$i,$this->images['browse'])));
 				if (isset($_GET['browse']))
@@ -637,6 +648,25 @@ function dublette(name,typ)
 		$this->htaccess_update();
 	}
 
+	function modules_select($module_name)
+	{
+	  if (count($this->installed_modules))
+	  {
+	  	
+  	  $module_select = new Select('module');
+      $module_select->add_option('','Modul');
+  	  foreach ($this->installed_modules as $module) 
+  	  {
+  	    $selected = ($module['Name'] == $module_name) ? array('selected'=>'selected') : array();
+  	  	$module_select->add_option($module['Name'],$module['Name'],$selected);
+  	  }
+  	  return $module_select->flush_select();
+	  }
+	  else 
+	  {
+	     return '';
+	  }
+	}
 	function groups_select ($r='',$s='')
 	{
 		$existent_groups = $this->existent_groups();
