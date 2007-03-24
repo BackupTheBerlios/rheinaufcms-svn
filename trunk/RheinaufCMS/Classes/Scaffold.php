@@ -72,6 +72,7 @@ class Scaffold extends RheinaufCMS
 		{
 			$this->http_request_scripts();
 		}
+		$this->loadCSS();
 	}
 
 	function show()
@@ -373,20 +374,20 @@ $search
 
 			if ($_GET['order'] == $key )
 			{
-				if ($_GET['dir'] == 'asc') $name .= '&uArr;' ;
-				else $name .= '&dArr;';
+				if ($_GET['dir'] == 'asc') $name .= '&#x25B2;' ; //up
+				else $name .= '&#x25BC;'; //down
 				$dir = ($_GET['dir'] == 'desc') ? 'asc' : 'desc';
 			}
 			else if (!isset($_GET['order'])&& $key == $this->order_by)
 			{
 				if ($this->order_dir == 'ASC')
 				{
-					$name .= '&uArr;' ;
+					$name .= '&#x25B2;'; // up
 					$dir = 'desc';
 				}
 				else
 				{
-					$name .= '&dArr;';
+					$name .= '&#x25BC;'; //down
 					$dir = 'asc';
 				}
 			}
@@ -1447,6 +1448,17 @@ $search
 				) ENGINE=MyISAM DEFAULT CHARSET=latin1;";
 
 		$this->connection->db_query($sql);
+	}
+	
+	function loadCSS()
+	{
+	  if ( $GLOBALS['ScaffoldCSS_loaded'] ) 
+	  {
+	    return;
+	  }
+	  $GLOBALS['ScaffoldCSS_loaded'] = true;
+	  $GLOBALS['other_css'] .= Html::stylesheet("/CSS/Scaffold.css");
+	  
 	}
 }
 

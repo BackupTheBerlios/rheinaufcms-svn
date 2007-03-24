@@ -7,15 +7,19 @@ function loading()
 	var scrolloffset = scrollOffset();
 	var viewport = viewPort()
 
-	div.style.position = 'absolute';
-	div.style.top = scrolloffset.y  + 'px';
-	div.style.left = scrolloffset.x + 'px';;
-	div.style.width = viewport.width  + 'px';
-	div.style.height = viewport.height  + 'px';
-	div.style.zIndex = 1000;
-	div.style.textAlign = 'center';
-	div.style.paddingTop = viewport.height / 2 - 100 +'px';
-	
+	with (div.style)
+	{
+		position = 'absolute';
+		top = scrolloffset.y  + 'px';
+		left = scrolloffset.x + 'px';;
+		width = viewport.width  + 'px';
+		height = viewport.height  + 'px';
+		zIndex = 1000;
+		textAlign = 'center';
+		paddingTop = viewport.height / 2 - 100 +'px';
+		MozUserSelect = "none";
+	}
+	div.unselectable = "on";
 	div.appendChild(document.createTextNode('Bitte warten ...'))
 	body.appendChild(div);
 }
@@ -26,9 +30,12 @@ function removeLoading()
 	if (typeof tooltip.init == "function") tooltip.init();
 }
 
-function httpRequestGET (url, handler)
+function httpRequestGET (url, handler, greyout)
 {
-	loading();
+	if ( greyout !== false )
+	{
+	  loading();
+	}
   var req = null;
   if ( window.ActiveXObject )
   {
@@ -46,7 +53,10 @@ function httpRequestGET (url, handler)
       if ( req.status == 200 )
       {
         handler(req.responseText, url);
-        removeLoading();
+        if ( greyout !== false )
+	      {
+          removeLoading();
+	      }
       }
       else
       {

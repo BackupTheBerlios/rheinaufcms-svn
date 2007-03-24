@@ -149,17 +149,16 @@ function getLatLong(str,plz,city,country,lat_target,long_target)
 		{
 			if (ret.latitude.indexOf('Fehler') != -1)
 		 	{
-		 		alert(ret.latitude);
 		 		lat_target.value = '';
 		 		long_target.value = '';
-		 		return;
+		 		return ret.latitude;
 		 	}
 			lat_target.value  = ret.latitude;
 			long_target.value = ret.longitude;
 	 	}
 	}
 	city = (plz) ? '' : city;
-	httpRequestGET('".SELF."?getlatlong&place=' + escape(str + ' ' +  plz + ' ' + city + ' ' + country),handler)
+	httpRequestGET('".SELF."?getlatlong&place=' + escape(str + ' ' +  plz + ' ' + city + ' ' + country),handler,false)
 }
 		";
 	}
