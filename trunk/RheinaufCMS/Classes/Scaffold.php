@@ -758,7 +758,7 @@ $search
 								}
 								else  $thumb = '';
 								$check = Form::add_input('hidden',$encoded_name.'[]',$file);
-								$check .= Html::br().Form::add_input('checkbox',$encoded_name.'_delfile[]',$file,array("onclick"=>"confirmDelPic(this)")).' Datei l?schen';
+								$check .= Html::br().Form::add_input('checkbox',$encoded_name.'_delfile[]',$file,array("onclick"=>"confirmDelPic(this)")).' Datei löschen';
 
 								$subtable->add_td(array($thumb,$file.$check));
 							}
@@ -1033,7 +1033,7 @@ $search
 						for ($i = 0; $i < $c;++$i)
 						{
 							$f_name = preg_replace("/[^0-9a-z.]/i",'_',$_FILES[$key.'_upload']['name'][$i]);
-							if ($f_name && $upload_extensions && !preg_match("/$upload_extensions/",$f_name))
+							if ($f_name && $upload_extensions && !preg_match("/$upload_extensions/i",$f_name))
 							{
 								$GLOBALS['scripts'] .= Html::script('onLoad.push(function() {alert("Dieses Dateiformat ist nicht erlaubt.")})');
 								continue;
