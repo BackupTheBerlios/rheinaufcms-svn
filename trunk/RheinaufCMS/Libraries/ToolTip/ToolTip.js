@@ -1,3 +1,108 @@
+var toolTips = [];
+var toolTipOnLoad = function()
+{
+	ToolTip.initToolTips(toolTips);
+}
+
+/** ToolTip
+ *
+ *  @condstructor
+ *  @param  args object
+ *     args.trigger string or DOM object
+ *     args.source string optional Either id or HTML
+ *     args.className string  optional
+ */
+function ToolTip (args)
+{
+	var trigger = (typeof args.trigger == "string") ? document.getElementById(args.trigger) : args.trigger;
+	if ( args.source )
+	{
+		var source = document.getElementById(args.source);
+		if (source)
+		{
+			text = source.innerHTML;
+		}
+		else text = args.source;
+	}
+	else text = trigger.title;
+	trigger.title = '';
+	this.attachEvents(trigger,text,args.className);
+}
+
+ToolTip.prototype.attachEvents = function (trigger,text,className)
+{
+	var self = this;
+	trigger.onmouseover = function (ev) {self.show(ev,text,className)};
+	trigger.onmouseout = function (ev) {self.hide()};
+	trigger.onmousemove = function (ev) {self.position(ev,text,className)};
+	
+}
+
+ToolTip.prototype.show = function (ev,text,className)
+{
+	if (!this.tip)
+	{
+		this.tip = document.createElement("div");
+		this.tip.style.position = "absolute";
+		this.tip.style.display = "none";
+		document.getElementsByTagName("body")[0].appendChild(this.tip);
+	}
+	if (this.tip.style.display != "none") return;
+	this.tip.className = (typeof className != "undefined") ? className : "tooltip";
+	this.tip.style.display = "";
+	this.tip.innerHTML = text;
+
+	this.position(ev);
+}
+
+ToolTip.prototype.hide= function ()
+{
+	if (this.tip) this.tip.style.display = "none";
+}
+
+ToolTip.prototype.position= function (ev,text,className)
+{
+	if (!this.tip)
+	{
+		this.show(ev,text,className);
+	}
+	var coords = mouseCoord(ev);
+	var innerW = winDim();
+	var scrollO = scrollOffset();
+	
+	var top = coords.y + 10;
+	var left = coords.x + 10;
+	var h = this.tip.offsetHeight;
+	var w = this.tip.offsetWidth;
+	
+	var oLeft = innerW.x + scrollO.x - (left + w); 
+	var oTop = innerW.y + scrollO.y - (top + h);
+	//alert(innerW.x + ' ' + scrollO.x  + ' ' +  left  + ' ' +  w);
+	if ( oLeft < 0 ) left -= w + 10 ; 
+	if ( oTop < 0 )  top -= h + 10; 
+	if ( left < scrollO.x + 5 ) left = scrollO.x + 5;
+	if ( top < scrollO.y + 5 ) top = scrollO.y + 5;
+	
+	this.tip.style.top = top + "px";
+	this.tip.style.left = left + "px";
+}
+
+ToolTip.initToolTips = function (toolTipsArray)
+{
+	for (var i = 0;i<toolTipsArray.length;i++)
+	{
+		new ToolTip (toolTipsArray[i]);
+	}
+	
+	var els = document.getElementsByName("tooltip");
+	for (var i = 0;i<els.length;i++)
+	{	
+		var trigger = els[i];
+		new ToolTip (trigger,trigger.getAttribute("title"),trigger.className);
+		//trigger.title = '';
+	}
+}
+
 function mouseCoord(e) 
 {
 	var posx = 0;
@@ -60,81 +165,4 @@ function scrollOffset ()
 	}
 	return {x : x, y : y}
 }
-var toolTips = [];
-function ToolTip ()
-{
-	this.init();
-}
-ToolTip.prototype.init = function ()
-{
-	for (var i = 0;i<toolTips.length;i++)
-	{	
-		var trigger = (typeof toolTips[i].trigger == "string") ? document.getElementById(toolTips[i].trigger) : toolTips[i].trigger;
-		var source = document.getElementById(toolTips[i].source);
-		if (source)
-		{
-			text = source.innerHTML;
-		}
-		else text = trigger.title;
-		trigger.title = '';
-		this.attachEvents(trigger,text,toolTips[i].className);
-	}
-	
-	var els = document.getElementsByName("tooltip");
-	for (var i = 0;i<els.length;i++)
-	{	
-		var trigger = els[i];
-		this.attachEvents(trigger,trigger.getAttribute("title"),trigger.className);
-		//trigger.title = '';
-	}
-}
-ToolTip.prototype.attachEvents = function (trigger,text,className)
-{
-	var self = this;
-	trigger.onmouseover = function (ev) {self.show(ev,text,className)};
-	trigger.onmouseout = function (ev) {self.hide()};
-}
-ToolTip.prototype.show = function (ev,text,className)
-{
-	if (!this.tip)
-	{
-		this.tip = document.createElement("div");
-		this.tip.style.position = "absolute";
-		this.tip.style.display = "none";
-		document.getElementsByTagName("body")[0].appendChild(this.tip);
-	}
-	if (this.tip.style.display != "none") return;
-	this.tip.className = (className) ? className : "tooltip";
-	this.tip.style.display = "";
-	this.tip.innerHTML = text;
 
-	var coords = mouseCoord(ev);
-	var innerW = winDim();
-	var scrollO = scrollOffset();
-	
-	var top = coords.y + 10;
-	var left = coords.x + 10;
-	var h = this.tip.offsetHeight;
-	var w = this.tip.offsetWidth;
-	
-	var oLeft = innerW.x + scrollO.x - (left + w); 
-	var oTop = innerW.y + scrollO.y - (top + h);
-	//alert(innerW.x + ' ' + scrollO.x  + ' ' +  left  + ' ' +  w);
-	if ( oLeft < 0 ) left -= w + 10 ; 
-	if ( oTop < 0 )  top -= h + 10; 
-	if ( left < 5 ) left = 5;
-	if ( top < 5 ) top = 5;
-	
-	this.tip.style.top = top + "px";
-	this.tip.style.left = left + "px";
-}
-ToolTip.prototype.hide= function ()
-{
-	if (this.tip) this.tip.style.display = "none";
-}
-var tooltip = null;
-var toolTipOnLoad = function()
-{
-	tooltip = new ToolTip();
-}
-//window.onload = onLoad;

@@ -92,5 +92,11 @@ a.active, .button  {
 	opacity:0.5;
 	filter:Alpha(opacity=50);
 	color:white;
-	background-color:#18D018;
+	background-color:#666;
+}
+.tooltip {
+	width:250px;
+	background-color:#FFFFCF;
+	border:1px dotted #8F8F86;
+	padding:5px 10px; 
 }

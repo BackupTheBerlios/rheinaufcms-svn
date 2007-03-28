@@ -55,6 +55,7 @@ class Scaffold extends RheinaufCMS
 	var $edit_enabled = false;
 	var $custom_parameter_filter = array();
 	var $input_width = "300px";
+	var $max_scale = array('x'=>1024,'y'=>768);
 
 	function  Scaffold ($table,$db_connection='')
 	{
@@ -581,7 +582,7 @@ $search
 		$return ='';
 		$url = ($action) ? $action : SELF_URL;
 		$url .= strstr($url,'?') ? '&amp;' : '?';
-		$url .= $this->GET_2_url(array_merge(array('edit','new','noframe','reentry'),$this->enable_search_for,$action_parameter_filter));
+		$url .= $this->GET_2_url(array_merge(array('edit','new','noframe','reentry'),$action_parameter_filter));
 		//$url .= ($_GET['edit']) ? '#entry'.$_GET['edit'] : '';
 		$return .= Form::form_tag($url,'post','multipart/form-data',array('onsubmit'=>"loading();return checkform();"));
 		$table = new Table(2,array('class'=>'scaffold'));
@@ -765,7 +766,7 @@ $search
 							$input .= $subtable->flush_table();
 							if ($col['upload_max_count']) $input .= Html::span("Maximal ".$col['upload_max_count']." Dateien".Html::br(),array('class'=>'klein'));
 						}
-						if (count(General::trim_array($entries)) >= $col['upload_max_count']) continue;
+						if ($col['upload_max_count'] && count(General::trim_array($entries)) >= $col['upload_max_count']) continue;
 						$attr_array['id'] = $id;
 						//$input = ($value) ? $value.Form::add_input('hidden',$encoded_name,$value,$attr_array).Html::br().Html::span('Neue Datei verknüpfen:',array('class'=>'klein')).Html::br():'';
 						$input .= Form::add_input('file',$encoded_name.'_upload[]').Form::add_input('submit','reentry','Hochladen');
@@ -1011,6 +1012,8 @@ $search
 				}
 
 				$field_value = ($_POST[$key]) ? $_POST[$key] :  array();
+				$_POST[$key] = isset($_POST[$key]) ? $_POST[$key] : true;
+				
 				if ($_FILES[$key.'_upload']['name'])
 				{
 					if ($this->upload_folder)
@@ -1047,6 +1050,9 @@ $search
 							$file = $this->upload_path .$upload_folder. $f_name;
 							$uploaded_file = $_FILES[$key.'_upload']['tmp_name'][$i];
 							move_uploaded_file($uploaded_file, $file);
+							RheinaufFile::chmod($file,'777');
+							$max_scale = ($col['max_scale']) ?  $col['max_scale'] : $this->max_scale;
+							$this->max_scale_image($file,$max_scale);
 							$field_value[] = $f_name;
 						}
 						//$field_value = (is_array($field_value)) ? implode('&delim;',General::trim_array( $field_value )) : $field_value;
@@ -1069,9 +1075,13 @@ $search
 						$file = $this->upload_path .$upload_folder. $f_name;
 						$uploaded_file = $_FILES[$key.'_upload']['tmp_name'];
 						move_uploaded_file($uploaded_file, $file);
+						RheinaufFile::chmod($file,'777');
+						$max_scale = ($col['max_scale']) ?  $col['max_scale'] : $this->max_scale;
+						$this->max_scale_image($file,$max_scale);
 						$field_value[] = $f_name;
 					}
 				}
+								
 				if (is_array($_POST[$key."_delfile"]))
 				{
 					$field_value = array_diff($field_value,$_POST[$key."_delfile"]);
@@ -1081,14 +1091,15 @@ $search
 					}
 				}
 			}
-
 			if (is_array($field_value)) $field_value = implode('&delim;',General::trim_array( $field_value ));
+
 			if ($key == 'id') $field_value =  ($_POST['edit_id'] !== '' ) ? $_POST['edit_id'] :'';
 			$field_value = General::input_clean($field_value,true);
 			$field_values[] = "'".$field_value."'";
 
 			if ($update && isset($_POST[$key])) $update_array[$key] = $field_value;
 		}
+
 		if ($update)
 		{
 			$this->connection->db_update($this->table,$update_array,"`id` = $update");
@@ -1392,6 +1403,28 @@ $search
 		$img->scaleMaxX($x);
 		$img->output();
 		exit;
+	}
+	
+	function max_scale_image($file,$max_scale)
+	{
+		$size = @getimagesize($file);
+		if (!$size) return;
+		if ($size[0] > $max_scale['x'] || $size[1] > $max_scale['y'])
+		{
+			if (!class_exists('Bilder')) include_once('Bilder.php');
+			if (!is_writeable($file)) RheinaufFile::chmod($file,'777');
+
+			$img = new Bilder($file,$file);
+			if ($size[0] > $max_scale['x'])
+			{
+				$img->scaleMaxX($max_scale['x']);
+			}
+			else
+			{
+				$img->scaleMaxY($max_scale['y']);
+			}
+			$img->output();
+		}
 	}
 
 	function get_options($options_value,$sort = false,$insert_index = false)
