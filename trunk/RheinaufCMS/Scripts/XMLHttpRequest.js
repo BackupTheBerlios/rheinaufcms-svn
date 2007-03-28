@@ -9,15 +9,15 @@ function loading()
 
 	with (div.style)
 	{
-		position = 'absolute';
-		top = scrolloffset.y  + 'px';
-		left = scrolloffset.x + 'px';;
-		width = viewport.width  + 'px';
-		height = viewport.height  + 'px';
-		zIndex = 1000;
-		textAlign = 'center';
-		paddingTop = viewport.height / 2 - 100 +'px';
-		MozUserSelect = "none";
+    position = (typeof div.style.maxWidth != 'undefined') ?  'fixed' : 'absolute';
+    top = (div.style.position == 'absolute') ?  scrolloffset.y  + 'px' : '0';
+    left = (div.style.position == 'absolute') ?  scrolloffset.x  + 'px' : '0';
+    width = viewport.width  + 'px';
+    height = viewport.height  + 'px';
+    zIndex = 1000;
+    textAlign = 'center';
+    paddingTop = viewport.height / 2 - 100 +'px';
+    MozUserSelect = "none";
 	}
 	div.unselectable = "on";
 	div.appendChild(document.createTextNode('Bitte warten ...'))
@@ -27,7 +27,6 @@ function removeLoading()
 {
 	var loading = document.getElementById("loading");
 	if (loading) loading.parentNode.removeChild(loading);
-	if (typeof tooltip.init == "function") tooltip.init();
 }
 
 function httpRequestGET (url, handler, greyout)
