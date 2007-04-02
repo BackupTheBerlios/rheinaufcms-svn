@@ -2,7 +2,7 @@
 /**
  * Image Manager configuration file.
  * @author $Author: ray $
- * @version $Id: config.inc.php 677 2007-01-19 22:24:36Z ray $
+ * @version $Id: config.inc.php 761 2007-02-24 02:18:05Z ray $
  * @package ImageManager
  *
  * @todo change all these config values to defines()

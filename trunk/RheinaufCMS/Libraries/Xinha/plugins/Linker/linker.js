@@ -216,7 +216,7 @@ _24._prepareDialog();
 return;
 }
 var _29=this.html;
-var _2a=this.dialog=new Xinha.Dialog(_25.editor,this.html,"Linker");
+var _2a=this.dialog=new Xinha.Dialog(_25.editor,this.html,"Linker",{width:600,height:400});
 var _2b=Xinha.uniq("dTree_");
 this.dTree=new dTree(_2b,_editor_url+"plugins/Linker/dTree/");
 eval(_2b+" = this.dTree");
@@ -224,32 +224,36 @@ this.dTree.add(this.Dialog_nxtid++,-1,_25.lConfig.treeCaption,null,_25.lConfig.t
 this.makeNodes(_27,0);
 var _2c=this.dialog.getElementById("dTree");
 _2c.innerHTML="";
-_2c.style.position="absolute";
-_2c.style.left=1+"px";
-_2c.style.top=0+"px";
 _2c.style.overflow="auto";
+_2c.style.height="300px";
+if(Xinha.is_ie){
+_2c.style.styleFloat="left";
+}else{
+_2c.style.cssFloat="left";
+}
 _2c.style.backgroundColor="white";
 this.ddTree=_2c;
 this.dTree._linker_premade=this.dTree.toString();
 var _2d=this.dialog.getElementById("options");
-_2d.style.position="absolute";
-_2d.style.top=0+"px";
-_2d.style.right=0+"px";
 _2d.style.width=320+"px";
 _2d.style.overflow="auto";
+this.dialog.rootElem.style.paddingBottom="0";
 this.dialog.onresize=function(){
 var h=parseInt(_2a.height)-_2a.getElementById("h1").offsetHeight;
-var w=parseInt(_2a.width)-322;
+var w=parseInt(_2a.width)-330;
 if(w<0){
 w=0;
 }
 if(h<0){
 h=0;
 }
-_2d.style.height=_2c.style.height=h+"px";
-_2c.style.width=w+"px";
+_24.ddTree.style.height=h+"px";
+_24.ddTree.style.width=w+"px";
 };
 this.ready=true;
+_2c=null;
+Xinha.freeLater(_24,"ddTree");
+_2d=null;
 };
 Linker.Dialog.prototype.makeNodes=function(_30,_31){
 for(var i=0;i<_30.length;i++){

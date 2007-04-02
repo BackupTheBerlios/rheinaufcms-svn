@@ -2,7 +2,7 @@
 /**
  * File Utilities.
  * @author $Author: ray $
- * @version $Id: Files.php 709 2007-01-30 23:22:04Z ray $
+ * @version $Id: Files.php 762 2007-02-24 15:47:57Z ray $
  * @package ImageManager
  */
 
@@ -15,7 +15,7 @@ define('FILE_ERROR_DST_DIR_EXIST', 104);
 /**
  * File Utilities
  * @author $Author: ray $
- * @version $Id: Files.php 709 2007-01-30 23:22:04Z ray $
+ * @version $Id: Files.php 762 2007-02-24 15:47:57Z ray $
  * @package ImageManager
  * @subpackage files
  */

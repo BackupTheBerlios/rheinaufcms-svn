@@ -26,41 +26,35 @@ window.focus();
 
 	xinha_plugins = xinha_plugins ? xinha_plugins :
 	[
-	//'Properties',
 	'CharacterMap',
 	//'ContextMenu',
 	//'FindReplace',
-	//'FullScreen',
 	//'ListType',
+	'PasteText',
 	'Stylist',
 	'SuperClean',
-	//'FullPage',
 	'TableOperations',
 	//'ImageManager',
 	'ExtendedFileManager',
-	//'Forms',
 	'InsertAnchor',
-	'GetHtml',
 	'Linker',
-	//'RheinaufCMSLinker',
 	'DoubleClick',
 	//'HorizontalRule',
 	'InsertSnippet',
 	'SaveSubmit',
 	'SmartReplace',
 	'CustomUtils',
-	//'Properties'
+	'HtmlEntities'
 	];
-	     // THIS BIT OF JAVASCRIPT LOADS THE PLUGINS, NO TOUCHING  :)
-	     if(!HTMLArea.loadPlugins(xinha_plugins, xinha_init)) return;
-
 
 	xinha_editors = xinha_editors ? xinha_editors :
 	[
 	'editor'
 	];
-
-	xinha_config = xinha_config ? xinha_config : new HTMLArea.Config();
+	     // THIS BIT OF JAVASCRIPT LOADS THE PLUGINS, NO TOUCHING  :)
+	     if(!Xinha.loadPlugins(xinha_plugins, xinha_init)) return;
+	     
+	xinha_config = xinha_config ? xinha_config : new Xinha.Config();
 
 	
 	xinha_config.toolbar =
@@ -68,36 +62,26 @@ window.focus();
 	    ["formatblock","bold","italic"],
 	    ["separator","insertorderedlist","insertunorderedlist"],
 	    ["separator","inserthorizontalrule","createlink","insertimage","inserttable"],
-	    ["separator","undo","redo","selectall"], (HTMLArea.is_gecko ? [] : ["cut","copy","paste","overwrite"]),
+	    ["separator","undo","redo","selectall"], (Xinha.is_gecko ? [] : ["cut","copy","paste","overwrite"]),
 	    ["separator","killword","removeformat","toggleborders","separator","htmlmode","about"]
  	 ];
 
- 	//xinha_config.flowToolbars = false;
 	xinha_config.showLoading = true;
-	//xinha_config.only7BitPrintablesInURLs = false;
 
+  xinha_config.pageStyleSheets = ['/CSS/Design.css'];
 
-	xinha_config.stripBaseHref = true;
-	xinha_config.baseHref = "<?php print 'http://'. $_SERVER['SERVER_NAME'] ?>";
-
-	//xinha_config.ListType.mode = 'panel';
-	//xinha_config.CharacterMap.mode = 'panel';
-
-	xinha_config.InsertSnippet.css = ['CSS/Screen.css'];
-	xinha_config.InsertSnippet.showInsertVariable =true;
-    xinha_config.InsertSnippet.snippets = '/RheinaufCMS/Libraries/XinhaConfig/snippets.php';
-
-    xinha_config.Linker.backend =  '/RheinaufCMS/Libraries/XinhaConfig/rheinauf_cms_db_scan.php',
+  xinha_config.stylistLoadStylesheet('/CSS/Styles.css');
+	xinha_config.stylistLoadStylesheet('/Libraries/XinhaConfig/editor.css');
+	
+  xinha_config.Linker.backend =  '/RheinaufCMS/Libraries/XinhaConfig/rheinauf_cms_db_scan.php',
+	xinha_config.Linker.treeCaption =  project_name + ' Server',
 
 	xinha_config.SuperClean.show_dialog = true;
     xinha_config.SuperClean.filters = {
-               'tidy': HTMLArea._lc('General tidy up and correction of some problems.', 'SuperClean'),
+               'tidy': Xinha._lc('General tidy up and correction of some problems.', 'SuperClean'),
                'word_edited': 'Word'
     }
 
-    xinha_config.editId = 'content';
-	xinha_config.bodyInnerHTML = '<div id="wrapper"><div id="content"></div></div>';
-	
 	if (xinha_config.ExtendedFileManager) 
 	{
 		with (xinha_config.ExtendedFileManager)
@@ -125,11 +109,21 @@ window.focus();
 		}
 	}
 
+	xinha_config.InsertSnippet.showInsertVariable =true;
+  xinha_config.InsertSnippet.snippets = _editor_url+"plugins/InsertSnippet/snippets.php";
+	with (xinha_config.InsertSnippet)
+	{
+		<?php
+	
+		// define backend configuration for the plugin
+		$backend_data['snippets_file'] = $docroot.'/RheinaufCMS/Templates/Snippets.html';
+		xinha_pass_to_php_backend($backend_data);
+	    
+		?>
+	}
     
-    xinha_editors   = HTMLArea.makeEditors(xinha_editors, xinha_config, xinha_plugins);
+  xinha_editors   = Xinha.makeEditors(xinha_editors, xinha_config, xinha_plugins);
 
-	xinha_editors.editor.config.stylistLoadStylesheet('/CSS/Screen.css');
-	xinha_editors.editor.config.stylistLoadStylesheet('/Libraries/XinhaConfig/editor.css');
 	
 	<?php if(is_file('../../CSS/Styles.css'))
 			{
@@ -142,7 +136,7 @@ window.focus();
 				print "	xinha_editors.editor.config.stylistLoadStylesheet('/CSS/$rubrik.css');";
 			}
 	?>
-	HTMLArea.startEditors(xinha_editors);
+	Xinha.startEditors(xinha_editors);
 
 	if (document.all&&document.getElementById) {
 			navRoot = document.getElementById("nav");
@@ -175,7 +169,7 @@ window.focus();
 
 	function revert (file,xinha_object) {
 
-		HTMLArea._getback(window.location.href+'&nohtml&revert='+file,function(getback){if (getback) {
+		Xinha._getback(window.location.href+'&nohtml&revert='+file,function(getback){if (getback) {
 
 		xinha_object.setHTML(getback);
 													}

@@ -14,7 +14,10 @@ return Xinha._lc(_7,"SuperClean");
 SuperClean.prototype._superClean=function(_8,_9){
 var _a=this;
 var _b=function(){
-var _c=_a._dialog.hide();
+_a._dialog.dialog.getElementById("main").style.display="none";
+_a._dialog.dialog.getElementById("waiting").style.display="";
+_a._dialog.dialog.getElementById("buttons").style.display="none";
+var _c=_a._dialog.dialog.getValues();
 var _d=_a.editor;
 if(_c.word_clean){
 _d._wordClean();
@@ -37,13 +40,23 @@ eval("var response = "+_11);
 switch(response.action){
 case "setHTML":
 _d.setHTML(response.value);
+_a._dialog.hide();
 break;
 case "alert":
-alert(_a._lc(response.value));
+_a._dialog.dialog.getElementById("buttons").style.display="";
+_a._dialog.dialog.getElementById("ok").style.display="none";
+_a._dialog.dialog.getElementById("waiting").style.display="none";
+_a._dialog.dialog.getElementById("alert").style.display="";
+_a._dialog.dialog.getElementById("alert").innerHTML=_a._lc(response.value);
+break;
+default:
+_a._dialog.hide();
 break;
 }
 };
 Xinha._postback(_d.config.SuperClean.tidy_handler,{"content":_d.getInnerHTML()},_10);
+}else{
+_a._dialog.hide();
 }
 return true;
 };
@@ -109,7 +122,7 @@ Xinha._postback(_1e.config.SuperClean.tidy_handler,{"content":_1d},function(_1f)
 eval(_1f);
 });
 };
-SuperClean.prototype.onGenerate=function(){
+SuperClean.prototype.onGenerateOnce=function(){
 if(this.editor.config.SuperClean.show_dialog&&!this._dialog){
 this._dialog=new SuperClean.Dialog(this);
 }
@@ -172,7 +185,7 @@ _29+="    </div>\n";
 }
 this.html=this.html.replace("<!--filters-->",_29);
 var _2c=this.html;
-var _2d=this.dialog=new Xinha.Dialog(_27.editor,this.html,"SuperClean");
+var _2d=this.dialog=new Xinha.Dialog(_27.editor,this.html,"SuperClean",{width:400});
 this.ready=true;
 };
 SuperClean.Dialog.prototype._lc=SuperClean.prototype._lc;
@@ -206,6 +219,11 @@ this.dialog.onresize();
 };
 SuperClean.Dialog.prototype.hide=function(){
 this.SuperClean.editor.enableToolbar();
+this.dialog.getElementById("main").style.display="";
+this.dialog.getElementById("buttons").style.display="";
+this.dialog.getElementById("waiting").style.display="none";
+this.dialog.getElementById("alert").style.display="none";
+this.dialog.getElementById("ok").style.display="";
 return this.dialog.hide();
 };
 

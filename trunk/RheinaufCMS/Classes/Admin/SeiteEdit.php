@@ -149,7 +149,7 @@ class SeiteEdit extends Admin
 		$editor_page->title = $title;
 
 		$editor_page->script(' _editor_url  = "/'.INSTALL_PATH.'/Libraries/Xinha/";_editor_lang = "de";_document_root = "'.DOCUMENT_ROOT.'"');
-		$editor_page->script('',array('src'=>'/'.INSTALL_PATH.'/Libraries/Xinha/XinhaCore.js'));
+		$editor_page->script('',array('src'=>'/'.INSTALL_PATH.'/Libraries/Xinha/XinhaLoader.js'));
 		$editor_page->script('',array('src'=>'/'.INSTALL_PATH.'/Libraries/XinhaConfig/editor.php'));
 		$editor_page->script("var project_name = '".addslashes(PROJECT_NAME) ."';");
 

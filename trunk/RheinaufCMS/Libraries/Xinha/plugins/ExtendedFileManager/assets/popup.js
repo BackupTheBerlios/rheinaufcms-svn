@@ -9,7 +9,7 @@
 // Version 3.0 developed by Mihai Bazon.
 //   http://dynarch.com/mishoo
 //
-// $Id: popup.js 681 2007-01-22 02:09:48Z ray $
+// $Id: popup.js 802 2007-03-28 16:15:10Z ray $
 
 function __dlg_onclose() {
     if(opener.Dialog._return)
@@ -46,4 +46,20 @@ function __dlg_translate(context) {
 function __dlg_close(val) {
     opener.Dialog._return(val);
     window.close();
+}
+
+function popupPrompt( prompt, value, handler, title)
+{
+  
+    Dialog("prompt.html", function(param)
+    {
+      if (!param) // user must have pressed Cancel
+      {
+        return false;
+      }
+      else
+      {
+        handler (param.value);
+      }
+    }, {prompt:prompt,value:value,title:title});
 }

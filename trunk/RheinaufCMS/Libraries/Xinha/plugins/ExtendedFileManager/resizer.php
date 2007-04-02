@@ -7,7 +7,7 @@ header('Content-Type: text/javascript');
  * relative to the base_dir given in config.inc.php
  * This is pretty much just thumbs.php with some mods, I'm too lazy to do it properly
  * @author $Author: ray $
- * @version $Id: resizer.php 677 2007-01-19 22:24:36Z ray $
+ * @version $Id: resizer.php 761 2007-02-24 02:18:05Z ray $
  * @package ImageManager
  */
 

@@ -1201,7 +1201,7 @@ $search
 		if (!$this->xinha_loaded)
 		{
 			$GLOBALS['scripts'] .= Html::script(' _editor_url  = "/'.INSTALL_PATH.'/Libraries/Xinha/";_editor_lang = "de";_document_root = "'.DOCUMENT_ROOT.'"');
-			$GLOBALS['scripts'] .= Html::script('',array('src'=>'/'.INSTALL_PATH.'/Libraries/Xinha/htmlarea.js'));
+			$GLOBALS['scripts'] .= Html::script('',array('src'=>'/'.INSTALL_PATH.'/Libraries/Xinha/XinhaLoader.js'));
 			$GLOBALS['scripts'] .= Html::script('
 				xinha_editors = [];
 				xinha_init    = null;
@@ -1216,17 +1216,17 @@ $search
 					[
 					"SuperClean",
 
-					"ImageManager",
+					"ExtendedFileManager",
 					//"GetHtml",
-					//"Linker",
+					"Linker",
 					"DoubleClick"
 					];
-				    if(!HTMLArea.loadPlugins(xinha_plugins, xinha_init)) return;
-
-
+				   
 					xinha_editors.push("'.$id.'");
 
-					xinha_config = xinha_config ? xinha_config : new HTMLArea.Config();
+					if(!Xinha.loadPlugins(xinha_plugins, xinha_init)) return;
+					
+					xinha_config = xinha_config ? xinha_config : new Xinha.Config();
 
 
 					xinha_config.statusBar = false;
@@ -1234,7 +1234,7 @@ $search
 					 [
 					    ["bold","italic"],
 					    ["separator","createlink","insertimage"],
-					    ["separator","undo","redo","selectall"], (HTMLArea.is_gecko ? [] : ["cut","copy","paste","overwrite"]),
+					    ["separator","undo","redo","selectall"], (Xinha.is_gecko ? [] : ["cut","copy","paste","overwrite"]),
 					    ["separator","killword","separator","htmlmode","about","showhelp"]
 				 	 ];
 
@@ -1245,13 +1245,13 @@ $search
 
 					xinha_config.SuperClean.show_dialog = true;
 				    xinha_config.SuperClean.filters = {
-				               "tidy": HTMLArea._lc("General tidy up and correction of some problems.", "SuperClean"),
+				               "tidy": Xinha._lc("General tidy up and correction of some problems.", "SuperClean"),
 				               "word": "Word"
 				    }
 
-				    xinha_editors   = HTMLArea.makeEditors(xinha_editors, xinha_config, xinha_plugins);
+				    xinha_editors   = Xinha.makeEditors(xinha_editors, xinha_config, xinha_plugins);
 
-					HTMLArea.startEditors(xinha_editors);
+					Xinha.startEditors(xinha_editors);
 
 				}
 			window.onload = xinha_init;

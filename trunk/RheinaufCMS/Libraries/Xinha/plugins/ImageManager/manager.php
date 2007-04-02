@@ -2,7 +2,7 @@
 /**
  * The main GUI for the ImageManager.
  * @author $Author: ray $
- * @version $Id: manager.php 700 2007-01-28 01:52:59Z ray $
+ * @version $Id: manager.php 775 2007-03-13 12:47:30Z ray $
  * @package ImageManager
  */
 
@@ -144,7 +144,7 @@
     <th align="left">Color:</th>
     <td>
       <input name="f_backgroundColor" type="text" id="f_backgroundColor" size="7" />
-      <input type="button" id="bgCol_pick" value="..." />
+     
     </td>
   </tr>
 
@@ -172,7 +172,7 @@
     <th align="left">Color:</th>
     <td>
       <input name="f_borderColor" type="text" id="f_borderColor" size="7" />
-      <input type="button" id="bdCol_pick" value="..." />
+      
     </td>
   </tr>
 

@@ -34,7 +34,7 @@ INSERT INTO `RheinaufCMS>Admin>Module` VALUES (1, 'NaviEdit', 'Navigation bearbe
 INSERT INTO `RheinaufCMS>Admin>Module` VALUES (2, 'User', 'User registrieren', 'Classes/Admin/Icons/32x32/edit_user.png','');
 INSERT INTO `RheinaufCMS>Admin>Module` VALUES (3, 'Module', 'Module', 'Classes/Admin/Icons/32x32/connect_no.png','');
 INSERT INTO `RheinaufCMS>Admin>Module` VALUES (4, 'Gruppen', 'Gruppen verwalten', 'Classes/Admin/Icons/32x32/edit_group.png','');
-
+INSERT INTO `RheinaufCMS>Admin>Module` VALUES (5, 'SnippetEditor', 'Snippets bearbeiten', 'Module/SnippetEditor/icon.png', 'Module/SnippetEditor.php');
 -- --------------------------------------------------------
 
 --
@@ -53,7 +53,7 @@ CREATE TABLE `RheinaufCMS>Groups` (
 --
 
 
-INSERT INTO `RheinaufCMS>Groups` VALUES ('', 'Admin', 'a:8:{i:0;s:13:"GruppenRechte";i:1;s:6:"Module";i:2;s:18:"NaviEditRubrikEdit";i:3;s:17:"NaviEditRubrikNeu";i:4;s:17:"NaviEditSeiteEdit";i:5;s:16:"NaviEditSeiteNeu";i:6;s:5:"Seite";i:7;s:7:"UserNeu";}');
+INSERT INTO `RheinaufCMS>Groups` VALUES ('', 'Admin', 'a:9:{i:0;s:13:"GruppenRechte";i:1;s:6:"Module";i:2;s:18:"NaviEditRubrikEdit";i:3;s:17:"NaviEditRubrikNeu";i:4;s:17:"NaviEditSeiteEdit";i:5;s:16:"NaviEditSeiteNeu";i:6;s:5:"Seite";i:7;s:12:"EditSnippets";i:8;s:7:"UserNeu";}');
 -- --------------------------------------------------------
 
 --
@@ -126,6 +126,7 @@ INSERT INTO `RheinaufCMS>Rechte` VALUES ('Seite', 'Backend', 'SeiteEdit', 'Seite
 INSERT INTO `RheinaufCMS>Rechte` VALUES ('GruppenRechte', 'Backend', 'Gruppen', 'Gruppen bearbeiten');
 INSERT INTO `RheinaufCMS>Rechte` VALUES ('UserNeu', 'Backend', 'User', 'Benutzer eintragen');
 INSERT INTO `RheinaufCMS>Rechte` VALUES ('Module', 'Backend', 'Module', 'Module installieren');
+INSERT INTO `RheinaufCMS>Rechte` VALUES ('EditSnippets', 'Backend', 'SnippetEditor', 'Snippets bearbeiten');
 
 -- --------------------------------------------------------
 
@@ -151,3 +152,15 @@ CREATE TABLE `RheinaufCMS>User` (
 
 INSERT INTO `RheinaufCMS>User` VALUES ('', '{admin_name}', '', '{admin_pass}', '', '', 0, 'Admin');
 
+
+
+-- 
+-- Tabellenstruktur für Tabelle `RheinaufCMS>Snippets`
+-- 
+
+CREATE TABLE `RheinaufCMS>Snippets` (
+  `id` int(11) NOT NULL auto_increment,
+  `Name` varchar(255) NOT NULL default '',
+  `Content` text NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT;
