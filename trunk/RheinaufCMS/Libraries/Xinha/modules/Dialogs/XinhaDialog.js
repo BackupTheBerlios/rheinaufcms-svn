@@ -458,12 +458,18 @@ Xinha.Dialog.prototype.showBackground=function(){
 this.background.style.display="";
 };
 Xinha.Dialog.prototype.posBackground=function(pos){
+	if (this.background.style.display != 'none')
+	{
 this.background.style.top=pos.top;
 this.background.style.left=pos.left;
+	}
 };
 Xinha.Dialog.prototype.resizeBackground=function(_49){
+		if (this.background.style.display != 'none')
+	{
 this.background.style.width=_49.width;
 this.background.style.height=_49.height;
+	}
 };
 Xinha.Dialog.prototype.posDialog=function(pos){
 var st=this.rootElem.style;

@@ -1,13 +1,11 @@
 <?php
-class DirList extends RheinaufCMS
+class DirList
 {
 
-	function DirList($start_folder='',$db_connection='',$path_information='')
+	function DirList($start_folder='')
 	{
 		$this->list_id = $start_folder;
 		$this->start_folder = ($start_folder !='') ? INSTALL_PATH.'/Download/'.$start_folder : INSTALL_PATH.'/Download';
-		$this->connection = ($db_connection != '') ? $db_connection : new RheinaufDB();
-		($path_information != '') ? $this->extract_to_this($path_information) : $this->pfad();
 
 		$this->list_path = '/'.($_GET['list']) ? $_GET['list'] :'';
 		$this->icons = array();

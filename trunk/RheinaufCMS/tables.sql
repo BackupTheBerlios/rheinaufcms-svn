@@ -1,40 +1,7 @@
--- phpMyAdmin SQL Dump
--- version 2.6.3-pl1
--- http://www.phpmyadmin.net
---
--- Host: localhost
--- Erstellungszeit: 01. Januar 2006 um 20:59
--- Server Version: 4.1.15
--- PHP-Version: 5.0.4
+-- 12. Juni 2007 um 18:36
 --
 --
 
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `RheinaufCMS>Admin>Module`
---
-
-CREATE TABLE `RheinaufCMS>Admin>Module` (
-  `ID` int(11) NOT NULL default '0',
-  `Name` text NOT NULL,
-  `LongName` text NOT NULL,
-  `Icon` text NOT NULL,
-  `File` varchar(100) NOT NULL default ''
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
-
---
--- Daten für Tabelle `RheinaufCMS>Admin>Module`
---
-
-
-INSERT INTO `RheinaufCMS>Admin>Module` VALUES (0, 'SeiteEdit', 'Seiten bearbeiten', 'Classes/Admin/Icons/32x32/filenew.png','');
-INSERT INTO `RheinaufCMS>Admin>Module` VALUES (1, 'NaviEdit', 'Navigation bearbeiten', 'Classes/Admin/Icons/32x32/folder_new.png','');
-INSERT INTO `RheinaufCMS>Admin>Module` VALUES (2, 'User', 'User registrieren', 'Classes/Admin/Icons/32x32/edit_user.png','');
-INSERT INTO `RheinaufCMS>Admin>Module` VALUES (3, 'Module', 'Module', 'Classes/Admin/Icons/32x32/connect_no.png','');
-INSERT INTO `RheinaufCMS>Admin>Module` VALUES (4, 'Gruppen', 'Gruppen verwalten', 'Classes/Admin/Icons/32x32/edit_group.png','');
-INSERT INTO `RheinaufCMS>Admin>Module` VALUES (5, 'SnippetEditor', 'Snippets bearbeiten', 'Module/SnippetEditor/icon.png', 'Module/SnippetEditor.php');
 -- --------------------------------------------------------
 
 --
@@ -43,8 +10,8 @@ INSERT INTO `RheinaufCMS>Admin>Module` VALUES (5, 'SnippetEditor', 'Snippets bea
 
 CREATE TABLE `RheinaufCMS>Groups` (
   `id` int(11) NOT NULL auto_increment,
-  `Name` text NOT NULL,
-  `Rechte` text NOT NULL,
+  `Name` varchar(100) NOT NULL,
+  `Rechte` varchar(100) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM ;
 
@@ -68,6 +35,12 @@ CREATE TABLE `RheinaufCMS>Module` (
 --
 -- Daten für Tabelle `RheinaufCMS>Module`
 --
+INSERT INTO `RheinaufCMS>Module` VALUES ('', 'NaviEdit', 'Navigation bearbeiten', '', 'System/Admin/NaviEdit.php', '/Libraries/Icons/32x32/folder_new.png', 1);
+INSERT INTO `RheinaufCMS>Module` VALUES ('', 'User', 'User registrieren', '', 'System/Admin/User.php', '/Libraries/Icons/32x32/edit_user.png', 1);
+INSERT INTO `RheinaufCMS>Module` VALUES ('', 'Module', 'Module verwalten', '', 'System/Admin/Module.php', '/Libraries/Icons/32x32/connect_no.png', 1);
+INSERT INTO `RheinaufCMS>Module` VALUES ('', 'Gruppen', 'Gruppen verwalten', '', 'System/Admin/Gruppen.php', '/Libraries/Icons/32x32/edit_group.png', 1);
+INSERT INTO `RheinaufCMS>Module` VALUES ('', 'SnippetEditor', 'Snippets bearbeiten', '', 'Module/SnippetEditor.php', '/Module/SnippetEditor/icon.png', 0);
+INSERT INTO `RheinaufCMS>Module` VALUES ('', 'SeiteEdit', 'Seiten bearbeiten', '', 'System/Admin/SeiteEdit.php', '/Libraries/Icons/32x32/filenew.png', 1);
 
 
 
@@ -133,25 +106,29 @@ INSERT INTO `RheinaufCMS>Rechte` VALUES ('EditSnippets', 'Backend', 'SnippetEdit
 --
 -- Tabellenstruktur für Tabelle `RheinaufCMS>User`
 --
-
 CREATE TABLE `RheinaufCMS>User` (
   `id` int(11) NOT NULL auto_increment,
-  `Name` text NOT NULL,
-  `LoginName` text NOT NULL,
-  `Password` text NOT NULL,
-  `E-Mail` text NOT NULL,
-  `Verantwortlichkeitsbereich` text NOT NULL,
+  `Anrede` varchar(255) NOT NULL default '',
+  `Titel` varchar(255) NOT NULL default '',
+  `Name` varchar(255) NOT NULL default '',
+  `Vorname` varchar(255) NOT NULL default '',
+  `Anschrift` varchar(255) NOT NULL default '',
+  `PLZ` varchar(255) NOT NULL default '',
+  `Stadt` varchar(255) NOT NULL default '',
+  `Login` varchar(255) NOT NULL default '',
+  `Password` varchar(255) NOT NULL default '',
+  `E-Mail` varchar(255) NOT NULL default '',
+  `Verantwortlichkeitsbereich` varchar(255) NOT NULL default '',
   `Kontaktierbar` tinyint(4) NOT NULL default '0',
-  `Group` text NOT NULL,
+  `Group` varchar(255) NOT NULL default '',
+  `last_login` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `RheinaufCMS>User`
 --
-
-INSERT INTO `RheinaufCMS>User` VALUES ('', '{admin_name}', '', '{admin_pass}', '', '', 0, 'Admin');
-
+INSERT INTO `RheinaufCMS>User` VALUES ('', '', '', '{admin_name}', '', '', '', '', '{admin_name}', '{admin_pass}', '', '', 0, 'Admin', '');
 
 
 -- 
@@ -163,4 +140,4 @@ CREATE TABLE `RheinaufCMS>Snippets` (
   `Name` varchar(255) NOT NULL default '',
   `Content` text NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT;
+) ENGINE=MyISAM;

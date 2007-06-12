@@ -98,9 +98,9 @@ if (preg_match('#Modul:(.*)\((.*?)\)#',$vars[$i],$match))
 	if (is_callable(array($modul,'class_init')))
 	{
 		eval('$instance = new $modul ('.$args.');');
-		$instance->class_init($this->connection,$this->path_information);
+		$instance->class_init($this->system);
 	}
-	else eval('$instance = new '.$modul.'('.$args.');');
+	else $instance = new $modul ($this->system);//eval('$instance = new '.$modul.'('.$this->system.');');
 
 
 	$return = str_replace($vars_geklammert[$i],$instance->show(), $return);
@@ -119,7 +119,7 @@ if (preg_match('#{PHP:(.*?)}#s',$vars_geklammert[$i],$match))
 
 if (preg_match('#{Ticker:(.*?)}#s',$vars_geklammert[$i],$match))
 {
-	$replace = '<marquee id="ticker" style="padding-top: 1em;">'.$match[1].'</marquee>';
+	$replace = '<marquee id="ticker" style="padding-top: 1em;" scrollamount="3" scrolldelay="100">'.$match[1].'</marquee>';
 	$return = str_replace($match[0],$replace, $return);
 }
 if (preg_match('#{I18n:(.*?)\((.*?)\)}#s',$vars_geklammert[$i],$match))

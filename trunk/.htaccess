@@ -32,7 +32,7 @@ RewriteRule \.js$ - [L,NC]
 RewriteRule ^RheinaufCMS/Content /CMSinit.php?httperror=403
 
 #Nur Domain
-RewriteRule !^. CMSinit.php
+RewriteRule !^. /Home
 
 #--REWRITE_RULES--#
 RewriteRule ^Startseite/index CMSinit.php?r=0&s=0&%{QUERY_STRING} [L,NC]

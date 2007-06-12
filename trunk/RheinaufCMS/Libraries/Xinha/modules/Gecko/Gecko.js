@@ -283,9 +283,13 @@ Xinha.prototype.saveSelection=function(){
 return this.createRange(this.getSelection()).cloneRange();
 };
 Xinha.prototype.restoreSelection=function(_38){
+try{
 var sel=this.getSelection();
 sel.removeAllRanges();
 sel.addRange(_38);
+}
+catch(e){
+}
 };
 Xinha.prototype.selectNodeContents=function(_3a,pos){
 this.focusEditor();

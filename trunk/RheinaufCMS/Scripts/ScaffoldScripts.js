@@ -432,3 +432,78 @@ window.onload = function ()
 		onLoad[i]();
 	}
 }
+
+function maxLength(ev,el,max)
+{
+	ev = ev ? ev : window.event;
+	var charCode = ev.charCode || ev.keyCode;
+	var X = String.fromCharCode(charCode);
+	//console.log(/[0-9a-z]/i.test(String.fromCharCode(charCode))+ String.fromCharCode(charCode));
+	
+	if (typeof el.onkeyup != "function")
+	{
+		//var count_display = document.createElement('span');
+		var count_display = document.getElementById(el.id+"_charsleft");
+		count_display.innerHTML = max;
+		//el.parentNode.insertBefore(count_display,el.nextSibling); 
+		el.onkeyup = function (ev)
+		{
+			if (el.value.length >= max)
+			{
+				el.value = el.value.substr(0,max);
+			}
+
+			count_display.innerHTML = max - el.value.length; 
+		}
+	}
+	if (el.value.length >= max && /[a-z0-9 \.\-]/i.test(String.fromCharCode(charCode)) && charCode != 46)
+	{
+		//return false;
+	}
+	
+	return true;
+}
+
+function Draw()
+{
+	
+}
+Draw.prototype.shape = function (classname,topleft,bottomleft,topright,bottomright)
+{
+	var startHeight = bottomleft[1] - topleft[1];
+	var endHeight = bottomright[1] - topright[1];
+	var width  = topright[0] - topleft[0];
+	var leftPos   = topleft[0];
+	var topPos    = topleft[1];
+	debugger;
+	var el;
+	var heightVal = startHeight;
+	if (topright[1] < topleft[1])
+	{
+		var heightStep = - Math.ceil(endHeight/width);
+	}
+	else
+	{
+		var heightStep = Math.ceil(endHeight/width);
+	}
+	for (var i = 0;i < width;i++)
+	{
+		el = document.createElement("div");
+		with (el.style)
+		{
+			position = "absolute";
+			backgroundColor = "black";
+			top = topPos + "px";
+			left = leftPos + "px";
+			height = heightVal + "px";
+			width = "1px";
+		}
+		//el.innerhtml;
+		document.body.appendChild(el);
+		leftPos++;
+		
+		topPos += heightStep;
+		heightVal += Math.ceil(startHeight/endHeight);
+		
+	}
+}

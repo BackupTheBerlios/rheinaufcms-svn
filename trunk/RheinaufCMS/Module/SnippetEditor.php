@@ -4,13 +4,14 @@ class SnippetEditor
 	var $scaff;
 	var $db_table = 'RheinaufCMS>Snippets';
 
-	function SnippetEditor($db_connection='')
+	function SnippetEditor(&$system)
 	{
-		$this->connection = ($db_connection != '') ? $db_connection : new RheinaufDB();
+		$this->system =& $system;
+		$this->connection = $system->connection;
 		$this->connection->debug = false;
 		if (!class_exists('Scaffold')) include_once('Scaffold.php');
 
-		$this->scaff = new Scaffold($this->db_table,$db_connection);
+		$this->scaff = new Scaffold($this->db_table,$this->connection);
 		$this->scaff->connection->debug = $this->connection->debug;
 		$this->scaff->edit_enabled = true;
 		$this->scaff->show_export = false;

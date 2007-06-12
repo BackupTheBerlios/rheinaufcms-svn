@@ -3630,7 +3630,10 @@ return this.createRange(sel);
 };
 HTMLArea=Xinha;
 Xinha.init();
+if (Xinha.is_ie)
+{
 Xinha.addDom0Event(window,"unload",Xinha.collectGarbageForIE);
+}
 Xinha.notImplemented=function(_280){
 throw new Error("Method Not Implemented","Part of Xinha has tried to call the "+_280+" method which has not been implemented.");
 };

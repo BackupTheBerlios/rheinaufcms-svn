@@ -55,6 +55,7 @@ window.focus();
 	     if(!Xinha.loadPlugins(xinha_plugins, xinha_init)) return;
 	     
 	xinha_config = xinha_config ? xinha_config : new Xinha.Config();
+	xinha_config.stripScripts = false;
 
 	
 	xinha_config.toolbar =
@@ -71,7 +72,8 @@ window.focus();
   xinha_config.pageStyleSheets = ['/CSS/Design.css'];
 
   xinha_config.stylistLoadStylesheet('/CSS/Styles.css');
-	xinha_config.stylistLoadStylesheet('/Libraries/XinhaConfig/editor.css');
+	
+  xinha_config.stylistLoadStylesheet('/Libraries/XinhaConfig/editor.css');
 	
   xinha_config.Linker.backend =  '/RheinaufCMS/Libraries/XinhaConfig/rheinauf_cms_db_scan.php',
 	xinha_config.Linker.treeCaption =  project_name + ' Server',
@@ -101,7 +103,7 @@ window.focus();
 			$IMConfig['link_enable_target'] = false;
 			$IMConfig['images_enable_align'] = false;
 			$IMConfig['max_foldersize_mb'] = 0;
-			$IMConfig['allowed_link_extensions'] = array("doc","fla","gif","gz","html","jpg","js","mov","pdf","php","png","ppt","rar","txt","xls","zip","mp3");
+			$IMConfig['allowed_link_extensions'] = array("doc","fla","gif","gz","html","jpg","js","mov","wmv","avi","pdf","php","png","ppt","rar","txt","xls","zip","mp3");
 			
 			require_once $docroot.'/RheinaufCMS/Libraries/Xinha/contrib/php-xinha.php';
 			xinha_pass_to_php_backend($IMConfig);
@@ -125,16 +127,16 @@ window.focus();
   xinha_editors   = Xinha.makeEditors(xinha_editors, xinha_config, xinha_plugins);
 
 	
-	<?php if(is_file('../../CSS/Styles.css'))
-			{
-				print "	xinha_editors.editor.config.stylistLoadStylesheet('/CSS/Styles.css');";
-			}
-	?>
-	<?php if(is_file('../../CSS/'.$_SESSION['rubrik'].'.css'))
-			{
-				$rubrik = $_SESSION['rubrik'];
-				print "	xinha_editors.editor.config.stylistLoadStylesheet('/CSS/$rubrik.css');";
-			}
+	<?php 
+	if(is_file('../../CSS/Styles.css'))
+	{
+		print "	xinha_editors.editor.config.stylistLoadStylesheet('/CSS/Styles.css');";
+	}
+	if(is_file('../../CSS/'.$_SESSION['rubrik'].'.css'))
+	{
+		$rubrik = $_SESSION['rubrik'];
+		print "	xinha_editors.editor.config.stylistLoadStylesheet('/CSS/$rubrik.css');";
+	}
 	?>
 	Xinha.startEditors(xinha_editors);
 
@@ -156,22 +158,27 @@ window.focus();
 
 	window.onload = xinha_init;
 
+	function setHTML(html)
+	{
+			xinha_editors.editor.setHTML(xinha_editors.editor.inwardHtml(html));
+	}
+	
+	
 
-
-	function save(xinha_object,action) {
-
+	function save(xinha_object,action) 
+	{
 		var newtitle = (action.indexOf('workingversion') > -1) ? document.title.replace(/Liveversion/,'Arbeitsversion'):  document.title.replace(/Arbeitsversion/,'Liveversion');
-		document.title =newtitle;
-		xinha_object._textArea.form.action = action.replace(/&amp;/,'&');
-		var savesubmit = xinha_object.plugins.SaveSubmit.instance;
-		savesubmit.save(xinha_object);
+		document.title = newtitle;
+		xinha_editors.editor._textArea.form.action = action.replace(/&amp;/,'&');
+		var savesubmit = xinha_editors.editor.plugins.SaveSubmit.instance;
+		savesubmit.save(xinha_editors.editor);
 	}
 
 	function revert (file,xinha_object) {
 
 		Xinha._getback(window.location.href+'&nohtml&revert='+file,function(getback){if (getback) {
 
-		xinha_object.setHTML(getback);
+		setHTML(getback);
 													}
 		});
 	}

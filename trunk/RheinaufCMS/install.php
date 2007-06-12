@@ -46,7 +46,7 @@ class RheinaufCMS_Install
 		$this->ftp_server = $_POST['ftp_server'];
 		$this->ftp_user = $_POST['ftp_user'];
 		$this->ftp_pass = $_POST['ftp_pass'];
-		$this->ftp_root = $_POST['ftp_root'];
+		$this->ftp_root = preg_replace("/\/*$/","",$_POST['ftp_root']).'/';
 			
 		$this->main_user = $_POST['main_user'];
 		$this->mail = $_POST['main_user_mail'];
@@ -75,12 +75,13 @@ class RheinaufCMS_Install
 		$config_file = preg_replace("/(define\('FTP_SERVER',').*?('\))/","define('FTP_SERVER','$this->ftp_server')",$config_file);
 		$config_file = preg_replace("/(define\('FTP_USER',').*?('\))/","define('FTP_USER','$this->ftp_user')",$config_file);
 		$config_file = preg_replace("/(define\('FTP_PASS',').*?('\))/","define('FTP_PASS','$this->ftp_pass')",$config_file);
+		$config_file = preg_replace("/(define\('FTP_ROOTDIR',').*?('\))/","define('FTP_ROOTDIR','$this->ftp_root')",$config_file);
 		
 		define('USE_FTP',true);
 		define('FTP_SERVER',$this->ftp_server);
 		define('FTP_USER',$this->ftp_user);
 		define('FTP_PASS',$this->ftp_pass);
-		define('FTP_ROOTDIR','');
+		define('FTP_ROOTDIR',$this->ftp_root);
 		include_once('Classes/RheinaufFile.php');
 		$this->docroot = docroot();
 		return RheinaufFile::write_file($this->docroot.$this->install_path.'/Config.inc.php',$config_file);
@@ -119,7 +120,9 @@ class RheinaufCMS_Install
 
 		
 		$connection = new RheinaufDB();
-		preg_match_all('/.*?[^(]*;/ms',$sql_file,$sql_queries);
+		$connection->debug = false;
+		
+		preg_match_all('/.*?[^(]*;',$sql_file,$sql_queries);
 
 		foreach ($sql_queries[0] as $query)
 		{
@@ -236,6 +239,14 @@ class RheinaufCMS_Install
           <td>
             <input type="text" name="ftp_pass" />
 
+          </td>
+        </tr>
+        <tr>
+          <td>
+            FTP-Pfad zum Webroot
+          </td>
+          <td>
+            <input type="text" name="ftp_root" />
           </td>
         </tr>
         <tr>

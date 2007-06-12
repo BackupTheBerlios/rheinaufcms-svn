@@ -133,6 +133,9 @@ this.editor.config.tidy_handler=null;
 if(!this.editor.config.SuperClean.tidy_handler&&this.editor.config.filters.tidy){
 this.editor.config.filters.tidy=null;
 }
+this.loadFilters();
+};
+SuperClean.prototype.loadFilters=function(){
 var sc=this;
 for(var _21 in this.editor.config.SuperClean.filters){
 if(!SuperClean.filterFunctions[_21]){
@@ -142,7 +145,7 @@ SuperClean.filterFunctions[_21]=filterFunction;
 }else{
 Xinha._getback(_editor_url+"plugins/SuperClean/filters/"+_21+".js",function(_23){
 eval("SuperClean.filterFunctions."+_21+"="+_23+";");
-sc.onGenerate();
+sc.loadFilters();
 });
 }
 return;
