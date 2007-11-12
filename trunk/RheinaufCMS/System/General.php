@@ -269,8 +269,6 @@ class General
 	function utf_8_decode($str)
 	{
 		include("UTF2entity.php");
-		include("UTF2entity.php");
-
 		return utf8_decode($str);
 	}
 	function get_add()
@@ -373,6 +371,22 @@ class General
 			}
 		}
 		return $t;
+	}
+	function  nice_pw($length=5)
+	{
+		$parts = array
+		(
+			array('a','e','i','o','u','ai','ei','ou','eu'),
+			array('b','d','f','g','h','j','k','l','m','n','p','r','s','t','v','w','x','y','z','tz','pf','ng','ch','qu')
+		);
+		shuffle($parts);
+		
+		$p ='';
+		while (strlen($p)<$length)
+		{
+			$p .= $parts[0][array_rand($parts[0])].$parts[1][array_rand($parts[1])];
+		}
+		return $p;
 	}
 }
 ?>

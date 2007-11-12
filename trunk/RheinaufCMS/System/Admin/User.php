@@ -20,8 +20,8 @@ class User extends Admin
 		$this->fields['id']['type'] = 'auto';
 		$this->fields['Name'] = array();
 		$this->fields['Name']['type'] = 'text';
-		$this->fields['LoginName'] = array();
-		$this->fields['LoginName']['type'] = 'text';
+		$this->fields['Login'] = array();
+		$this->fields['Login']['type'] = 'text';
 		$this->fields['Password'] = array();
 		$this->fields['Password']['type'] = 'text';
 		$this->fields['E-Mail'] = array();
@@ -47,7 +47,7 @@ class User extends Admin
 	}
 	function event_listen()
 	{
-		if (!$this->check_right('User')) return Html::div('Sie haben kein Recht diese Aktion auszuf?hren!',array('class'=>'rot'));
+		if (!$this->check_right('User')) return Html::div('Sie haben kein Recht diese Aktion auszuführen!',array('class'=>'rot'));
 		if (isset($_POST['submit_new_user'])) $this->new_user_input();
 		if (isset($_GET['deleteuser'])) $this->delete_user();
 		if (isset($_POST['submit_edit_group'])) $this->edit_group_update();
@@ -56,7 +56,7 @@ class User extends Admin
 
 	function show()
 	{
-		if (!$this->check_right('User')) return Html::div('Sie haben kein Recht diese Aktion auszuf?hren!',array('class'=>'rot'));
+		if (!$this->check_right('User')) return Html::div('Sie haben kein Recht diese Aktion auszuführen!',array('class'=>'rot'));
 		return  $this->user_table();
 	}
 

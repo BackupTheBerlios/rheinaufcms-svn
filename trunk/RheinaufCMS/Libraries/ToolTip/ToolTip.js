@@ -6,7 +6,7 @@ var toolTipOnLoad = function()
 
 /** ToolTip
  *
- *  @condstructor
+ *  @constructor
  *  @param  args object
  *     args.trigger string or DOM object
  *     args.source string optional Either id or HTML
@@ -15,6 +15,7 @@ var toolTipOnLoad = function()
 function ToolTip (args)
 {
 	var trigger = (typeof args.trigger == "string") ? document.getElementById(args.trigger) : args.trigger;
+	if (!trigger) return;
 	if ( args.source )
 	{
 		var source = document.getElementById(args.source);

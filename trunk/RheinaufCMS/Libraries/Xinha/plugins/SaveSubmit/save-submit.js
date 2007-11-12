@@ -14,10 +14,7 @@ _3.addToolbarElement("savesubmit","popupeditor",-1);
 SaveSubmit.prototype._lc=function(_5){
 return Xinha._lc(_5,"SaveSubmit");
 };
-SaveSubmit._pluginInfo={name:"SaveSubmit",version:"1.0",developer:"Raimund Meyer",developer_url:"http://rheinauf.de",c_owner:"Raimund Meyer",sponsor:"",sponsor_url:"",license:"htmlArea"};
-SaveSubmit.prototype.onGenerateOnce=function(){
-this.initial_html=this.editor.getInnerHTML();
-};
+SaveSubmit._pluginInfo={name:"SaveSubmit",version:"1.05",developer:"Raimund Meyer",developer_url:"http://rheinauf.de",c_owner:"Raimund Meyer",sponsor:"",sponsor_url:"",license:"htmlArea"};
 SaveSubmit.prototype.onKeyPress=function(ev){
 if(ev.ctrlKey&&this.editor.getKey(ev)=="s"){
 this.save(this.editor);
@@ -49,7 +46,7 @@ return false;
 }
 };
 SaveSubmit.prototype.getChanged=function(){
-if(this.initial_html===null){
+if(!this.initial_html){
 this.initial_html=this.editor.getInnerHTML();
 }
 if(this.initial_html!=this.editor.getInnerHTML()&&this.changed==false){

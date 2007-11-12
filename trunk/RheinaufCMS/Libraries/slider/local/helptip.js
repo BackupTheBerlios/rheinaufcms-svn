@@ -186,10 +186,10 @@ var helpTipHandler = {
 		var scroll = this.getScroll();
 		var d = this.helpTip;
 		
-		var dw = (window.innerWidth || document.documentElement.offsetWidth) - 25;		
+		var dw = (window.innerWidth || document.documentElement.offsetWidth) - 25;		
 		if (d.offsetWidth >= dw)
-			d.style.width = dw - 10 + "px";		else
-			d.style.width = "";		
+			d.style.width = dw - 10 + "px";		else
+			d.style.width = "";		
 		if (e.clientX > dw - d.offsetWidth)
 			d.style.left = dw - d.offsetWidth + scroll.x + "px";
 		else

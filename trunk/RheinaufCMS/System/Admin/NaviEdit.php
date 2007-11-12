@@ -783,11 +783,11 @@ function dublette(name,typ)
 			foreach ($entry['Subnavi'] as $sub_entry)
 			{
 					$seite = addcslashes($this->path_encode($this->I18n_get_real($sub_entry['Seite'])),$regex_esc);
-					$new_htaccess .= 'RewriteRule ^'.$rubrik.'/'.$seite.' CMSinit.php?r='.$rubrik_key.'&s='.$page_key.'&%{QUERY_STRING} [L,NC]'."\n";
+					$new_htaccess .= 'RewriteRule ^'.$rubrik.'/'.$seite.' CMSinit.php?r='.$rubrik_key.'&s='.$page_key.' [L,NC,QSA]'."\n";
 
 				$page_key++;
 			}
-			$new_htaccess .= 'RewriteRule ^'.$rubrik.' CMSinit.php?r='.$rubrik_key.'&s=0&%{QUERY_STRING} [L,NC]'."\n";
+			$new_htaccess .= 'RewriteRule ^'.$rubrik.' CMSinit.php?r='.$rubrik_key.'&s=0 [L,NC,QSA]'."\n";
 
 			$rubrik_key++;
 		}

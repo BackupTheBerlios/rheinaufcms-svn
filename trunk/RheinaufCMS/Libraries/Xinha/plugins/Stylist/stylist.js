@@ -364,6 +364,9 @@ _49.resize();
 Stylist.prototype.resize=function(){
 var _53=this.editor;
 var _54=this.dialog.rootElem;
+if(_54.style.display=="none"){
+return;
+}
 var _55=_54.parentNode;
 var _56=_55.offsetHeight;
 for(var i=0;i<_55.childNodes.length;++i){

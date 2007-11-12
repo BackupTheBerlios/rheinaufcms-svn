@@ -2,7 +2,7 @@
 /**
  * Show a list of images in a long horizontal table.
  * @author $Author: ray $
- * @version $Id: images.php 761 2007-02-24 02:18:05Z ray $
+ * @version $Id: images.php 892 2007-09-14 18:19:33Z ray $
  * @package ImageManager
  */
 
@@ -209,7 +209,7 @@ _backend_url = "<?php print $IMConfig['backend_url']; ?>";
 /*<![CDATA[*/
 
 	if(window.top)
-		HTMLArea = window.top.HTMLArea;
+    HTMLArea = Xinha    = window.top.Xinha;
 
 	function hideMessage()
 	{
@@ -274,6 +274,7 @@ _backend_url = "<?php print $IMConfig['backend_url']; ?>";
 /*]]>*/
 </script>
 <script type="text/javascript" src="<?php print $IMConfig['base_url'];?>assets/images.js"></script>
+<script type="text/javascript" src="../../popups/popup.js"></script>
 <script type="text/javascript" src="assets/popup.js"></script>
 </head>
 

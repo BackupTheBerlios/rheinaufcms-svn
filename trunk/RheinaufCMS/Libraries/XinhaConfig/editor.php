@@ -26,11 +26,13 @@ window.focus();
 
 	xinha_plugins = xinha_plugins ? xinha_plugins :
 	[
+	'PasteText',
 	'CharacterMap',
 	//'ContextMenu',
 	//'FindReplace',
 	//'ListType',
-	'PasteText',
+	
+	'InsertSnippet',
 	'Stylist',
 	'SuperClean',
 	'TableOperations',
@@ -40,7 +42,6 @@ window.focus();
 	'Linker',
 	'DoubleClick',
 	//'HorizontalRule',
-	'InsertSnippet',
 	'SaveSubmit',
 	'SmartReplace',
 	'CustomUtils',
@@ -75,8 +76,8 @@ window.focus();
 	
   xinha_config.stylistLoadStylesheet('/Libraries/XinhaConfig/editor.css');
 	
-  xinha_config.Linker.backend =  '/RheinaufCMS/Libraries/XinhaConfig/rheinauf_cms_db_scan.php',
-	xinha_config.Linker.treeCaption =  project_name + ' Server',
+  xinha_config.Linker.backend =  '/RheinaufCMS/Libraries/XinhaConfig/rheinauf_cms_db_scan.php';
+	xinha_config.Linker.treeCaption =  project_name + ' Server';
 
 	xinha_config.SuperClean.show_dialog = true;
     xinha_config.SuperClean.filters = {
@@ -112,17 +113,8 @@ window.focus();
 	}
 
 	xinha_config.InsertSnippet.showInsertVariable =true;
-  xinha_config.InsertSnippet.snippets = _editor_url+"plugins/InsertSnippet/snippets.php";
-	with (xinha_config.InsertSnippet)
-	{
-		<?php
-	
-		// define backend configuration for the plugin
-		$backend_data['snippets_file'] = $docroot.'/RheinaufCMS/Templates/Snippets.html';
-		xinha_pass_to_php_backend($backend_data);
-	    
-		?>
-	}
+  xinha_config.InsertSnippet.snippets = '/Admin/SeiteEdit?getsnippets';
+
     
   xinha_editors   = Xinha.makeEditors(xinha_editors, xinha_config, xinha_plugins);
 

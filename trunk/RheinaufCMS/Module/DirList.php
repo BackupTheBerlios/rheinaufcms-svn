@@ -23,6 +23,10 @@ class DirList
 
 
 	}
+	function class_init()
+	{
+		
+	}
 
 	function show()
 	{

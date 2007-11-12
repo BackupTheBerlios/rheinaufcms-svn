@@ -10,8 +10,6 @@ define('DB_NAME','');
 define('DB_USER','');
 define('DB_PASS','');
 
-define('DB_PREFIX','');
-
 #FTP
 define('USE_FTP',true);
 define('FTP_SERVER','');

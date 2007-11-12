@@ -15,19 +15,33 @@ function checkform() {
 	var bg_color_cache  = '';
 	for (i=0;i<required_fields.length;i++)
 	{
+		check = true;
 		e = document.getElementById(required_fields[i]);
-		bg_color_cache = e.style.backgroundColor;
-		if (e.value == "" || e.value.indexOf("--") != -1)
+		if (!e.bg_color_cache) e.bg_color_cache = e.style.backgroundColor ?  e.style.backgroundColor :'transparent';
+		if (e.tagName.toLowerCase() == 'div')
+		{
+			var els = document.getElementsByName(e.getAttribute('name')+'[]');
+			check =  false;
+			for (var j=0;j<els.length;j++)
+			{
+				if (els[j].checked)
+				{
+					check = true;
+					break;
+				}
+			}
+		}
+		else if (e.value == "" || e.value.indexOf("--") != -1)
 		{
 			check = false;
 			if (document.getElementById(e.id + '_other') && document.getElementById(e.id + '_other').value != "") check = true;		
-			if (!check)
-			{
-				if (!firstFail) firstFail = e;
-				e.style.backgroundColor = "red";
-			}
 		}
-		else e.style.backgroundColor = bg_color_cache;
+		if (!check)
+		{
+			if (!firstFail) firstFail = e;
+			e.style.backgroundColor = "red";
+		}
+		else e.style.backgroundColor = e.bg_color_cache;
 	}
 	if (firstFail)
 	{
@@ -35,7 +49,7 @@ function checkform() {
 		firstFail.focus();
 		alert('Bitte füllen Sie alle Felder mit einem * aus.');
 	}
-	return check;
+	return (firstFail) ? false : true;
 }
 var required_fields = [];
 

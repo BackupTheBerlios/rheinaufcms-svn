@@ -1,4 +1,5 @@
 #php_flag register_globals off
+
 AddDefaultCharset ISO-8859-1
 ErrorDocument 404 /CMSinit.php?httperror=404
 ErrorDocument 403 /CMSinit.php?httperror=403
@@ -22,17 +23,13 @@ RewriteRule ^Libraries/(.*) RheinaufCMS/Libraries/$1 [L]
 RewriteRule ^Module/(.*) RheinaufCMS/Module/$1 [L]
 RewriteRule ^Scripts/(.*) RheinaufCMS/Scripts/$1 [L]
 
-RewriteRule \.jpg$ - [L,NC]
-RewriteRule \.gif$ - [L,NC]
-RewriteRule \.png$ - [L,NC]
-RewriteRule \.css$ - [L,NC]
-RewriteRule \.js$ - [L,NC]
+RewriteRule (.jpg|.gif|.css|.js|.php|.html?|.doc|.pdf)$ - [L,NC]
 
 #Kein direkter Zugriff auf Content-HTMLs
 RewriteRule ^RheinaufCMS/Content /CMSinit.php?httperror=403
 
 #Nur Domain
-RewriteRule !^. /Home
+RewriteRule !^. /Startseite
 
 #--REWRITE_RULES--#
 RewriteRule ^Startseite/index CMSinit.php?r=0&s=0&%{QUERY_STRING} [L,NC]

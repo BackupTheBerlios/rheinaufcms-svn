@@ -3,16 +3,22 @@ class Template
 {
 	var $template;
 	var $parts= array();
+	var $snippets = array();
+	var $system;
+	
 	function Template($template)
 	{
 		if (@RheinaufFile::is_file($template)) $this->template = RheinaufFile::get_file($template);
 		else $this->template = $template;
-		if (@RheinaufFile::is_file($snippet_pfad = INSTALL_PATH.'/Templates/Snippets.html'))
+	}
+	function init_snippets()
+	{
+		$snippets = $this->system->connection->db_assoc("SELECT * FROM `RheinaufCMS>Snippets`");
+		foreach ($snippets as $s)
 		{
-			$this->snippets = $this->get_all_parts(file_get_contents($snippet_pfad));
+			$this->snippets[$s['Name']] = $s['Content'];
 		}
 	}
-
 	function get_part ($name='')
 	{
 

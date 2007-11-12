@@ -36,7 +36,36 @@ class Login extends RheinaufCMS
 			$vars['user'] = $_GET['logout'];
 			$vars['meldung'] = $login_form->parse_template('LOGOUT-MELDUNG',$vars);
 		}
+		if (isset($_GET['recover']))
+		{
+			if ($_POST['recover_submit'])
+			{
+				$email = General::input_clean($_POST['email'],true);
+				foreach ($this->system->user_tables as $t)
+				{
+					$sql = "SELECT * FROM `$t` WHERE `E-Mail` = '$email'";
+					$result = $this->system->connection->db_single_row($sql);
+					if ($result) break;
+				}
+				if ($result)
+				{
+					$mail = $login_form->parse_template('RECOVER_MAIL',$result);
 
+					mail($result['E-Mail'],'Ihr '.PROJECT_NAME.' Passwort',$mail,'From: '.PROJECT_NAME.'<noreply@'.preg_replace('/^www\./i','',$_SERVER['HTTP_HOST']).'>');
+					return $login_form->parse_template('RECOVER_THANKYOU',$result);
+				}
+				else 
+				{
+					return $login_form->parse_template('RECOVER_NOFOUND',$result);
+				}
+
+			}
+			else 
+			{
+				$vars['meldung'] = 'Bitte geben Sie Ihre E-Mail-Adresse ein: ';
+			}
+			return Html::div($login_form->parse_template('RECOVER_FORM',$vars));
+		}
 		if (!isset ($_POST['user']) || !isset ($_POST['pass']) )
 		{
 			$vars['meldung'] .= Html::br().$meldungen['KENNWORT_EINGEBEN'];
@@ -61,7 +90,7 @@ class Login extends RheinaufCMS
 	{
 		if (!isset($_SESSION)) session_start();
 
-		if ($_SESSION['RheinaufCMS_User']['Login'])
+		if ($_SESSION['RheinaufCMS_User']['Login'] && in_array($_SESSION['RheinaufCMS_User']['user_found_in'],$system->user_tables))
 		{
 			$system->user = $_SESSION['RheinaufCMS_User'];
 			$system->valid_user = true;
@@ -81,7 +110,7 @@ class Login extends RheinaufCMS
 		if ($user && $pass && $result['Login'] == $user && $result['Password'] == $pass && $_SESSION['uuid'] == $_POST['uuid'])
 		{
 			$_SESSION['RheinaufCMS_User'] = $system->user = General::multi_unserialize($result);
-			$_SESSION['RheinaufCMS_User']['user_found_in'] = $t;
+			$_SESSION['RheinaufCMS_User']['user_found_in'] = $system->user['user_found_in'] =  $t;
 			setcookie('RheinaufCMS_user',$user,0,'/');
 		
 			$system->connection->db_update($t,array('last_login'=>Date::now()),"id = '".$result['id']."'");

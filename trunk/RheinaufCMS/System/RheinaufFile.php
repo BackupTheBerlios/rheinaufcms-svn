@@ -31,23 +31,35 @@ class RheinaufFile
 	{
 		$text = General::input_clean($text);
 		$filename = RheinaufFile::get_enc($filename);
-		if (!RheinaufFile::is_file($filename) && defined('USE_FTP') && USE_FTP)
+		if (!is_file($filename) && defined('USE_FTP') && USE_FTP === true)
 		{
-
 			$filename = str_replace(docroot(),'',$filename);
 			$root_dir = FTP_ROOTDIR;
-			$file = fopen('ftp://'.FTP_USER.':'.FTP_PASS.'@'.FTP_SERVER.'/'.FTP_ROOTDIR.$filename,"wb");
+			$tmpname = TMPDIR.'/'.uniqid('RheinaufCMS_tmp_'.basename($filename));
+
+			$file = fopen($tmpname,"wb");
 			$fwrite = fwrite ($file, $text);
 			fclose($file);
-			RheinaufFile::chmod(utf8_decode($filename),777);
-			return $fwrite;
+			
+			$ftp_filename = $root_dir.$filename; 
+			RheinaufFile::ftpcmd("ftp_put(\$conn_id,'$ftp_filename','$tmpname',FTP_BINARY);");
+			RheinaufFile::chmod($filename,777);
+			
+			RheinaufFile::delete($tmpname);
 		}
 		else
 		{
-			if (!is_writable($filename)) RheinaufFile::chmod($filename,777);
+			if (is_file($filename) && !is_writable($filename))
+			{
+				RheinaufFile::chmod($filename,'0777');
+			}
 			$file = fopen($filename,"wb");
 			$fwrite = fwrite ($file, $text);
 			fclose($file);
+			if (is_file($filename))
+			{
+				RheinaufFile::chmod($filename,777);
+			}
 			return $fwrite;
 		}
 	}
@@ -158,6 +170,7 @@ class RheinaufFile
 			ftp_quit($conn_id);
 			return;
 		}
+		ftp_pasv($conn_id, true);
 		eval("\$return=".$ftp_befehl);
 
 		ftp_quit($conn_id);
@@ -174,8 +187,8 @@ class RheinaufFile
 	function chmod($file,$mode)
 	{
 		$file = RheinaufFile::get_enc($file);
-		if (USE_FTP) RheinaufFile::ftpcmd("ftp_site(\$conn_id,\"CHMOD ".'0'.strval($mode)." ".RheinaufFile::server2ftppath($file)."\");");
-		else chmod($file,decoct(strval($mode)));
+		if (defined('USE_FTP') && USE_FTP === true) RheinaufFile::ftpcmd("ftp_site(\$conn_id,\"CHMOD ".'0'.strval($mode)." ".RheinaufFile::server2ftppath($file)."\");");
+		else $c= chmod($file,0777);
 	}
 
 	function xchmod($dir,$mode)
@@ -199,7 +212,7 @@ class RheinaufFile
 	function mkdir ($dirname)
 	{
 		$dirname = RheinaufFile::get_enc($dirname);
-		if (USE_FTP) RheinaufFile::ftpcmd("ftp_mkdir(\$conn_id,'".RheinaufFile::server2ftppath($dirname)."');");
+		if (defined('USE_FTP') && USE_FTP === true) RheinaufFile::ftpcmd("ftp_mkdir(\$conn_id,'".RheinaufFile::server2ftppath($dirname)."');");
 		else mkdir($dirname);
 
 	}
@@ -208,7 +221,7 @@ class RheinaufFile
 	{
 		$old_name = RheinaufFile::get_enc($old_name);
 		$new_name = RheinaufFile::get_enc($new_name);
-		if (USE_FTP) RheinaufFile::ftpcmd("ftp_rename(\$conn_id,'".RheinaufFile::server2ftppath($old_name)."','".RheinaufFile::server2ftppath($new_name)."');");
+		if (defined('USE_FTP') && USE_FTP === true) RheinaufFile::ftpcmd("ftp_rename(\$conn_id,'".RheinaufFile::server2ftppath($old_name)."','".RheinaufFile::server2ftppath($new_name)."');");
 		else rename($old_name,$new_name);
 	}
 
@@ -228,7 +241,7 @@ class RheinaufFile
 	{
 		$old_name = RheinaufFile::get_enc($old_name);
 		$new_name = RheinaufFile::get_enc($new_name);
-		if (USE_FTP)
+		if (defined('USE_FTP') && USE_FTP === true)
 		{
 			$old_file = file_get_contents($old_name);
 			RheinaufFile::write_file($new_name,$old_file);

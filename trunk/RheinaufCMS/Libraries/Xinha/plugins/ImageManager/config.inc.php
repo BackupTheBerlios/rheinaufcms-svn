@@ -2,7 +2,7 @@
 /**
  * Image Manager configuration file.
  * @author $Author: ray $
- * @version $Id: config.inc.php 761 2007-02-24 02:18:05Z ray $
+ * @version $Id: config.inc.php 862 2007-07-10 16:38:51Z ray $
  * @package ImageManager
  *
  * @todo change all these config values to defines()
@@ -184,6 +184,15 @@ $IMConfig['resized_prefix'] = '.resized';
 
 $IMConfig['resized_dir'] = '.resized';
 
+/**
+ * Full options
+ *
+ * Determines whether the user is given options for padding, 
+ * background/padding colour, margin, border and border colour. 
+ */
+
+$IMConfig['show_full_options'] = true;
+ 
 // -------------------------------------------------------------------------
 
 /**

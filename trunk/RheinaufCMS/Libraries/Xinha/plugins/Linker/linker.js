@@ -183,6 +183,7 @@ Linker.Dialog.prototype._prepareDialog=function(){
 var _24=this;
 var _25=this.linker;
 if(typeof dTree=="undefined"){
+this.linker.editor.setLoadingMessage("Loading Tree script");
 Xinha._loadback(_editor_url+"plugins/Linker/dTree/dtree.js",function(){
 _24._prepareDialog();
 });
@@ -190,6 +191,7 @@ return;
 }
 if(this.files==false){
 if(_25.lConfig.backend){
+this.linker.editor.setLoadingMessage("Loading files from backend");
 Xinha._postback(_25.lConfig.backend,_25.lConfig.backend_data,function(txt){
 try{
 _24.files=eval(txt);

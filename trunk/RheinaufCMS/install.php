@@ -18,11 +18,11 @@ class RheinaufCMS_Install
 	function RheinaufCMS_Install ()
 	{
 
-		include_once('Classes/Date.php');
-		include_once('Classes/HTML.php');
-		include_once('Classes/Template.php');
-		include_once('Classes/RheinaufDB.php');
-		include_once('Classes/General.php');
+		include_once('System/Date.php');
+		include_once('System/HTML.php');
+		include_once('System/Template.php');
+		include_once('System/RheinaufDB.php');
+		include_once('System/General.php');
 	
 		if (isset($_POST['install_submit'])) $this->install();
 		else $this->form();
@@ -82,7 +82,7 @@ class RheinaufCMS_Install
 		define('FTP_USER',$this->ftp_user);
 		define('FTP_PASS',$this->ftp_pass);
 		define('FTP_ROOTDIR',$this->ftp_root);
-		include_once('Classes/RheinaufFile.php');
+		include_once('System/RheinaufFile.php');
 		$this->docroot = docroot();
 		return RheinaufFile::write_file($this->docroot.$this->install_path.'/Config.inc.php',$config_file);
 	}
@@ -122,19 +122,19 @@ class RheinaufCMS_Install
 		$connection = new RheinaufDB();
 		$connection->debug = false;
 		
-		preg_match_all('/.*?[^(]*;',$sql_file,$sql_queries);
+		preg_match_all('/.*?[^(]*;/ms',$sql_file,$sql_queries);
 
 		foreach ($sql_queries[0] as $query)
 		{
-			$query = preg_replace("/(INSERT INTO `RheinaufCMS>User` VALUES \('', '){admin_name}(', '', '){admin_pass}(', '', '', 0, 'Admin'\);)/",
-												"$1".$_POST['admin_name']."$2".$_POST['admin_pass']."$3",$query);
-			
-			if (!$connection->db_query($query))
+			if (!$connection->db_query($query) || mysql_error() )
 			{
-				print 'Fehler beim Datenbankzugriff. Installation abgebrochen<br />';
+				print 'Fehler beim Datenbankzugriff. Installation abgebrochen<br />'.mysql_error();
 				return;
 			}
 		}
+		$connection->db_query("INSERT INTO `RheinaufCMS>User` ( `Name`, `Login`, `Password`,   `Group`) 
+								VALUES ( '".$_POST['admin_name']."', '".$_POST['admin_name']."', '".$_POST['admin_pass']."',   'Admin')");
+		
 		print  'Tabellen geschrieben<br />';
 	}
 

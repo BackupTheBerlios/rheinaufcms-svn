@@ -1,84 +1,92 @@
-CreateLink._pluginInfo={name:"CreateLink",origin:"Xinha Core",version:"$LastChangedRevision: 761 $".replace(/^[^:]*: (.*) \$$/,"$1"),developer:"The Xinha Core Developer Team",developer_url:"$HeadURL: http://svn.xinha.python-hosting.com/branches/ray/modules/CreateLink/link.js $".replace(/^[^:]*: (.*) \$$/,"$1"),sponsor:"",sponsor_url:"",license:"htmlArea"};
-function CreateLink(_1){
+// Paste Plain Text plugin for Xinha
+
+// Distributed under the same terms as Xinha itself.
+// This notice MUST stay intact for use (see license.txt).
+
+function CreateLink(editor) {
+	this.editor = editor;
+	var cfg = editor.config;
+	var self = this;
+
+   editor.config.btnList.createlink[3] = function() { self.show(self._getSelectedAnchor()); }
 }
-Xinha.prototype._createLink=function(_2){
-var _3=this;
-var _4=null;
-if(typeof _2=="undefined"){
-_2=this.getParentElement();
-if(_2){
-while(_2&&!/^a$/i.test(_2.tagName)){
-_2=_2.parentNode;
-}
-}
-}
-if(!_2){
-var _5=_3.getSelection();
-var _6=_3.createRange(_5);
-var _7=0;
-if(Xinha.is_ie){
-if(_5.type=="Control"){
-_7=_6.length;
-}else{
-_7=_6.compareEndPoints("StartToEnd",_6);
-}
-}else{
-_7=_6.compareBoundaryPoints(_6.START_TO_END,_6);
-}
-if(_7===0){
-alert(Xinha._lc("You need to select some text before creating a link"));
-return;
-}
-_4={f_href:"",f_title:"",f_target:"",f_usetarget:_3.config.makeLinkShowsTarget};
-}else{
-_4={f_href:Xinha.is_ie?_3.stripBaseURL(_2.href):_2.getAttribute("href"),f_title:_2.title,f_target:_2.target,f_usetarget:_3.config.makeLinkShowsTarget};
-}
-Dialog(_3.config.URIs.link,function(_8){
-if(!_8){
-return false;
-}
-var a=_2;
-if(!a){
-try{
-var _a=Xinha.uniq("http://www.example.com/Link");
-_3._doc.execCommand("createlink",false,_a);
-var _b=_3._doc.getElementsByTagName("a");
-for(var i=0;i<_b.length;i++){
-var _d=_b[i];
-if(_d.href==_a){
-if(!a){
-a=_d;
-}
-_d.href=_8.f_href;
-if(_8.f_target){
-_d.target=_8.f_target;
-}
-if(_8.f_title){
-_d.title=_8.f_title;
-}
-}
-}
-}
-catch(ex){
-}
-}else{
-var _e=_8.f_href.trim();
-_3.selectNodeContents(a);
-if(_e===""){
-_3._doc.execCommand("unlink",false,null);
-_3.updateToolbar();
-return false;
-}else{
-a.href=_e;
-}
-}
-if(!(a&&a.tagName.toLowerCase()=="a")){
-return false;
-}
-a.target=_8.f_target.trim();
-a.title=_8.f_title.trim();
-_3.selectNodeContents(a);
-_3.updateToolbar();
-},_4);
+
+CreateLink._pluginInfo = {
+  name          : "CreateLink",
+  origin        : "Xinha Core",
+  version       : "$LastChangedRevision: 694 $".replace(/^[^:]*: (.*) \$$/, '$1'),
+  developer     : "The Xinha Core Developer Team",
+  developer_url : "$HeadURL: http://svn.xinha.python-hosting.com/trunk/modules/CreateLink/link.js $".replace(/^[^:]*: (.*) \$$/, '$1'),
+  sponsor       : "",
+  sponsor_url   : "",
+  license       : "htmlArea"
 };
 
+CreateLink.prototype._lc = function(string) {
+	return Xinha._lc(string, 'Xinha');
+};
+
+
+CreateLink.prototype.onGenerateOnce = function()
+{
+	this.prepareDialog();
+	this.loadScripts();
+};
+
+CreateLink.prototype.loadScripts = function()
+{
+  var self = this;
+  if(!this.methodsReady)
+	{
+		Xinha._getback(_editor_url + 'modules/CreateLink/pluginMethods.js', function(getback) { eval(getback); self.methodsReady = true; });
+		return;
+	}
+};
+
+CreateLink.prototype.onUpdateToolbar = function()
+{ 
+  if (!(this.dialogReady && this.methodsReady))
+	{
+	  this.editor._toolbarObjects.createlink.state("enabled", false);
+	}
+};
+
+CreateLink.prototype.prepareDialog = function()
+{
+	var self = this;
+	var editor = this.editor;
+
+	if(!this.html) // retrieve the raw dialog contents
+	{
+		Xinha._getback(_editor_url + 'modules/CreateLink/dialog.html', function(getback) { self.html = getback; self.prepareDialog(); });
+		return;
+	}
+
+	// Now we have everything we need, so we can build the dialog.
+		
+	var dialog = this.dialog = new Xinha.Dialog(editor, this.html, 'Xinha',{width:400})
+	// Connect the OK and Cancel buttons
+	dialog.getElementById('ok').onclick = function() {self.apply();}
+
+	dialog.getElementById('cancel').onclick = function() { self.dialog.hide()};
+
+	if (!editor.config.makeLinkShowsTarget)
+	{
+		dialog.getElementById("f_target_label").style.visibility = "hidden";
+		dialog.getElementById("f_target").style.visibility = "hidden";
+		dialog.getElementById("f_other_target").style.visibility = "hidden";
+	}
+
+	dialog.getElementById('f_target').onchange= function() 
+	{
+		var f = dialog.getElementById("f_other_target");
+		if (this.value == "_other") {
+			f.style.visibility = "visible";
+			f.select();
+			f.focus();
+		} else f.style.visibility = "hidden";
+	};
+
+	
+	this.dialogReady = true;
+};

@@ -1,4 +1,4 @@
-	<?php
+<?php
 /*--------------------------------
 --  RheinaufCMS Admin UI
 --
@@ -42,11 +42,11 @@ class Admin extends RheinaufCMS
 		$this->system =& $system;
 		$this->system->backend =& $this;
 		
-		$this->connection = $system->connection;
+		$this->connection =& $system->connection;
 		
 	}
 	function show()
-	{ 
+	{
 		if (!Login::check_login($this->system))
 		{
 			$page = new Seite($this->system,$this->login_tpl);
@@ -69,7 +69,7 @@ class Admin extends RheinaufCMS
 			unset($_SESSION['RheinaufCMS_User']);
 			$page = new Seite($this->system,$this->login_tpl);
 			$login = new Login($this->system);
-			return $page->header().$login->show('Entschuldigung, Sie haben nicht die Erforderlichen Rechte.').$page->footer();
+			return $page->header().$login->show('Entschuldigung, Sie haben nicht die erforderlichen Rechte.').$page->footer();
 		}
 		
 		if ($_SESSION['RheinaufCMS_User']['Group'] == 'dev')
@@ -114,7 +114,7 @@ class Admin extends RheinaufCMS
 			$this->scripts = (isset($instance->scripts)) ? $instance->scripts : '';
 			
 		}
-		$return = Html::div(Html::span($this->system->backend->tabs),array('id'=>'admin_tabs')).$return; 
+		$return = Html::div(Html::span($this->system->backend->tabs),array('id'=>'admin_tabs')).$return.'<br style="clear:both" />'; 
 		if ($this->system->noframe ||isset($_GET['noframe']))
 		{
 			return $return;
@@ -150,11 +150,12 @@ class Admin extends RheinaufCMS
 	     	{
 	     		var url = location.protocol + "/"+"/"+ location.host +"/Admin?ping";
 	     		httpRequestGET (url,function(){
-	     		setTimeout(pinghome,120000);
+	     		window.t = setTimeout(pinghome,120000);
 	     		}, false)
 	     	}
-	     	setTimeout(pinghome,120000);');
+	     	window.t = setTimeout(pinghome,120000);');
 		
+		$return .= '<br style="clear:both" />';
 		if (isset($_GET['nomenu']))
 		{
 			$page->div($return,array('id'=>'content'));
@@ -193,7 +194,7 @@ class Admin extends RheinaufCMS
 				}
 			}
 		}
-		if ($allowed_modules == 0) $return_string .= 'Ihre Zugangsberechtigung gilt nicht für diesen Bereich.';
+		if ($allowed_modules == 0) $return_string .= 'Ihre Zugangsberechtigung gilt nicht fï¿½r diesen Bereich.';
 		
 		return  $menu->menu_print();
 	}

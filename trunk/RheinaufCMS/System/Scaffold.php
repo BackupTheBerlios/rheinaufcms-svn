@@ -62,7 +62,7 @@ class Scaffold extends RheinaufCMS
 	var $input_width = "300px";
 	var $max_scale = array('x'=>1024,'y'=>768);
 	var $options_table = null;
-
+	var $show_export = false;
 	function  Scaffold ($table,&$db_connection)
 	{
 		$this->upload_path = INSTALL_PATH.'/Download/';
@@ -308,7 +308,9 @@ class Scaffold extends RheinaufCMS
 			$loop .= "<td class=\"$alt_col{If:alt_row}\">{If:edit_btns}</td>\n";
 			$loop = "<tr id=\"entry{id}\">\n$loop</tr>\n";
 			$search =  (count($this->enable_search_for)) ?  $this->search_form() : '';
-
+			
+			$export_button = ($this->show_export) ? '<a href=\"{SELF_URL}?export&amp;allresults&amp;{If:export_get_vars}\"><img src=\"/RheinaufCMS/System/Scaffold/icon_excel_doc.gif\" alt=\"Excel\" title=\"Ergebnisse als Excel-Tabelle speichern\" /></a>' : '';
+						
 			$new_template = '';
 			$new_template .= '
 <!--PAGE_BROWSER-->
@@ -330,7 +332,8 @@ $new_template .= "
 $search
 <table>
 <thead>
-<tr><td colspan=\"$colspan_minus1\">{page_browser}</td><td><a href=\"{SELF_URL}?export&amp;allresults&amp;{If:export_get_vars}\"><img src=\"/RheinaufCMS/System/Scaffold/icon_excel_doc.gif\" alt=\"Excel\" title=\"Ergebnisse als Excel-Tabelle speichern\" /></a> </td></tr>
+<tr><td colspan=\"$colspan_minus1\">{page_browser}</td>
+<td>$export_button </td></tr>
 {IfNotEmpty:pagination(<tr><td colspan=\"$colspan\">Seite [pagination]</td></tr>)}
 <tr>$head</tr>
 </thead>
@@ -362,6 +365,7 @@ $search
 			$icons['new'] = Html::img('/Libraries/Icons/16x16/edit_add.png','');
 			$vars['new_btn']  =  Html::a(SELF_URL.'?new&amp;'.$this->GET_2_url(),$icons['new']. 'Eintrag hinzufügen',array('title'=>'Eintrag hinzufügen','class'=>'button'));
 		}
+		$vars['set_filters'] = $this->get_filters("&");
 		$vars['export_get_vars'] = $this->GET_2_url();
 		$vars['num_pages'] = $pages = $this->get_pages();
 		$vars['num_entries'] = $num_rows;
@@ -466,10 +470,16 @@ $search
 				$icons['edit'] = Html::img('/Libraries/Icons/16x16/edit.png','');
 				$icons['delete'] = Html::img('/Libraries/Icons/16x16/cancel.png','');
 
-				$btns['edit'] = Html::a(SELF_URL.'?edit='.$entry['id'].'&amp;'.$this->GET_2_url(),$icons['edit'],array('title'=>'Eintrag bearbeiten'));
-				$btns['delete'] = Html::a(SELF_URL.'?delete='.$entry['id'].'&amp;'.$this->GET_2_url('delete','noframe'),$icons['delete'],array('title'=>'Eintrag löschen','onclick'=>'return delete_confirm(this,\''.$entry['id'].'\')'));
-
-				$entry['edit_btns'] .= implode(' ',$btns);
+				$entry['edit_btn_url'] = SELF_URL.'?edit='.$entry['id'].'&amp;'.$this->GET_2_url();
+				$entry['delete_btn_url'] = SELF_URL.'?delete='.$entry['id'].'&amp;'.$this->GET_2_url('delete','noframe');
+				 
+				$btns['edit'] = Html::a($entry['edit_btn_url'],$icons['edit'],array('title'=>'Eintrag bearbeiten'));
+				$btns['delete'] = Html::a($entry['delete_btn_url'],$icons['delete'],array('title'=>'Eintrag löschen','onclick'=>'return delete_confirm(this,\''.$entry['id'].'\')'));
+				
+				$entry['edit_btn'] = $btns['edit']; 
+				$entry['delete_btn'] = $btns['delete']; 
+				
+				$entry['edit_btns'] = implode(' ',$btns);
 			}
 
 			$entry['alt_row'] = ' alt_row_'.$alternatig_rows;
@@ -489,8 +499,31 @@ $search
 			$name = $this->cols_array[$search_field]['name'];
 			$id = Html::html_legal_id($search_field);
 			$input_name = rawurlencode($search_field);
-			$input = Form::add_input('text',$input_name,"{If:".$search_field."_search_value}",array('id'=>$id,'onkeyup'=>'getSuggestions(event,this)'));
-			$inputs .= Form::add_label($id,$name.' '.$input,array('class'=>'nowrap'));
+			if ($this->cols_array[$search_field]['options'] )
+			{
+				$options = $this->get_options($search_field,true);
+				
+				$select = new Select($encoded_name);
+				$select->add_option('',$this->cols_array[$search_field]['name']);
+				$attr_array = array();
+
+				if (is_array($options))
+				{
+					foreach ($options as $option => $name)
+					{
+						if (isset($_GET['option']))  $attr_array['selected'] = 'selected';
+						else unset ($attr_array['selected']);
+						$select->add_option($option,$name,$attr_array);
+					}
+				}
+
+				$inputs .= $select->flush_select();
+			}
+			else 
+			{
+				$input = Form::add_input('text',$input_name,"{If:".$search_field."_search_value}",array('id'=>$id,'onkeyup'=>'getSuggestions(event,this)'));
+				$inputs .= Form::add_label($id,$name.' '.$input,array('class'=>'nowrap'));
+			}
 		}
 		$inputs .= "{If:filter_get_vars}\n";
 		$inputs .= Form::add_input('submit','Filter');
@@ -676,20 +709,23 @@ $search
 						$select = new Select($encoded_name,array_merge($attr_array,array('onchange'=>"selectOtherOption('$id','".$col['other_option']."')")));
 						$select->add_option('','--Bitte auswählen--');
 						$attr_array = array();
-						if (!in_array($value,$options) && !key_exists($value,$options)) $col['other'] = $value;
-						foreach ($options as $option => $name)
+						if (is_array($options))
 						{
-							if ($value == $option)  $attr_array['selected'] = 'selected';
-							else unset ($attr_array['selected']);
-							$select->add_option($option,$name,$attr_array);
+							if (!in_array($value,$options) && !key_exists($value,$options)) $col['other'] = $value;
+							foreach ($options as $option => $name)
+							{
+								if ($value == $option)  $attr_array['selected'] = 'selected';
+								else unset ($attr_array['selected']);
+								$select->add_option($option,$name,$attr_array);
+							}
+							if ($col['other_option'])
+							{
+								if ($col['other']) $attr_array['selected'] = 'selected';
+								$attr_array['onclick'] = 'otherOption(this,\''.rawurlencode($encoded_name).'\')';
+								$select->add_option('',$col['other_option'],$attr_array);
+							}
+							else unset($attr_array['onclick']);
 						}
-						if ($col['other_option'])
-						{
-							if ($col['other']) $attr_array['selected'] = 'selected';
-							$attr_array['onclick'] = 'otherOption(this,\''.rawurlencode($encoded_name).'\')';
-							$select->add_option('',$col['other_option'],$attr_array);
-						}
-						else unset($attr_array['onclick']);
 						$input = $select->flush_select();
 						if ($col['other']) $input .= Form::add_input('text',$encoded_name,$col['other'],array('onfocus'=>"selectOtherOption('$id','".$col['other_option']."')",'id'=>$id.'_other'));
 						$input .= $edit_options_btn;
@@ -745,6 +781,7 @@ $search
 							$input .= $col['other_option'].' '.Form::add_input('text',$encoded_name.'[]',implode(', ',$other)).Html::br();
 						}
 						$input .= $edit_options_btn;
+						$input = Html::div($input,array('id'=>$id,'name'=>$encoded_name));
 					break;
 					case ('textarea'):
 						$attr_array['id'] = $id;
@@ -781,6 +818,10 @@ $search
 						else $entries = $value;
 
 						$upload_folder = '';
+						if (is_string($this->upload_folder))
+						{
+							$this->upload_folder = array($this->upload_folder);
+						}
 						foreach ($this->upload_folder as $col_name)
 						{
 							$upload_folder .= $values[$col_name];
@@ -812,10 +853,10 @@ $search
 						//$input = ($value) ? $value.Form::add_input('hidden',$encoded_name,$value,$attr_array).Html::br().Html::span('Neue Datei verknüpfen:',array('class'=>'klein')).Html::br():'';
 					
 						$input .= Form::add_input('file',$encoded_name.'_upload[]');
-						if ($col['upload_max_count'])
-						{
+					//	if ($col['upload_max_count'])
+					//	{
 							$input .= Form::add_input('submit','reentry','Hochladen');
-						}
+					//	}
 						if ($col['upload_extensions'])
 						{
 							$input .= Html::br() . Html::span("Erlaubte Erweiterungen: ".implode(', ',$col['upload_extensions']),array('class'=>'klein'));
@@ -1023,6 +1064,7 @@ $search
 				$c = count($field_value);
 				for ($i =  0;$i<$c;++$i)
 				{
+					// was bedeutet das hier wohl? ah ja, sonsiges feld mit komma getrennt wird gesplitted und einzeln behandelt
 					if (strstr($field_value[$i],','))
 					{
 						$t = explode(',',$field_value[$i]);
@@ -1034,6 +1076,7 @@ $search
 					$field_value[] = trim($v);
 				}
 				$field_value = (is_array($field_value)) ? implode('&delim;',General::trim_array( $field_value )) : $field_value;
+				if (!$fieldvalue) $_POST[$key] = '';	
 			}
 
 			if ($col['type'] == 'timestamp')
@@ -1071,11 +1114,13 @@ $search
 				$field_value = ($_POST[$key]) ? $_POST[$key] :  array();
 				$_POST[$key] = isset($_POST[$key]) ? $_POST[$key] : true;
 				
-				if ($_FILES[$key.'_upload']['name'])
-				{
-					if ($this->upload_folder)
+				if ($this->upload_folder)
 					{
 						$upload_folder = '';
+						if (is_string($this->upload_folder))
+						{
+							$this->upload_folder = array($this->upload_folder);
+						}
 						foreach ($this->upload_folder as $col_name)
 						{
 							$upload_folder .= $_POST[$col_name];
@@ -1087,6 +1132,9 @@ $search
 						}
 						$upload_folder = $upload_folder."/";
 					}
+				
+				if ($_FILES[$key.'_upload']['name'])
+				{
 					if (is_array($_FILES[$key.'_upload']['name']))
 					{
 						$c = count($_FILES[$key.'_upload']['name']);
@@ -1366,6 +1414,17 @@ $search
 		}
 		return implode("\n",$return);
 	}
+	
+	function get_filters($glue = "&amp;")
+	{
+		$set_filters = array();
+		foreach ($this->enable_search_for as $f)
+		{
+			if ($_GET[$f]) $set_filters[] = rawurlencode($f) .'='.rawurlencode($_GET[$f]);
+		}
+		if ($_GET['start']) $set_filters[] = "start=".intval($_GET['start']);
+		return implode($glue,$set_filters);
+	}
 
 	function make_btn_link($url,$content,$attributes)
 	{
@@ -1474,7 +1533,11 @@ $search
 		$url = $this->upload_path . $_GET['img'];
 		$x = $_GET['x'];
 		$img = new Bilder($url);
-		$img->scaleMaxX($x);
+		if ($x < $img->img_x)
+		{
+			$img->scaleMaxX($x);
+		}
+		else $img->new_image = $img->old_image;
 		$img->output();
 		exit;
 	}
@@ -1508,7 +1571,7 @@ $search
 			$options = array();
 			$options_table = ($this->options_table) ? $this->options_table : $this->table.">Options";
 			$a = $this->connection->db_assoc("SELECT * FROM `$options_table` WHERE `Context` = '$options_value' ORDER BY `id`");
-			
+
 			foreach ($a as  $v)
 			{
 				$index = ($insert_index) ? $v['id'] : $v['Text'];
@@ -1527,6 +1590,7 @@ $search
 		}
 
 		if ($sort) asort($options);
+
 		return $options;
 	}
 

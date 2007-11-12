@@ -124,33 +124,11 @@ _1a.appendChild(_1b);
 Xinha._lc=function(_1c){
 return _1c;
 };
-if(document.addEventListener){
 Xinha._addEvent=function(el,_1e,_1f){
+if(document.addEventListener){
 el.addEventListener(_1e,_1f,true);
-};
-Xinha._removeEvent=function(el,_21,_22){
-el.removeEventListener(_21,_22,true);
-};
-Xinha._stopEvent=function(ev){
-ev.preventDefault();
-ev.stopPropagation();
-};
 }else{
-if(document.attachEvent){
-Xinha._addEvent=function(el,_25,_26){
-el.attachEvent("on"+_25,_26);
-};
-Xinha._removeEvent=function(el,_28,_29){
-el.detachEvent("on"+_28,_29);
-};
-Xinha._stopEvent=function(ev){
-try{
-ev.cancelBubble=true;
-ev.returnValue=false;
-}
-catch(ex){
+el.attachEvent("on"+_1e,_1f);
 }
 };
-}
-}
 

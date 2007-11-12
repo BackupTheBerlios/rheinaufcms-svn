@@ -1,7 +1,7 @@
 <?php
 #Initialition des Systems
 include('RheinaufCMS/Config.inc.php');
-include('RheinaufCMS/Classes/RheinaufCMS.php');
+include('RheinaufCMS/System/RheinaufCMS.php');
 $RheinaufCMS = new RheinaufCMS();
 
 if (defined('HEADER')) 			print  (HEADER);

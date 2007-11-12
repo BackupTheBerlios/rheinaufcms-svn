@@ -5,24 +5,31 @@
 
    <title>{IfNotEmpty:projekt_name([projekt_name])} - {IfNotEmpty:title([title])}</title>
 	<link rel="stylesheet" href="/RheinaufCMS/CSS/Screen.css" media="screen" type="text/css" />
+	<!--[if lt IE 7]>
+	<script src="/RheinaufCMS/Libraries/IE7/ie7-standard-p.js" type="text/javascript">
+	</script>
+	<![endif]-->
+	{IfNotEmpty:other_css([other_css])}
 
-	{If:other_css}
-	
 	{IfNotEmpty:keywords(<meta name="keywords" content="[keywords]" />)}
 	{IfNotEmpty:description(<meta name="description" content="[description]" />)}
 	
 	<meta http-equiv="imagetoolbar" content="no" />
 
-	{If:scripts}
+	{IfNotEmpty:scripts([scripts])}
 </head>
 
 <body>
-{navi}
-<div id="content">	 
+<div id="wrapper">
+<div id="illu">&nbsp;</div>
+<div class="navi_background">{navi}</div> 
+<div id="content">	
+
 <!--/HEADER-->
 <!--FOOTER-->
 
 </div><!-- content-->
+</div><!--wrapper-->
 
 </body>
 </html>

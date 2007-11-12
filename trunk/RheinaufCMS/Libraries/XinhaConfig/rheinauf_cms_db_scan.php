@@ -34,7 +34,7 @@
 
     if($hash)
     {
-      session_start();
+      //session_start();
       if(!isset($_SESSION[sha1($hash)]))
       {
         ?>
@@ -89,7 +89,7 @@
       return dirsort($files);
     }
 
-    
+
 function dbnavi()
     {
      return $_SESSION['RheinaufCMSLinker'];

@@ -1,0 +1,51 @@
+<!--PAGE_BROWSER-->
+<form method="get" action="{SELF_URL}" onsubmit="httpRequestSubmit(this);return false;">
+
+{IfNotEmpty:prev_url(<a href="[prev_url]" class="button" onclick="httpRequestGET('[prev_url]&amp;noframe',setContent);return false">Zurück</a>)}
+{IfNotEmpty:next_url(<a href="[next_url]" class="button" onclick="httpRequestGET('[next_url]&amp;noframe',setContent);return false">Weiter</a>)}
+&nbsp;&nbsp;&nbsp;{If:new_btn}
+&nbsp;&nbsp;&nbsp;{num_entries} Einträge auf {num_pages} Seiten
+&nbsp;&nbsp;&nbsp;Zeige <input type="text" size="2" name="results_per_page" id="results_per_page" value="{results_per_page}" style="text-align:center"/> Einträge pro Seite
+<input type="submit" value="Aktualisieren" />
+
+{If:results_per_page_get_vars}
+</form>
+<!--/PAGE_BROWSER-->
+<!--PRE-->
+<form action="{SELF_URL}" method="get" enctype="application/x-www-form-urlencoded"  onsubmit="httpRequestSubmit(this);return false;" autocomplete="off">
+<fieldset ><legend>Filter</legend><label for="Name" class="nowrap" >Name <input type="text" name="Name" value="{If:Name_search_value}" id="Name" onkeyup="getSuggestions(event,this)"/>
+</label><select name="category"  >
+<option value="" >Kategorie</option>
+{If:cat_select}
+</select>
+{If:filter_get_vars}
+<input type="submit" name="Filter" />
+<input type="submit" name="" value="Zurücksetzen" onclick="resetFilter(this);return false;"/>
+</fieldset>
+</form>
+
+<table>
+<thead>
+<tr><td colspan="1">{page_browser}</td>
+<td> </td></tr>
+{IfNotEmpty:pagination(<tr><td colspan="2">Seite [pagination]</td></tr>)}
+<tr><th>{Name_sort}</th>
+<th>{category_sort}</th>
+</tr>
+</thead>
+<tbody>
+<!--/PRE-->
+<!--NO_RESULTS-->
+<tr><td colspan="2">Keine Einträge gefunden<td></tr>
+<!--/NO_RESULTS-->
+<!--LOOP-->
+<tr id="entry{id}">
+<td class="{If:alt_row}">{If:Name}</td>
+<td class="alt_col{If:alt_row}">{If:category}</td>
+<td class="{If:alt_row}">{If:edit_btns}</td>
+</tr>
+
+<!--/LOOP-->
+<!--POST-->
+</tbody><tfoot><tr><td colspan="2">{If:new_btn}</td></tr></tfoot></table>
+<!--/POST-->

@@ -1,5 +1,7 @@
+if(typeof Xinha=="undefined"){
 Xinha=window.opener.Xinha;
-HTMLArea=window.opener.Xinha;
+}
+HTMLArea=Xinha;
 function getAbsolutePos(el){
 var r={x:el.offsetLeft,y:el.offsetTop};
 if(el.offsetParent){
@@ -27,7 +29,7 @@ function __xinha_dlg_init(_b){
 if(window.__dlg_init_done){
 return true;
 }
-if(window.opener._editor_skin!=""){
+if(window.opener._editor_skin){
 var _c=document.getElementsByTagName("head")[0];
 var _d=document.createElement("link");
 _d.type="text/css";
@@ -36,14 +38,13 @@ _d.rel="stylesheet";
 _c.appendChild(_d);
 }
 window.dialogArguments=opener.Dialog._arguments;
-var _e=document.body;
+var _e=Xinha.pageSize(window);
 if(!_b){
-var _f=Xinha.viewportSize(window);
-_b={width:_f.x,height:_e.scrollHeight};
+_b={width:_e.x,height:_e.y};
 }
 window.resizeTo(_b.width,_b.height);
 var _f=Xinha.viewportSize(window);
-window.resizeBy(0,_e.scrollHeight-_f.y);
+window.resizeBy(0,_e.y-_f.y);
 if(_b.top&&_b.left){
 window.moveTo(_b.left,_b.top);
 }else{

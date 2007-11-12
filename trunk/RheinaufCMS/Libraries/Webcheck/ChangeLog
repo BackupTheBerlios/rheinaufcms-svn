@@ -1,0 +1,1625 @@
+2007-01-15 20:26  arthur
+
+	* [r308] schemes/http.py: catch any exception in HTTP module and
+	  report is as a link problem
+
+2007-01-15 08:25  arthur
+
+	* [r307] HACKING, README, debian/rules: move section on webcheck
+	  design into HACKING document
+
+2007-01-15 08:21  arthur
+
+	* [r306] README: fix the bugreporting section to more clearly state
+	  the needed information
+
+2007-01-13 08:19  arthur
+
+	* [r305] debian/control, debian/pycompat, debian/rules: switch to
+	  using latest syntax of python-support
+
+2006-10-23 21:09  arthur
+
+	* [r304] plugins/sitemap.py: present sitemap with all bases
+
+2006-10-23 21:08  arthur
+
+	* [r303] config.py: add USE_ROBOTS option
+
+2006-10-23 21:08  arthur
+
+	* [r302] crawler.py: include list of bases in Site class
+
+2006-10-23 21:05  arthur
+
+	* [r301] plugins/__init__.py: print reason why link is yanked if
+	  available
+
+2006-09-29 10:27  arthur
+
+	* [r300] debian/control: include link to homepage in package
+	  description
+
+2006-09-04 10:47  arthur
+
+	* [r299] schemes/http.py: explicitly transform username and
+	  password to string in case either one isn't supplied
+
+2006-07-13 20:47  arthur
+
+	* [r298] schemes/http.py: also handle ssl related socket errors
+	  (e.g. ssl timeout)
+
+2006-07-13 20:44  arthur
+
+	* [r297] crawler.py, parsers/html.py, schemes/http.py: add
+	  set_encoding methond to Link object to do some basic encoding
+	  santity checks
+
+2006-07-02 21:42  arthur
+
+	* [r295] ChangeLog, NEWS, TODO, config.py, debian/changelog,
+	  webcheck.1: get files ready for 1.9.7 release
+
+2006-06-29 21:09  arthur
+
+	* [r294] webcheck.css: always keep navigation on top
+
+2006-06-24 15:35  arthur
+
+	* [r293] crawler.py, serialize.py: store internal, external and
+	  yanked regular expressions in a map allowing them to be
+	  serialized
+
+2006-06-23 21:01  arthur
+
+	* [r292] debian/control, debian/pycompat, debian/rules: switch to
+	  using python-support and follow recent python policy
+
+2006-06-05 20:21  arthur
+
+	* [r291] debian/control: split Build-Depends-Indep into
+	  Build-Depends and Build-Depends-Indep
+
+2006-06-05 20:19  arthur
+
+	* [r290] debian/rules: also install favicon.ico in deb package
+	  (plus cosmetic fix)
+
+2006-06-04 21:28  arthur
+
+	* [r289] webcheck.1: fix typos and fix example explanation
+
+2006-06-04 21:09  arthur
+
+	* [r288] serialize.py: do not split list of strings on comma's
+	  inside the quoted strings
+
+2006-06-04 20:41  arthur
+
+	* [r287] serialize.py: make DeSerializeException a class instead of
+	  a function and add fixme
+
+2006-06-04 20:40  arthur
+
+	* [r286] config.py, webcheck.1, webcheck.py: add --continue option
+	  to resume the crawling from the point where the previous crawl
+	  stopped
+
+2006-06-02 11:47  arthur
+
+	* [r285] webcheck.py: handle break signals in all code
+
+2006-06-02 11:42  arthur
+
+	* [r284] webcheck.py: add code to serialize crawled data during
+	  crawl and again after crawl
+
+2006-06-02 11:37  arthur
+
+	* [r283] serialize.py: raise a custom exception instead of IOError
+
+2006-05-31 20:24  arthur
+
+	* [r282] parsers/html.py: add TODOs
+
+2006-05-31 20:23  arthur
+
+	* [r281] debian/control: upgrade to standards-version 3.7.2 (no
+	  changes needed)
+
+2006-05-31 20:22  arthur
+
+	* [r280] README: update feature list from deb package description
+
+2006-05-16 19:18  arthur
+
+	* [r279] crawler.py, serialize.py, webcheck.py: split
+	  crawler.crawl() function into crawler.crawl() and
+	  crawler.postprocess() functions
+
+2006-05-16 19:07  arthur
+
+	* [r278] crawler.py: also serialize remaining links after crawl
+
+2006-05-16 19:05  arthur
+
+	* [r277] crawler.py: remove anchor debugging statements
+
+2006-05-16 18:23  arthur
+
+	* [r276] serialize.py: flag deserialized links as changed so they
+	  will be reserialized again
+
+2006-05-16 18:21  arthur
+
+	* [r275] plugins/size.py: fix sorting
+
+2006-05-16 18:19  arthur
+
+	* [r274] plugins/about.py, webcheck.css: update link to
+	  fancytooltips
+
+2006-05-15 21:30  arthur
+
+	* [r273] plugins/__init__.py: add makebackup option to open_file()
+	  so we can implement updating files (e.g. serialization files)
+
+2006-05-15 21:00  arthur
+
+	* [r272] crawler.py: fix some stupid typos
+
+2006-05-15 20:51  arthur
+
+	* [r271] crawler.py: add code to serialize links to a file while
+	  crawling the site
+
+2006-05-15 20:50  arthur
+
+	* [r270] serialize.py: import crawler late as to simplify
+	  dependencies
+
+2006-05-15 20:36  arthur
+
+	* [r269] serialize.py: fix typo in fixme
+
+2006-05-15 20:35  arthur
+
+	* [r268] crawler.py: add _ischanged attribute to link objects to
+	  indicate change since the constructor (or serialization)
+
+2006-05-15 19:17  arthur
+
+	* [r267] serialize.py: only write serialized data if it is diferent
+	  from the constructor's default value
+
+2006-05-15 19:15  arthur
+
+	* [r266] serialize.py: clear anchors, linkproblems and pageproblems
+	  from to be deserialized links to avoid duplicates as a link can
+	  be deserialized multiple times
+
+2006-05-15 19:13  arthur
+
+	* [r265] serialize.py: remove the call to crawl() from deserialize
+	  as this could be a partial deserialize that needs more tweaking
+	  to the site before the call to crawl()
+
+2006-05-15 17:26  arthur
+
+	* [r264] parsers/html.py: make decoding try/fallback code a lot
+	  simpler and handle case where encoding is specified as empty
+	  string
+
+2006-05-12 21:32  arthur
+
+	* [r263] parsers/html.py: improve warning text and add comment
+	  concerning trying of encodings
+
+2006-05-12 21:23  arthur
+
+	* [r262] parsers/html.py: ignore unknown entities instead of
+	  throwing an error
+
+2006-05-07 10:31  arthur
+
+	* [r261] favicon.ico, plugins/__init__.py, webcheck.py: include
+	  favicon.ico file in generated report
+
+2006-05-07 10:31  arthur
+
+	* [r260] schemes/__init__.py: ensure that we are not importing
+	  anything weird by using invalid scheme names
+
+2006-05-07 10:26  arthur
+
+	* [r259] webcheck.py: support floats as parameter for --wait
+
+2006-05-07 10:25  arthur
+
+	* [r258] webcheck.1: fix useage of dash
+
+2006-05-07 10:19  arthur
+
+	* [r257] serialize.py: add serialize module that alows serializing
+	  and deserializing all crawler state (site and links) to and from
+	  a file, this module is not called anywhere yet
+
+2006-05-07 09:56  arthur
+
+	* [r256] crawler.py: fix typo in docstring and add comment
+
+2006-05-07 09:36  arthur
+
+	* [r255] parsers/html.py, plugins/__init__.py: move html escaping
+	  and unescaping functions to parsers.html
+
+2006-05-07 09:25  arthur
+
+	* [r254] parsers/html.py: use unichr() to generate unicode
+	  characters, not chr()
+
+2006-05-07 09:20  arthur
+
+	* [r253] schemes/file.py: return None explicitly
+
+2006-05-07 09:12  arthur
+
+	* [r252] crawler.py, parsers/html.py, plugins/__init__.py,
+	  schemes/file.py, schemes/ftp.py: some more small code
+	  improvements thanks to pychecker
+
+2006-05-06 15:44  arthur
+
+	* [r251] parsers/html.py: implement checking for id and name tags
+	  in anchors
+
+2006-05-06 15:28  arthur
+
+	* [r250] schemes/ftp.py, schemes/https.py, webcheck.css: bump
+	  copyright notices
+
+2006-04-27 21:53  arthur
+
+	* [r249] crawler.py: also add all unfetched links from a site to
+	  make this mehtod recallable
+
+2006-04-27 21:47  arthur
+
+	* [r248] crawler.py: make get_link() function a public class
+	  function
+
+2006-04-27 21:43  arthur
+
+	* [r247] crawler.py: move url checking bit to right function and
+	  improve anchor debugging messages even further
+
+2006-04-27 21:39  arthur
+
+	* [r246] plugins/__init__.py: fix remaining references to escape
+	  instead of htmlescape
+
+2006-04-27 21:32  arthur
+
+	* [r245] crawler.py: support passing a url to add_reqanchor() plus
+	  some minor comments changes
+
+2006-04-27 21:25  arthur
+
+	* [r244] webcheck.py: handle problems in regular expressions passed
+	  on the command line a little more gracefully
+
+2006-04-23 14:52  arthur
+
+	* [r243] plugins/__init__.py, plugins/about.py,
+	  plugins/badlinks.py, plugins/problems.py: rename escape()
+	  function to htmlescape() to make it a little clearer what we're
+	  escaping
+
+2006-04-23 11:31  arthur
+
+	* [r242] TODO, config.py, crawler.py, debugio.py,
+	  parsers/__init__.py, parsers/css.py, parsers/html.py,
+	  plugins/__init__.py, plugins/about.py, plugins/anchors.py,
+	  plugins/badlinks.py, plugins/external.py, plugins/images.py,
+	  plugins/new.py, plugins/notchkd.py, plugins/notitles.py,
+	  plugins/old.py, plugins/problems.py, plugins/sitemap.py,
+	  plugins/size.py, plugins/urllist.py, schemes/__init__.py,
+	  schemes/file.py, schemes/ftp.py, schemes/http.py,
+	  schemes/https.py, webcheck.py: code improvements thanks to pylint
+
+2006-04-23 11:26  arthur
+
+	* [r241] plugins/__init__.py: also sort parent list by url if
+	  titles are the same
+
+2006-04-23 11:25  arthur
+
+	* [r240] schemes/http.py: also properly handle timout problems
+	  which only pass one parameter with the exception
+
+2006-04-11 21:40  arthur
+
+	* [r239] config.py, schemes/http.py: implement a timeout setting
+	  with a default of 10 seconds
+
+2006-04-11 21:35  arthur
+
+	* [r238] webcheck.css: revert to borderless links as they look ugly
+	  in some (most) cases
+
+2006-04-11 21:06  arthur
+
+	* [r237] config.py, plugins/size.py, plugins/slow.py: rename slow
+	  plugin to size
+
+2006-04-07 17:58  arthur
+
+	* [r236] parsers/html.py: do not fail on unknown encodings (fall
+	  back to system encoding) and add some TODO's to do extra encoding
+	  checking
+
+2006-03-26 19:05  arthur
+
+	* [r235] crawler.py, parsers/html.py: split urlescape() from
+	  _urlclean() and ensure that all anchors are consitently
+	  url-encoded
+
+2006-03-26 19:01  arthur
+
+	* [r234] plugins/anchors.py: only report missing anchors for pages
+	  that were fetched and some cleanups
+
+2006-03-26 18:58  arthur
+
+	* [r233] webcheck.css: put a boder around links
+
+2006-03-26 16:47  arthur
+
+	* [r232] plugins/badlinks.py, plugins/external.py,
+	  plugins/images.py, plugins/new.py, plugins/notchkd.py,
+	  plugins/notitles.py, plugins/old.py, plugins/problems.py,
+	  plugins/slow.py: properly close html files on no output
+
+2006-03-10 23:02  arthur
+
+	* [r231] parsers/html.py: revert catching Exception instead of
+	  IOError that was there for testing
+
+2006-03-10 22:58  arthur
+
+	* [r230] config.py, crawler.py, parsers/html.py,
+	  plugins/anchors.py: implement checking of anchors (there should
+	  be no double anchors and all referenced anchors should exist)
+
+2006-03-10 22:56  arthur
+
+	* [r229] plugins/__init__.py: do not include navigation for plugins
+	  that do not generate output
+
+2006-03-10 22:48  arthur
+
+	* [r228] parsers/html.py, plugins/notitles.py: trim spaces from
+	  title and author fields and check that title is not empty string
+	  (apart from undefined)
+
+2006-03-09 22:10  arthur
+
+	* [r227] plugins/__init__.py, plugins/about.py,
+	  plugins/badlinks.py, plugins/external.py, plugins/images.py,
+	  plugins/new.py, plugins/notchkd.py, plugins/notitles.py,
+	  plugins/old.py, plugins/problems.py, plugins/sitemap.py,
+	  plugins/slow.py, plugins/urllist.py, webcheck.py: restructure
+	  plugin code to open output files from within plugin itself to be
+	  able to write different kinds of files
+
+2006-01-30 16:27  arthur
+
+	* [r225] ChangeLog, NEWS, README, TODO, config.py,
+	  debian/changelog, debian/copyright, webcheck.1, webcheck.py: get
+	  files ready for 1.9.6 release
+
+2006-01-29 22:39  arthur
+
+	* [r224] crawler.py: bugfix in matching url encoding
+
+2006-01-29 21:24  arthur
+
+	* [r223] crawler.py: actually decode urlencoded character as hex
+	  not decimal
+
+2006-01-29 20:50  arthur
+
+	* [r222] fancytooltips/fancytooltips.js: html escape all content
+	  that is retreived from attributes
+
+2006-01-29 20:48  arthur
+
+	* [r221] crawler.py, parsers/html.py: make sure all urls are
+	  consistently url encoded where it counts
+
+2006-01-29 20:15  arthur
+
+	* [r220] schemes/http.py: add some more debugging information
+	  (cache hit or miss)
+
+2006-01-29 20:14  arthur
+
+	* [r219] plugins/about.py: update copyright notice and indicate
+	  that we're using gpl2+
+
+2006-01-25 23:16  arthur
+
+	* [r218] parsers/html.py: fix typo (thanks Andrew Kim
+	  <Andrew.Kim@revolution.com>)
+
+2006-01-19 21:38  arthur
+
+	* [r217] plugins/__init__.py: ignore errors when converting to
+	  unicode string and uses system encoding instead of utf-8 as
+	  default
+
+2006-01-19 21:35  arthur
+
+	* [r216] plugins/__init__.py: also escape the url when generating
+	  links
+
+2006-01-19 20:46  arthur
+
+	* [r215] plugins/__init__.py: explictly convert strings to unicode
+	  to avoid potential problems with non-ascii charaters in strings
+
+2006-01-19 20:45  arthur
+
+	* [r214] parsers/html.py: quote links so that they do not contain
+	  any non-ascii characters to avoid problems later on (and add some
+	  more debugging)
+
+2006-01-19 20:32  arthur
+
+	* [r213] crawler.py: fix debug message to print url instead of
+	  object reference
+
+2006-01-15 08:44  arthur
+
+	* [r212] crawler.py: give some more debugging info while following
+	  base urls and no longer delete unreferenced followed links
+
+2005-12-30 22:33  arthur
+
+	* [r210] ChangeLog, NEWS, TODO, config.py, debian/changelog,
+	  webcheck.1: get files ready for 1.9.5 release
+
+2005-12-30 22:09  arthur
+
+	* [r209] crawler.py: fix copy-pasto from r204
+
+2005-12-30 21:21  arthur
+
+	* [r208] webcheck.1: add some clarifications to --internal and URL
+	  classes sections
+
+2005-12-30 20:45  arthur
+
+	* [r207] debian, debian/changelog, debian/compat, debian/control,
+	  debian/copyright, debian/postinst, debian/rules: import updated
+	  debian package configuration data, partially from old webcheck
+	  package
+
+2005-12-29 00:53  arthur
+
+	* [r206] crawler.py, schemes/http.py: trim empty ports
+	  (http://host:/) from urls and do not crash on improperly
+	  formatted urls
+
+2005-12-29 00:51  arthur
+
+	* [r205] plugins/slow.py: fix typo
+
+2005-12-28 22:29  arthur
+
+	* [r204] crawler.py, webcheck.1, webcheck.py: add --internal option
+	  to match internal URLs with a regular expression
+
+2005-12-28 21:37  arthur
+
+	* [r203] webcheck.1: clarify section on url classes that yanked
+	  urls can be internal or external and some typo fixes
+
+2005-12-28 21:26  arthur
+
+	* [r202] AUTHORS: add Stefan Schröder to the contributors list
+
+2005-12-28 21:23  arthur
+
+	* [r201] plugins/about.py: make text even shorter
+
+2005-12-28 00:10  arthur
+
+	* [r200] plugins/badlinks.py, plugins/external.py,
+	  plugins/images.py, plugins/new.py, plugins/notchkd.py,
+	  plugins/notitles.py, plugins/old.py, plugins/problems.py,
+	  plugins/slow.py: first generate (with filter and lambda
+	  expressions) a list of links that should be reported by the
+	  plugin and just then present the result, including a nicer
+	  message when there is nothing to report
+
+2005-12-28 00:08  arthur
+
+	* [r199] plugins/about.py: make copyright information a little more
+	  compact
+
+2005-12-27 21:51  arthur
+
+	* [r198] plugins/__init__.py, plugins/about.py,
+	  plugins/badlinks.py, plugins/external.py, plugins/images.py,
+	  plugins/new.py, plugins/notchkd.py, plugins/notitles.py,
+	  plugins/old.py, plugins/problems.py, plugins/sitemap.py,
+	  plugins/slow.py, plugins/urllist.py: move printing of description
+	  into plugin instead of from __init__.py
+
+2005-12-27 21:23  arthur
+
+	* [r197] plugins/about.py: fix indenting and closing li of
+	  generated html code
+
+2005-12-27 21:16  arthur
+
+	* [r196] plugins/__init__.py, plugins/about.py,
+	  plugins/badlinks.py, plugins/external.py, plugins/new.py,
+	  plugins/notchkd.py, plugins/notitles.py, plugins/old.py,
+	  plugins/problems.py, plugins/slow.py: replace backslases from end
+	  of lines where they are not required
+
+2005-12-27 20:52  arthur
+
+	* [r195] webcheck.css: give more areas a rounder look, change
+	  opacity of tooltips and try to use some css 3.0 attributes
+
+2005-12-27 20:26  arthur
+
+	* [r194] plugins/about.py: include reference to FancyTooltips in
+	  about screen
+
+2005-12-27 20:26  arthur
+
+	* [r193] README: s/contains/includes/ FancyTooltips
+
+2005-12-26 08:47  arthur
+
+	* [r192] schemes/http.py: catch all relevant exceptions when
+	  looking up content-type header
+
+2005-12-26 08:46  arthur
+
+	* [r191] parsers/html.py: bugfix to handle numeric character
+	  references better (unicode characters)
+
+2005-12-17 22:22  arthur
+
+	* [r190] README, plugins/__init__.py, webcheck.css, webcheck.py:
+	  reference and install fancytooltips from webcheck
+
+2005-12-17 22:08  arthur
+
+	* [r189] fancytooltips/fancytooltips.js: local customisations of
+	  fancyurltips: don't trim long strings and replace newlines with
+	  html <br />'s
+
+2005-12-17 21:43  arthur
+
+	* [r188] fancytooltips, fancytooltips/fancytooltips.css,
+	  fancytooltips/fancytooltips.js, fancytooltips/readme.txt: import
+	  fancytooltips 1.2.1 from
+	  http://victr.lm85.com/Design/css/fancytooltips-a-la-victr.php
+
+2005-12-17 20:34  arthur
+
+	* [r187] webcheck.py: update --help output to take multiple base
+	  URLs into account
+
+2005-12-17 18:32  arthur
+
+	* [r186] README, config.py, crawler.py, debugio.py,
+	  parsers/__init__.py, parsers/css.py, parsers/html.py,
+	  plugins/__init__.py, plugins/about.py, plugins/badlinks.py,
+	  plugins/external.py, plugins/images.py, plugins/new.py,
+	  plugins/notchkd.py, plugins/notitles.py, plugins/old.py,
+	  plugins/problems.py, plugins/sitemap.py, plugins/slow.py,
+	  plugins/urllist.py, schemes/__init__.py, schemes/file.py,
+	  schemes/ftp.py, schemes/http.py, schemes/https.py, webcheck.1,
+	  webcheck.py: add copyright clarification to specify that
+	  generated output files are not covered by our copyright
+
+2005-12-17 17:57  arthur
+
+	* [r185] schemes/http.py: remove trailing : from netloc if it is
+	  present
+
+2005-12-17 17:10  arthur
+
+	* [r184] crawler.py: fix wrapping of text in pydoc
+
+2005-12-17 17:09  arthur
+
+	* [r183] webcheck.1: add section to document url classes
+
+2005-09-18 14:55  arthur
+
+	* [r182] config.py, schemes/http.py: add configuration option to
+	  disable proxy caching
+
+2005-09-18 14:26  arthur
+
+	* [r181] webcheck.1, webcheck.py: add long command-line options as
+	  equivalents for the short options
+
+2005-09-17 20:54  arthur
+
+	* [r180] plugins/__init__.py, plugins/about.py,
+	  plugins/badlinks.py, plugins/problems.py: implement out own
+	  proper escape function and use it instead of the functions from
+	  saxutils (this one escapes as much as possible to result in a 7
+	  bit clean file
+
+2005-09-17 16:05  arthur
+
+	* [r179] crawler.py, parsers/html.py, plugins/__init__.py,
+	  plugins/problems.py: store author and title in unicode internally
+	  and ensure that they are output as utf-8
+
+2005-09-17 15:58  arthur
+
+	* [r178] parsers/html.py: also try to get character encoding from
+	  xml declaration and http-equiv meta tag
+
+2005-09-17 15:55  arthur
+
+	* [r177] plugins/__init__.py: fix typo
+
+2005-09-17 15:40  arthur
+
+	* [r176] parsers/html.py: parse characted entries as normal data,
+	  these eneties will be expanded later on (they are also used in
+	  attribute values
+
+2005-09-17 15:21  arthur
+
+	* [r175] crawler.py, schemes/http.py: try to extract character
+	  encoding from http response and store it in the link object
+
+2005-09-16 21:38  arthur
+
+	* [r174] plugins/__init__.py: improve code and documentation of the
+	  open_file() function, adding an istext flag (defaults to True) to
+	  open files as text
+
+2005-09-16 19:51  arthur
+
+	* [r173] webcheck.py: do not prepend output directory twice (thanks
+	  to Stefan Schröder <stefan@tokonoma.de> for spotting this)
+
+2005-09-16 09:48  arthur
+
+	* [r172] webcheck.py: turn error into warning
+
+2005-09-13 20:49  arthur
+
+	* [r171] schemes/http.py: support basic authentication for http
+	  proxies and some initial fixes to get proxying https traffic
+	  working
+
+2005-09-10 08:10  arthur
+
+	* [r170] plugins/about.py: present some more information about
+	  webcheck and the generated report instead of a plain list of
+	  plugins (and change names and descriptions where needed)
+
+2005-09-10 07:50  arthur
+
+	* [r169] plugins/about.py, plugins/badlinks.py,
+	  plugins/external.py, plugins/images.py, plugins/new.py,
+	  plugins/notchkd.py, plugins/notitles.py, plugins/old.py,
+	  plugins/problems.py, plugins/sitemap.py, plugins/slow.py,
+	  plugins/urllist.py: remove version numbers from plugins since
+	  they were not really used or useful
+
+2005-09-10 07:48  arthur
+
+	* [r168] schemes/__init__.py: fix wrapping of documentation
+
+2005-09-03 09:20  arthur
+
+	* [r167] NEWS: some fixes to NEWS file
+
+2005-09-03 09:05  arthur
+
+	* [r163] ChangeLog, NEWS, TODO, config.py, webcheck.1: get files
+	  ready for 1.9.4 release
+
+2005-09-01 21:04  arthur
+
+	* [r162] plugins/__init__.py, webcheck.py: make error handling more
+	  robust and have consisten error messages
+
+2005-09-01 20:12  arthur
+
+	* [r161] AUTHORS: add Herbert Weinhandl <weinhand@unileoben.ac.at>
+	  to contributors
+
+2005-09-01 20:11  arthur
+
+	* [r160] README: add some design notes for developers
+
+2005-09-01 20:10  arthur
+
+	* [r159] webcheck.py: add extra checks not to overwrite our own
+	  input file while copying files into place
+
+2005-09-01 20:06  arthur
+
+	* [r158] plugins/__init__.py: typo fix
+
+2005-09-01 18:47  arthur
+
+	* [r157] plugins/__init__.py, webcheck.css: highlight current
+	  plugin in the navigation, based on a patch by Herbert Weinhandl
+	  <weinhand@unileoben.ac.at>
+
+2005-08-30 17:47  arthur
+
+	* [r156] config.py, plugins/__init__.py: make specifying of target
+	  in links configurable (disabled by default to keep page valid
+	  xhtml 1.1)
+
+2005-08-25 19:27  arthur
+
+	* [r155] crawler.py: add note about making instances of Link class
+
+2005-08-23 15:15  arthur
+
+	* [r154] webcheck.py: handle passing file names (instead of urls)
+	  on the command line
+
+2005-08-23 15:14  arthur
+
+	* [r153] webcheck.py: add initial support for passing urls to
+	  install_file() function
+
+2005-08-23 14:29  arthur
+
+	* [r152] plugins/badlinks.py: include transfer problem in
+	  pageproblem description
+
+2005-08-23 14:28  arthur
+
+	* [r151] plugins/problems.py: make problem lists sorted by url and
+	  problem description
+
+2005-08-21 18:18  arthur
+
+	* [r150] plugins/about.py: include short description in plugin
+	  overview page
+
+2005-08-21 14:23  arthur
+
+	* [r149] AUTHORS: add some other people to the AUTHORS file, mostly
+	  based on contents of the Debian bug tracking system
+
+2005-08-20 16:32  arthur
+
+	* [r148] parsers/html.py: also feed style tag content to the css
+	  parser to parse inline css
+
+2005-08-20 16:31  arthur
+
+	* [r147] parsers/css.py: remove some debugging functions from css
+	  parser
+
+2005-08-20 16:30  arthur
+
+	* [r146] parsers/css.py: firt attempt at a very simple css parser
+	  that just summarises links to images and imported css files
+
+2005-08-20 09:24  arthur
+
+	* [r145] crawler.py, plugins/__init__.py, schemes/http.py: set
+	  status to result of fetching the document (not an error
+	  indicator)
+
+2005-08-20 08:06  arthur
+
+	* [r144] parsers/html.py: add checking of unescaped spaces to the
+	  html parser, including line and column information
+
+2005-08-19 20:48  arthur
+
+	* [r143] webcheck.py: pass site as parameter to parse_args()
+	  instead of declaring it global
+
+2005-08-19 20:44  arthur
+
+	* [r142] crawler.py: fix bug with following redirects where
+	  otherwise unreferenced links were removed and implement redirect
+	  loop detection
+
+2005-08-19 20:27  arthur
+
+	* [r141] crawler.py, schemes/file.py, schemes/ftp.py,
+	  schemes/http.py: move redirect handling code to crawler module,
+	  including redirect loop detection code
+
+2005-08-19 20:24  arthur
+
+	* [r140] plugins/badlinks.py: fix html bug and improve bad link
+	  string
+
+2005-08-19 18:16  arthur
+
+	* [r139] plugins/badlinks.py, plugins/new.py, plugins/old.py,
+	  plugins/problems.py, plugins/slow.py, webcheck.css: change html
+	  display of problems to a nicer list
+
+2005-08-19 18:14  arthur
+
+	* [r138] crawler.py, parsers/html.py, plugins/__init__.py,
+	  plugins/badlinks.py, plugins/notitles.py, plugins/old.py,
+	  plugins/problems.py, plugins/slow.py, schemes/file.py,
+	  schemes/ftp.py, schemes/http.py: split problems into page
+	  problems (parsing errors, wrong links, etc) and link problems
+	  (errors retreiving the document)
+
+2005-08-16 20:50  arthur
+
+	* [r136] ChangeLog, NEWS, TODO, config.py, webcheck.1: get files
+	  ready for 1.9.3 release
+
+2005-08-16 20:36  arthur
+
+	* [r135] config.py, schemes/file.py, schemes/ftp.py: pick up
+	  configured filenames if present in directories
+
+2005-08-16 18:25  arthur
+
+	* [r134] schemes/ftp.py: add extra debugging info
+
+2005-08-13 19:19  arthur
+
+	* [r133] schemes/ftp.py: use a pool of ftp connections to keep ftp
+	  connection to a host open to do multiple requests (this greatly
+	  speeds up crawling of ftp sites)
+
+2005-08-13 19:08  arthur
+
+	* [r132] schemes/ftp.py: almost complete reimplementation of the
+	  ftp scheme, handling errors more gracefully and also crawl normal
+	  ftp directories
+
+2005-08-13 19:06  arthur
+
+	* [r131] plugins/__init__.py: add missing newline and trim trailing
+	  newline of extra link info
+
+2005-08-12 19:04  arthur
+
+	* [r130] schemes/file.py: complete reimplementation of file module,
+	  reading index.html from directory, otherwise read directory
+	  contents
+
+2005-08-12 18:20  arthur
+
+	* [r129] schemes/__init__.py, schemes/file.py, schemes/ftp.py,
+	  schemes/http.py: rename parameter to acceptedtypes to not
+	  conflict with mimetypes module
+
+2005-08-12 17:27  arthur
+
+	* [r128] crawler.py, parsers/__init__.py, schemes/__init__.py,
+	  schemes/file.py, schemes/ftp.py, schemes/http.py: also pass
+	  mimetypes to scheme modules to only fetch content if we can parse
+	  the content type
+
+2005-08-12 17:02  arthur
+
+	* [r127] plugins/__init__.py: don't print referenced from if there
+	  are no parents
+
+2005-08-12 16:57  arthur
+
+	* [r126] crawler.py: add checkurl method to clean up urls and
+	  report problems (currently only checks for spaces in urls)
+
+2005-08-12 16:55  arthur
+
+	* [r125] parsers/html.py: put compiled regular expression on module
+	  level so that it is compiled only once
+
+2005-08-12 16:52  arthur
+
+	* [r124] webcheck.css: small fix to render menu better under MSIE
+
+2005-08-11 21:41  arthur
+
+	* [r123] plugins/__init__.py: add some extra information to every
+	  link with a nicely formatted size
+
+2005-08-01 17:58  arthur
+
+	* [r122] parsers/html.py: make parsing handle errors a little more
+	  gracefully, thanks to Stefan Schröder <stefan@tokonoma.de> for
+	  all the testing
+
+2005-07-31 20:58  arthur
+
+	* [r120] ChangeLog, NEWS, TODO, config.py: get files ready for
+	  1.9.2 release
+
+2005-07-31 20:44  arthur
+
+	* [r119] parsers/html.py: also catch AttributeError for problem in
+	  HTMLParser not fully supporting continuing after errors
+
+2005-07-31 10:50  arthur
+
+	* [r118] README: add note about supported versions of python
+
+2005-07-31 09:45  arthur
+
+	* [r117] parsers/html.py: replace numeric entity refs with their
+	  proper values based on patch by Eric W.Brown <eric@saugus.net>
+
+2005-07-31 09:21  arthur
+
+	* [r116] parsers/html.py: put new html parser in place
+
+2005-07-31 09:14  arthur
+
+	* [r115] schemes/https.py: add https module as a wrapper to the
+	  http module
+
+2005-07-31 09:02  arthur
+
+	* [r114] crawler.py: while cleaning urls also make host part
+	  lowercase and also clean added internal urls
+
+2005-07-30 15:34  arthur
+
+	* [r113] crawler.py: fix a thinko
+
+2005-07-30 15:32  arthur
+
+	* [r112] crawler.py: fix typo
+
+2005-07-30 15:20  arthur
+
+	* [r111] crawler.py: follow_link() now returns None when trying to
+	  follow a redirect who's target is not crawled, also don't add
+	  children and embeds when we are an external link
+
+2005-07-30 14:05  arthur
+
+	* [r110] plugins/__init__.py: remove version and author from module
+	  as no other module has one (except the plugins themselves)
+
+2005-07-30 14:04  arthur
+
+	* [r109] config.py: remove support for extra configurable headers
+
+2005-07-30 14:04  arthur
+
+	* [r108] schemes/http.py: reimplement http module to be a little
+	  more generic and clean and handle errors cleaner and more
+	  consistently
+
+2005-07-30 14:00  arthur
+
+	* [r107] crawler.py: give second search through website a slightly
+	  different debug message
+
+2005-07-30 13:59  arthur
+
+	* [r106] crawler.py: also ignore io errors when retrieving
+	  robots.txt files
+
+2005-07-30 13:59  arthur
+
+	* [r105] crawler.py: make a _urlclean() function to always store a
+	  proper url without a fragment and with at least a slash for urls
+	  with path elements
+
+2005-07-30 13:55  arthur
+
+	* [r104] README: some minor tweaks in the documentation
+
+2005-07-29 14:36  arthur
+
+	* [r103] crawler.py: import time as we need it for sleep
+
+2005-07-29 14:32  arthur
+
+	* [r102] crawler.py, plugins/sitemap.py: do an extra breadth first
+	  traversal of the site to combine links into pages, combining page
+	  children and determining depth of every page and using all this
+	  in the sitemap
+
+2005-07-29 10:20  arthur
+
+	* [r101] AUTHORS, README, config.py, webcheck.1: change email
+	  address from arthur@tiefighter.et.tudelft.nl to
+	  arthur@ch.tudelft.nl (including urls etc)
+
+2005-07-29 10:18  arthur
+
+	* [r100] webcheck.css: remove another reference of an email address
+
+2005-07-29 10:11  arthur
+
+	* [r99] NEWS, README, config.py, crawler.py, debugio.py,
+	  parsers/__init__.py, parsers/css.py, parsers/html.py,
+	  plugins/__init__.py, plugins/about.py, plugins/badlinks.py,
+	  plugins/external.py, plugins/images.py, plugins/new.py,
+	  plugins/notchkd.py, plugins/notitles.py, plugins/old.py,
+	  plugins/problems.py, plugins/sitemap.py, plugins/slow.py,
+	  plugins/urllist.py, schemes/__init__.py, schemes/file.py,
+	  schemes/ftp.py, schemes/http.py, webcheck.py: remove references
+	  to email addresses where they are not useful, based on a partial
+	  patch by Evelyn Mitchell <efm@tummy.com>
+
+2005-07-27 20:38  arthur
+
+	* [r98] plugins/__init__.py, plugins/badlinks.py,
+	  plugins/problems.py, plugins/sitemap.py: fix a couple of typos,
+	  also thanks to Scott Kirkwood <scottakirkwood@gmail.com> for
+	  spotting another one
+
+2005-07-27 20:32  arthur
+
+	* [r97] crawler.py: turn tocheck list into fifo queue
+
+2005-07-26 20:40  arthur
+
+	* [r96] plugins/new.py, plugins/old.py: fix typo spotted by Scott
+	  Kirkwood <scottakirkwood@gmail.com>
+
+2005-07-25 17:29  arthur
+
+	* [r94] ChangeLog, NEWS, config.py: get files ready for 1.9.1
+	  release
+
+2005-07-25 17:17  arthur
+
+	* [r93] webcheck.1: fix typo, thanks to Stefan Schröder
+	  <stefan@tokonoma.de>
+
+2005-07-25 17:16  arthur
+
+	* [r92] plugins/slow.py: only report on internal links
+
+2005-07-25 17:13  arthur
+
+	* [r91] parsers/css.py: empty module as placeholder to parse css
+	  (referenced from __init__.py already)
+
+2005-07-25 17:11  arthur
+
+	* [r90] parsers/html.py: don't replace an allready set title
+
+2005-07-24 09:32  arthur
+
+	* [r88] ChangeLog: add ChangeLog for release
+
+2005-07-24 09:30  arthur
+
+	* [r87] NEWS, TODO: get files ready for release
+
+2005-07-24 08:56  arthur
+
+	* [r86] README: clean up README removing sections that should be in
+	  the manual page
+
+2005-07-24 08:55  arthur
+
+	* [r85] config.py, plugins/new.py, plugins/old.py,
+	  plugins/whatsnew.py, plugins/whatsold.py: rename whatsold and
+	  whatsnew plugins to old and new
+
+2005-07-24 08:52  arthur
+
+	* [r84] schemes/http.py: handle socket errors properly
+
+2005-07-24 08:52  arthur
+
+	* [r83] schemes/http.py: fix for incomplete change in r76, now
+	  version should not be referenced any more
+
+2005-07-24 08:49  arthur
+
+	* [r82] plugins/__init__.py, plugins/badlinks.py,
+	  plugins/external.py, plugins/images.py, plugins/notchkd.py,
+	  plugins/notitles.py, plugins/problems.py, plugins/sitemap.py,
+	  plugins/slow.py, plugins/urllist.py, plugins/whatsnew.py,
+	  plugins/whatsold.py: call make_link() with a link object instead
+	  of a url, removing the need for a mySite in plugins
+
+2005-07-24 08:47  arthur
+
+	* [r81] plugins/badlinks.py: remove HTTP status code handling from
+	  here as this should be done by the HTTP module
+
+2005-07-24 08:47  arthur
+
+	* [r80] plugins/whatsnew.py, plugins/whatsold.py: only report on
+	  internal links
+
+2005-07-24 08:46  arthur
+
+	* [r79] crawler.py: only add links to crawl list if they are not in
+	  there allready
+
+2005-07-24 08:45  arthur
+
+	* [r78] debugio.py: flush stdout after each message so that
+	  redirecting stdout and stderr together to a file works reliably
+
+2005-07-23 14:02  arthur
+
+	* [r77] crawler.py: fix regular expression matching
+
+2005-07-23 12:55  arthur
+
+	* [r76] config.py, plugins/__init__.py, schemes/http.py,
+	  version.py, webcheck.1, webcheck.py: integrate versio.py into
+	  config.py, clean up config.py removing unused settings and clean
+	  up boolean types
+
+2005-07-23 11:00  arthur
+
+	* [r75] config.py, webcheck.1, webcheck.py: remove logo option
+	  since the current output does not use one
+
+2005-07-23 10:53  arthur
+
+	* [r74] schemes/file.py: most systems already know about .shtml
+	  files
+
+2005-07-23 08:34  arthur
+
+	* [r73] BUGS, INSTALL, README, webcheck.1: first step in cleaning
+	  up documentation, integrating INSTALL in README and BUGS in
+	  manual page and adding section on robots handling in manual
+
+2005-07-23 08:28  arthur
+
+	* [r72] AUTHORS, crawler.py, debugio.py, parsers/html.py,
+	  plugins/__init__.py, plugins/about.py, plugins/badlinks.py,
+	  plugins/external.py, plugins/images.py, plugins/notchkd.py,
+	  plugins/notitles.py, plugins/problems.py, plugins/sitemap.py,
+	  plugins/slow.py, plugins/whatsnew.py, plugins/whatsold.py,
+	  schemes/file.py, schemes/ftp.py, schemes/http.py, version.py,
+	  webcheck.1, webcheck.py: Mike Meyer -> Mike W. Meyer
+
+2005-07-22 21:21  arthur
+
+	* [r71] crawler.py: add support for sleep between requests
+
+2005-07-22 21:11  arthur
+
+	* [r70] webcheck.py: don't add . to python path as it's not needed
+	  and put command line handling in same order as options
+
+2005-07-22 21:05  arthur
+
+	* [r69] plugins/__init__.py, webcheck.css: change layout to have a
+	  simpler layout that also should work in MSIE
+
+2005-07-22 21:04  arthur
+
+	* [r68] debugio.py: fix docstrings
+
+2005-07-22 21:01  arthur
+
+	* [r67] plugins/__init__.py, webcheck.py: do not use start_time
+	  from webcheck saving an import
+
+2005-07-22 19:17  arthur
+
+	* [r66] crawler.py, myUrlLib.py, parsers/__init__.py,
+	  parsers/html.py, plugins/__init__.py, plugins/badlinks.py,
+	  plugins/external.py, plugins/images.py, plugins/notchkd.py,
+	  plugins/notitles.py, plugins/sitemap.py, plugins/slow.py,
+	  plugins/urllist.py, plugins/whatsnew.py, plugins/whatsold.py,
+	  schemes/__init__.py, schemes/file.py, schemes/ftp.py,
+	  schemes/http.py, webcheck.py: almost complete rewrite of crawling
+	  and site state code making children and parents link objects
+	  instead of urls and giving link member variables better names,
+	  change plugins accordingly, make scheme handling more pluggable
+	  and only use one function call and have a better pluggable
+	  structure for content parsing (currently only html)
+
+2005-07-17 08:46  arthur
+
+	* [r65] myUrlLib.py, plugins/__init__.py, plugins/badlinks.py,
+	  plugins/external.py, plugins/images.py, plugins/notitles.py,
+	  plugins/problems.py, plugins/sitemap.py, plugins/slow.py,
+	  plugins/urllist.py, plugins/whatsnew.py, plugins/whatsold.py,
+	  schemes/file.py, schemes/ftp.py, schemes/http.py, webcheck.py:
+	  use lowercase url attribute in Link instead of uppercase URL
+
+2005-07-16 15:35  arthur
+
+	* [r64] plugins/__init__.py, plugins/badlinks.py,
+	  plugins/external.py, plugins/images.py, plugins/notchkd.py,
+	  plugins/notitles.py, plugins/problems.py, plugins/rptlib.py,
+	  plugins/sitemap.py, plugins/slow.py, plugins/urllist.py,
+	  plugins/whatsnew.py, plugins/whatsold.py, webcheck.py: move
+	  functionality of rptlib.py to __init__.py so that we can just use
+	  the plugins package
+
+2005-07-16 15:33  arthur
+
+	* [r63] plugins/__init__.py: remove __init__.py to be replaced by
+	  contents of rptlib.py
+
+2005-07-16 10:24  arthur
+
+	* [r62] webcheck.1: add note about pattern matching
+
+2005-07-10 14:08  arthur
+
+	* [r61] myUrlLib.py, schemes/__init__.py, schemes/file.py,
+	  schemes/ftp.py, schemes/http.py: rework scheme code to use more
+	  logical function names, more clearly mark internal functions and
+	  do some major cleanup of the scheme modules code
+
+2005-07-10 12:26  arthur
+
+	* [r60] myUrlLib.py, plugins/whatsnew.py, plugins/whatsold.py,
+	  schemes/file.py, schemes/http.py: store mtime in link object
+	  instead of age in days
+
+2005-07-10 12:00  arthur
+
+	* [r59] schemes/ftp.py, webcheck.py: remove unneeded import and
+	  print
+
+2005-07-09 20:22  arthur
+
+	* [r58] htmlparse.py, myUrlLib.py, parsers, parsers/__init__.py,
+	  parsers/html.py: move htmlparse to a more generic parsers
+	  package, cleaning up the code and simplefying dependencies
+
+2005-07-09 13:54  arthur
+
+	* [r57] plugins/about.py, plugins/badlinks.py, plugins/external.py,
+	  plugins/images.py, plugins/notchkd.py, plugins/notitles.py,
+	  plugins/problems.py, plugins/rptlib.py, plugins/sitemap.py,
+	  plugins/slow.py, plugins/urllist.py, plugins/whatsnew.py,
+	  plugins/whatsold.py, webcheck.css, webcheck.py: clean up html
+	  output generating xhtml 1.1 without frames and using css for
+	  styling also getting rid of the images
+
+2005-07-04 21:25  arthur
+
+	* [r56] config.py: put plugins in a more logical order
+
+2005-07-04 20:39  arthur
+
+	* [r55] plugins/badlinks.py, plugins/external.py,
+	  plugins/images.py, plugins/notchkd.py, plugins/notitles.py,
+	  plugins/rptlib.py, plugins/sitemap.py, plugins/slow.py,
+	  plugins/urllist.py, plugins/whatsnew.py, plugins/whatsold.py:
+	  implement consistent sorting of all lists removing sort functions
+	  from rptlib and using lambda functions where needed
+
+2005-07-03 07:04  arthur
+
+	* [r54] config.py, plugins/rptlib.py, schemes/http.py, webcheck.1:
+	  handle and document proxy settings with environment variables
+
+2005-07-03 06:36  arthur
+
+	* [r53] INSTALL, README, config.py, myUrlLib.py, plugins/rptlib.py,
+	  schemes/http.py, webcheck.1, webcheck.py: name webcheck with
+	  lower case
+
+2005-06-28 20:32  arthur
+
+	* [r52] schemes/http.py: clean up get_reply() function to uses
+	  proper recursion and don't use self where it doesn't make sense
+
+2005-06-22 19:24  arthur
+
+	* [r51] COPYING, debugio.py, htmlparse.py, myUrlLib.py,
+	  plugins/about.py, plugins/badlinks.py, plugins/external.py,
+	  plugins/images.py, plugins/notchkd.py, plugins/notitles.py,
+	  plugins/problems.py, plugins/rptlib.py, plugins/sitemap.py,
+	  plugins/slow.py, plugins/urllist.py, plugins/whatsnew.py,
+	  plugins/whatsold.py, schemes/file.py, schemes/ftp.py,
+	  schemes/http.py, version.py, webcheck.1, webcheck.py: change to
+	  most recent version of the GPL (FSF address change) and update
+	  notices
+
+2005-06-18 19:59  arthur
+
+	* [r50] plugins/external.py: sort external links by url
+
+2005-06-18 13:48  arthur
+
+	* [r49] webcheck.py: split main() part into it's own function
+
+2005-06-18 13:32  arthur
+
+	* [r48] plugins/rptlib.py, webcheck.py: restructure a couple of
+	  things to reduce the number of mutual imports and reduce the
+	  number of sutff gathered in webcheck.py
+
+2005-06-18 13:31  arthur
+
+	* [r47] config.py, plugins/urllist.py: add simple urllist plugin to
+	  list all visited urls
+
+2005-06-18 13:20  arthur
+
+	* [r46] plugins/sitemap.py: only include internal links in sitemap
+
+2005-06-18 12:49  arthur
+
+	* [r45] config.py, webcheck.py: add problems plugin to config
+	  instead of hard-coding
+
+2005-06-18 10:25  arthur
+
+	* [r44] plugins/rptlib.py: remove ugly redirection for overwrite
+	  file question since we now write all html through a file
+	  descriptor
+
+2005-06-15 21:01  arthur
+
+	* [r43] TODO, myUrlLib.py, plugins/about.py, plugins/badlinks.py,
+	  plugins/external.py, plugins/images.py, plugins/notchkd.py,
+	  plugins/notitles.py, plugins/problems.py, plugins/rptlib.py,
+	  plugins/sitemap.py, plugins/slow.py, plugins/whatsnew.py,
+	  plugins/whatsold.py, schemes/http.py, webcheck.py: pass reference
+	  to Link class to plugins with parameter and make import config
+	  where it is used instead of accessing it through another module
+
+2005-06-15 20:55  arthur
+
+	* [r42] myUrlLib.py, plugins/rptlib.py, plugins/sitemap.py,
+	  webcheck.py: make use of base consistent, do not modify it to
+	  make a nicer url (at least not now) and do not overwrite it with
+	  something silly from webcheck.py
+
+2005-06-14 19:17  arthur
+
+	* [r41] myUrlLib.py: also set URL attribute on yaked links
+
+2005-06-12 06:21  arthur
+
+	* [r40] plugins/badlinks.py, plugins/images.py, plugins/notchkd.py,
+	  plugins/notitles.py: again use the url as link title for some
+	  links
+
+2005-06-11 21:52  arthur
+
+	* [r39] httpcodes.py, plugins/about.py, plugins/badlinks.py,
+	  plugins/external.py, plugins/images.py, plugins/notchkd.py,
+	  plugins/notitles.py, plugins/problems.py, plugins/rptlib.py,
+	  plugins/sitemap.py, plugins/slow.py, plugins/whatsnew.py,
+	  plugins/whatsold.py: general cleanup of plugins structure and
+	  code, moving httpcodes to the only place they were used, cleaning
+	  up plugin titles, version numbers and descriptios, adding
+	  docstrings and using slightly more logical and consistent names
+	  (plus some other cleanups)
+
+2005-06-11 21:39  arthur
+
+	* [r38] plugins/rptlib.py: make_link(): if no title is specified,
+	  try to look up the title of the page and fallback to the url as
+	  title
+
+2005-06-11 21:24  arthur
+
+	* [r37] plugins/about.py: adapt plugin to using file descriptor etc
+
+2005-06-11 18:52  arthur
+
+	* [r36] contrib, plugins/about.py: move about plugin to plugins
+	  directory
+
+2005-06-08 19:29  arthur
+
+	* [r35] plugins/badlinks.py, plugins/external.py,
+	  plugins/images.py, plugins/notchkd.py, plugins/notitles.py,
+	  plugins/problems.py, plugins/rptlib.py, plugins/sitemap.py,
+	  plugins/slow.py, plugins/whatsnew.py, plugins/whatsold.py,
+	  webcheck.py: write html files using file descriptors instead of
+	  through redirection using stdout, split writing of navigation
+	  frame and plugin pages plus some minor cleanups to calling
+	  plugins
+
+2005-06-08 19:10  arthur
+
+	* [r34] plugins/__init__.py, schemes/__init__.py: claiming
+	  copyright on empty files is silly
+
+2005-06-06 21:22  arthur
+
+	* [r33] debugio.py, htmlparse.py, myUrlLib.py, plugins/rptlib.py,
+	  schemes/ftp.py, schemes/http.py, webcheck.1, webcheck.py: redo
+	  output writing using a cleaner debugio and change debug command
+	  line option
+
+2005-06-06 20:11  arthur
+
+	* [r32] plugins/badlinks.py, plugins/notchkd.py: replace a couple
+	  more tabs
+
+2005-06-06 20:05  arthur
+
+	* [r31] webcheck.1: initial version of manual page loosely based on
+	  documentation
+
+2005-06-06 19:22  arthur
+
+	* [r30] AUTHORS: added myself as copyright holder and added Bastian
+	  Kleineidam (previous debian package maintainer) as contributor
+
+2005-06-06 19:20  arthur
+
+	* [r29] webcheck.py: small text improvement
+
+2005-05-27 20:39  arthur
+
+	* [r28] webcheck.sh: remove unneeded shell script
+
+2005-05-27 20:28  arthur
+
+	* [r27] webcheck.py: also support --force
+
+2005-05-27 20:18  arthur
+
+	* [r26] webcheck.py: redo command-line checking
+
+2005-04-13 19:41  arthur
+
+	* [r25] contrib/plugins/about.py: general cleanup
+
+2005-04-13 19:41  arthur
+
+	* [r24] plugins/sitemap.py: rework recursion to make it simpler
+	  plus some general cleanups
+
+2005-04-13 19:20  arthur
+
+	* [r23] contrib/plugins/about.py, myUrlLib.py, plugins/badlinks.py,
+	  plugins/external.py, plugins/images.py, plugins/notchkd.py,
+	  plugins/notitles.py, plugins/problems.py, plugins/rptlib.py,
+	  plugins/sitemap.py, plugins/slow.py, plugins/whatsnew.py,
+	  plugins/whatsold.py, schemes/http.py, webcheck.py: rename
+	  linkList to linkMap
+
+2005-04-13 19:18  arthur
+
+	* [r22] myUrlLib.py, robotparser.py: remove local copy of
+	  robotparser, just use python\'s
+
+2005-04-09 20:03  arthur
+
+	* [r21] myUrlLib.py: qualify references to types functions
+
+2005-04-09 13:48  arthur
+
+	* [r20] htmlparse.py, myUrlLib.py, plugins/badlinks.py,
+	  plugins/external.py, plugins/images.py, plugins/notchkd.py,
+	  plugins/notitles.py, plugins/rptlib.py, plugins/slow.py,
+	  plugins/whatsnew.py, plugins/whatsold.py, schemes/http.py: indent
+	  with spaces instead of tabs (tabs are evil)
+
+2005-04-08 21:31  arthur
+
+	* [r19] myUrlLib.py: move finding of scheme module to separate
+	  function
+
+2005-04-08 21:25  arthur
+
+	* [r18] schemes/http.py: rebump loglevel to debug
+
+2005-04-08 16:24  arthur
+
+	* [r17] myUrlLib.py, schemes/file.py, schemes/filelink.py,
+	  schemes/ftp.py, schemes/ftplink.py, schemes/http.py,
+	  schemes/httplink.py: remove link part from scheme modules
+
+2005-04-07 22:37  arthur
+
+	* [r16] schemes/httplink.py: clean up http request code a little
+	  and do not set host header (it is sent by HTTPConnection already
+
+2005-04-07 20:29  arthur
+
+	* [r15] contrib/plugins/about.py, debugio.py, htmlparse.py,
+	  httpcodes.py, myUrlLib.py, plugins/__init__.py,
+	  plugins/badlinks.py, plugins/external.py, plugins/images.py,
+	  plugins/notchkd.py, plugins/notitles.py, plugins/problems.py,
+	  plugins/rptlib.py, plugins/sitemap.py, plugins/slow.py,
+	  plugins/whatsnew.py, plugins/whatsold.py, schemes/__init__.py,
+	  schemes/filelink.py, schemes/ftplink.py, version.py, webcheck.py:
+	  make nicer file (copyrights) headers
+
+2005-04-07 20:23  arthur
+
+	* [r14] schemes/httplink.py: fix problem with incorrect indent
+
+2005-04-07 20:06  arthur
+
+	* [r13] config.py, httpcodes.py, plugins/notitles.py: tabs to
+	  spaces (tabs are evil)
+
+2005-04-07 20:05  arthur
+
+	* [r12] config.py, contrib/plugins/about.py, httpcodes.py,
+	  plugins/badlinks.py, plugins/external.py, plugins/notchkd.py,
+	  plugins/notitles.py, plugins/problems.py, plugins/rptlib.py,
+	  plugins/sitemap.py, plugins/slow.py, plugins/whatsnew.py,
+	  plugins/whatsold.py, schemes/filelink.py, schemes/ftplink.py,
+	  schemes/httplink.py: tabs to spaces (tabs are evil)
+
+2005-04-07 20:04  arthur
+
+	* [r11] AUTHORS, schemes/httplink.py: include patch from Sebastien
+	  Delafond <sdelafond@gmx.net> (from http://bugs.debian.org/286017)
+	  to fix problems with recent versions of python
+
+2005-04-06 19:38  arthur
+
+	* [r10] INSTALL, config.py, htmlparse.py, plugins/images.py,
+	  plugins/rptlib.py, schemes/ftplink.py, schemes/httplink.py,
+	  webcheck.css, webcheck.py: import Debian package patches
+
+2005-03-31 12:47  arthur
+
+	* [r9] COPYING: install updated file without millenium bug
+
+2005-03-31 12:45  arthur
+
+	* [r8] AUTHORS: reformat file to better match suggested layout
+
+2005-03-31 12:44  arthur
+
+	* [r7] NEWS: put news items in a little more standard format
+
+2005-03-31 12:42  arthur
+
+	* [r6] AUTHORS, CHANGES, CREDITS, ChangeLog-1999, ChangeLog-2002,
+	  HISTORY, HISTORY.linbot, NEWS: rename files to more standard
+	  names
+
+2005-03-31 12:32  arthur
+
+	* [r5] config.py, plugins/rptlib.py, version.py: remove checks for
+	  updates (registry)
+
+2005-03-31 12:28  arthur
+
+	* [r4] ., contrib, contrib/plugins, plugins, schemes: ignore
+	  compiled python objects
+
+2005-03-29 12:08  arthur
+
+	* [r2] BUGS, CHANGES, COPYING, CREDITS, HISTORY, HISTORY.linbot,
+	  INSTALL, README, TODO, config.py, contrib, contrib/plugins,
+	  contrib/plugins/about.py, debugio.py, htmlparse.py, httpcodes.py,
+	  myUrlLib.py, plugins, plugins/__init__.py, plugins/badlinks.py,
+	  plugins/external.py, plugins/images.py, plugins/notchkd.py,
+	  plugins/notitles.py, plugins/problems.py, plugins/rptlib.py,
+	  plugins/sitemap.py, plugins/slow.py, plugins/whatsnew.py,
+	  plugins/whatsold.py, robotparser.py, schemes,
+	  schemes/__init__.py, schemes/filelink.py, schemes/ftplink.py,
+	  schemes/httplink.py, version.py, webcheck.css, webcheck.py,
+	  webcheck.sh: import of release 1.0
+
+2005-03-28 12:57  arthur
+
+	* [r1] .: create webcheck directory
+

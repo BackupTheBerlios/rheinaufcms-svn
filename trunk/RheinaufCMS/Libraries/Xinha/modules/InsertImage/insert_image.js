@@ -1,107 +1,68 @@
-InsertImage._pluginInfo={name:"InsertImage",origin:"Xinha Core",version:"$LastChangedRevision: 761 $".replace(/^[^:]*: (.*) \$$/,"$1"),developer:"The Xinha Core Developer Team",developer_url:"$HeadURL: http://svn.xinha.python-hosting.com/branches/ray/modules/InsertImage/insert_image.js $".replace(/^[^:]*: (.*) \$$/,"$1"),sponsor:"",sponsor_url:"",license:"htmlArea"};
+InsertImage._pluginInfo={name:"InsertImage",origin:"Xinha Core",version:"$LastChangedRevision: 791 $".replace(/^[^:]*: (.*) \$$/,"$1"),developer:"The Xinha Core Developer Team",developer_url:"$HeadURL: http://svn.xinha.python-hosting.com/branches/ray/modules/InsertImage/InsertImage.js $".replace(/^[^:]*: (.*) \$$/,"$1"),sponsor:"",sponsor_url:"",license:"htmlArea"};
 function InsertImage(_1){
-}
-Xinha.prototype._insertImage=function(_2){
+this.editor=_1;
+var _2=_1.config;
 var _3=this;
-var _4;
-if(typeof _2=="undefined"){
-_2=this.getParentElement();
-if(_2&&_2.tagName.toLowerCase()!="img"){
-_2=null;
+_1.config.btnList.insertimage[3]=function(){
+_3.show();
+};
 }
+InsertImage.prototype._lc=function(_4){
+return Xinha._lc(_4,"Xinha");
+};
+InsertImage.prototype.onGenerateOnce=function(){
+this.prepareDialog();
+this.loadScripts();
+};
+InsertImage.prototype.loadScripts=function(){
+var _5=this;
+if(!this.methodsReady){
+Xinha._getback(_editor_url+"modules/InsertImage/pluginMethods.js",function(_6){
+eval(_6);
+_5.methodsReady=true;
+});
+return;
 }
-var _5;
-if(typeof _3.config.baseHref!="undefined"&&_3.config.baseHref!==null){
-_5=_3.config.baseHref;
-}else{
-var _6=window.location.toString().split("/");
-_6.pop();
-_5=_6.join("/");
+};
+InsertImage.prototype.onUpdateToolbar=function(){
+if(!(this.dialogReady&&this.methodsReady)){
+this.editor._toolbarObjects.insertimage.state("enabled",false);
 }
-if(_2){
-_4={f_base:_5,f_url:Xinha.is_ie?_3.stripBaseURL(_2.src):_2.getAttribute("src"),f_alt:_2.alt,f_border:_2.border,f_align:_2.align,f_vert:(_2.vspace!=-1?_2.vspace:""),f_horiz:(_2.hspace!=-1?_2.hspace:""),f_width:_2.width,f_height:_2.height};
-}else{
-_4={f_base:_5,f_url:""};
+};
+InsertImage.prototype.prepareDialog=function(){
+var _7=this;
+var _8=this.editor;
+if(!this.html){
+Xinha._getback(_editor_url+"modules/InsertImage/dialog.html",function(_9){
+_7.html=_9;
+_7.prepareDialog();
+});
+return;
 }
-Dialog(_3.config.URIs.insert_image,function(_7){
-if(!_7){
+var _a=this.dialog=new Xinha.Dialog(_8,this.html,"Xinha",{width:410});
+_a.getElementById("ok").onclick=function(){
+_7.apply();
+};
+_a.getElementById("cancel").onclick=function(){
+_7.dialog.hide();
+};
+_a.getElementById("preview").onclick=function(){
+var _b=_a.getElementById("f_url");
+var _c=_b.value;
+var _d=_a.getElementById("f_base").value;
+if(!_c){
+alert(_a._lc("You must enter the URL"));
+_b.focus();
 return false;
 }
-var _8=_2;
-if(!_8){
-if(Xinha.is_ie){
-var _9=_3.getSelection();
-var _a=_3.createRange(_9);
-_3._doc.execCommand("insertimage",false,_7.f_url);
-_8=_a.parentElement();
-if(_8.tagName.toLowerCase()!="img"){
-_8=_8.previousSibling;
-}
-}else{
-_8=document.createElement("img");
-_8.src=_7.f_url;
-_3.insertNodeAtSelection(_8);
-if(!_8.tagName){
-_8=_a.startContainer.firstChild;
-}
-}
-}else{
-_8.src=_7.f_url;
-}
-for(var _b in _7){
-var _c=_7[_b];
-switch(_b){
-case "f_alt":
-if(_c){
-_8.alt=_c;
-}else{
-_8.removeAttribute("alt");
-}
-break;
-case "f_border":
-if(_c){
-_8.border=parseInt(_c||"0");
-}else{
-_8.removeAttribute("border");
-}
-break;
-case "f_align":
-if(_c){
-_8.align=_c;
-}else{
-_8.removeAttribute("align");
-}
-break;
-case "f_vert":
-if(_c){
-_8.vspace=parseInt(_c||"0");
-}else{
-_8.removeAttribute("vspace");
-}
-break;
-case "f_horiz":
-if(_c){
-_8.hspace=parseInt(_c||"0");
-}else{
-_8.removeAttribute("hspace");
-}
-break;
-case "f_width":
-if(_c){
-_8.width=parseInt(_c||"0");
-}else{
-_8.removeAttribute("width");
-}
-break;
-case "f_height":
-if(_c){
-_8.height=parseInt(_c||"0");
-}else{
-_8.removeAttribute("height");
-}
-break;
-}
-}
-},_4);
+_a.getElementById("ipreview").src=Xinha._resolveRelativeUrl(_d,_c);
+return false;
+};
+this.dialog.onresize=function(){
+var _e=parseInt(this.height,10)-this.getElementById("h1").offsetHeight-this.getElementById("buttons").offsetHeight-this.getElementById("inputs").offsetHeight-parseInt(this.rootElem.style.paddingBottom,10);
+this.getElementById("ipreview").style.height=((_e>0)?_e:0)+"px";
+this.getElementById("ipreview").style.width=this.width-2+"px";
+};
+this.dialogReady=true;
 };
 

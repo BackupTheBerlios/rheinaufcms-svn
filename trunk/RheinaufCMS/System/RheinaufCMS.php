@@ -52,9 +52,15 @@ class RheinaufCMS
 
 	function ini_sets()
 	{
+		define('DOCUMENT_ROOT',str_replace(INSTALL_PATH.'/System/RheinaufCMS.php','',__FILE__));
+		define('TMPDIR',DOCUMENT_ROOT.'/'.INSTALL_PATH.'/tmp');
 		set_include_path(get_include_path().PATH_SEPARATOR.INSTALL_PATH.'/System/'.PATH_SEPARATOR.INSTALL_PATH.'/Module/'.PATH_SEPARATOR .INSTALL_PATH.'/Libraries/'.PATH_SEPARATOR .INSTALL_PATH.'/Libraries/PEAR/');
+		ini_set('display_errors',0);
 		ini_set('arg_separator.output','&amp;');
-		ini_set('display_errors',1);
+		ini_set('session.use_only_cookies','1');
+//		ini_set('session.save_path',TMPDIR);
+	//	session_name ("rcms_session");
+		
 		header('Content-type: text/html;charset=ISO-8859-1');
 		header('Content-Script-Type: text/javascript');
 		setlocale(LC_ALL, 'de_DE');
@@ -202,7 +208,7 @@ class RheinaufCMS
 
 		}
 		$content_file = DOCUMENT_ROOT.INSTALL_PATH.'/Content/'.$this->path_encode($this->rubrik).'/'.$this->path_encode($this->seite).$working_version.'/content.html';
-
+		
 		if (isset($_GET['httperror']) || !RheinaufFile::is_file($content_file))
 		{
 /*			$search1 = General::error_regex($this->uri_components[0]);
@@ -225,11 +231,22 @@ class RheinaufCMS
 		}
 		else
 		{
+			$file_last_changed = filemtime($content_file);
+			$vars['last_changed'] = date("d.m.Y, H.i");
 			$template = new Template ($content_file);
-			$template->system = $this;
+			$template->system =& $this;
+			$template->init_snippets();
+
 			$content = $template->parse_template('',$vars);
+			
+			$vars['scripts'] = $this->scripts;
 			$vars['scripts'] .= $template->scripts;
 			$vars['other_css'] .= $template->other_css;
+
+			$vars['other_css'] = $this->other_css;
+			if (isset($GLOBALS['other_css'])) $vars['other_css'] .= $GLOBALS['other_css'];
+			if (isset($GLOBALS['scripts'])) $vars['scripts'] .= $GLOBALS['scripts'];
+
 			if ($template->noframe ||  isset($_GET['noframe']))
 			{
 				return $content;
@@ -271,12 +288,15 @@ class RheinaufCMS
 		
 		$instance_show = $instance->show();
 
-		if (isset($instance->other_css))	$vars['other_css'] = $instance->other_css;
+		$vars['other_css'] = $this->other_css;
+		if (isset($instance->other_css))	$vars['other_css'] .= $instance->other_css;
 		if (isset($GLOBALS['other_css'])) $vars['other_css'] .= $GLOBALS['other_css'];
 
-		if (isset($instance->scripts))	$vars['scripts'] = $instance->scripts;
-		if (isset($GLOBALS['scripts'])) $vars['scripts'] .= $GLOBALS['scripts'];
-
+		$vars['scripts'] = $this->scripts;
+		if (isset($instance->scripts))	$vars['scripts'] .= $instance->scripts; //deprecated
+		if (isset($GLOBALS['scripts'])) $vars['scripts'] .= $GLOBALS['scripts']; // half deprecated
+		
+		
 		if ( isset($_GET['noframe']) || $this->noframe)
 		{
 			if (isset($instance->extern))
@@ -305,6 +325,8 @@ class RheinaufCMS
 	//	if ($modul!='Admin')
 	//	{
 			$content = new Template ($instance_show);
+			$content->system =& $this;
+			$content->init_snippets();
 			$content = $content->parse_template('',$vars);
 	//	}
 	//	else $content = $instance_show;
@@ -330,6 +352,8 @@ class RheinaufCMS
 		{
 			define ('DOCUMENT_ROOT',General::docroot());
 			$this->extract_to_this($this->path_information);
+			define('SELF_URL',$_SERVER['PHP_SELF']);
+
 			return;
 		}
 
@@ -362,8 +386,9 @@ class RheinaufCMS
 		$this->path_information['pfad'] = implode('/',$pfad);
 		$this->path_information['uri_components'] = $uri;
 		define ('DOCUMENT_ROOT',General::docroot());
-		define('SELF','/'.implode('/',$self));
+		//define('SELF','/'.implode('/',$self)); 
 		define('SELF_URL','/'.implode('/',$self));
+
 		$this->extract_to_this($this->path_information);
 	}
 	function extract_to_this($array)

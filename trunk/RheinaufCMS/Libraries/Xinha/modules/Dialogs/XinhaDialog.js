@@ -106,6 +106,9 @@ src=_editor_url+"images/xinha-small-icon.gif";
 style.position="absolute";
 style.top="3px";
 style.left="2px";
+ondrag=function(){
+return false;
+};
 }
 _b.style.paddingLeft="22px";
 _9.appendChild(this.icon);
@@ -184,7 +187,7 @@ this.resizeBackground({width:_1b.x+"px",height:_1b.y+"px"});
 }
 var _1c=_1a.y;
 var _1d=_1a.x;
-_16.display="";
+Xinha.Dialog.fadeIn(this.rootElem);
 var _1e=_15.offsetHeight;
 var _1f=_15.offsetWidth;
 if(_1e>_1c){
@@ -242,7 +245,7 @@ Xinha.Dialog.prototype.hide=function(){
 if(this.attached){
 this.editor.hidePanel(this.rootElem);
 }else{
-this.rootElem.style.display="none";
+Xinha.Dialog.fadeOut(this.rootElem);
 this.hideBackground();
 var _23=this;
 if(Xinha.is_gecko&&this.modal){
@@ -452,24 +455,22 @@ _44.attachToPanel(_45.side);
 };
 };
 Xinha.Dialog.prototype.hideBackground=function(){
-this.background.style.display="none";
+Xinha.Dialog.fadeOut(this.background);
 };
 Xinha.Dialog.prototype.showBackground=function(){
-this.background.style.display="";
+Xinha.Dialog.fadeIn(this.background,70);
 };
 Xinha.Dialog.prototype.posBackground=function(pos){
-	if (this.background.style.display != 'none')
-	{
+if(this.background.style.display!="none"){
 this.background.style.top=pos.top;
 this.background.style.left=pos.left;
-	}
+}
 };
 Xinha.Dialog.prototype.resizeBackground=function(_49){
-		if (this.background.style.display != 'none')
-	{
+if(this.background.style.display!="none"){
 this.background.style.width=_49.width;
 this.background.style.height=_49.height;
-	}
+}
 };
 Xinha.Dialog.prototype.posDialog=function(pos){
 var st=this.rootElem.style;
@@ -641,5 +642,54 @@ Xinha.Dialog.activeModeless.rootElem.style.zIndex=parseInt(Xinha.Dialog.activeMo
 }
 Xinha.Dialog.activeModeless=_66;
 Xinha.Dialog.activeModeless.rootElem.style.zIndex=parseInt(Xinha.Dialog.activeModeless.rootElem.style.zIndex)+10;
+};
+Xinha.Dialog.setOpacity=function(el,_69){
+if(typeof el.style.filter!="undefined"){
+el.style.filter=(_69<100)?"alpha(opacity="+_69+")":"";
+}else{
+el.style.opacity=_69/100;
+}
+};
+Xinha.Dialog.fadeIn=function(el,_6b,_6c,_6d){
+_6c=_6c||1;
+_6d=_6d||25;
+_6b=_6b||100;
+el.op=el.op||0;
+var op=el.op;
+if(el.style.display=="none"){
+Xinha.Dialog.setOpacity(el,0);
+el.style.display="";
+}
+if(op<_6b){
+el.op+=_6d;
+Xinha.Dialog.setOpacity(el,op);
+el.timeOut=setTimeout(function(){
+Xinha.Dialog.fadeIn(el,_6b,_6c,_6d);
+},_6c);
+}else{
+Xinha.Dialog.setOpacity(el,_6b);
+el.op=_6b;
+el.timeOut=null;
+}
+};
+Xinha.Dialog.fadeOut=function(el,_70,_71){
+_70=_70||1;
+_71=_71||30;
+if(typeof el.op=="undefined"){
+el.op=100;
+}
+var op=el.op;
+if(op>=0){
+el.op-=_71;
+Xinha.Dialog.setOpacity(el,op);
+el.timeOut=setTimeout(function(){
+Xinha.Dialog.fadeOut(el,_70,_71);
+},_70);
+}else{
+Xinha.Dialog.setOpacity(el,0);
+el.style.display="none";
+el.op=0;
+el.timeOut=null;
+}
 };
 

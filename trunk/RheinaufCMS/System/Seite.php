@@ -22,6 +22,8 @@ class Seite
 		{
 			$this->template = new Template(INSTALL_PATH.'/Templates/Seite.template.html');
 		}
+		$this->template->system =& $system;
+		$this->template->init_snippets();
 	}
 
 	function header($vars=array())

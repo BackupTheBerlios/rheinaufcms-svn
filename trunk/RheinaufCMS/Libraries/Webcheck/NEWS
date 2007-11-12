@@ -1,0 +1,229 @@
+changes from 1.9.7 to 1.9.8
+---------------------------
+
+* some checks for properly handling unknown and wrong encodings have been
+  added
+* added proper error handling for SSL related socket problems (exceptions are
+  not a subclass of regular socket exceptions)
+* a bugfix for urls that contain a user name without a password or the other
+  way around
+* miscellaneous small report improvements
+
+
+changes from 1.9.6 to 1.9.7
+---------------------------
+
+* site data is now stored to a file while crawling the site, this can be used
+  to resume a crawl with the --continue option and for debugging purposes
+* implemented checking of link anchors
+* small improvements to generated reports (favicon included, css fix)
+* documentation improvements
+* properly handle float values for --wait
+* unreachable sites will time out faster
+* added support for plugins that don't output html
+* half a dozen other small bugfixes (stability fixes, code cleanups and
+  improvements)
+
+
+changes from 1.9.5 to 1.9.6
+---------------------------
+
+* SECURITY FIX: a cross-site scripting vulnerability with content in the
+                tooltips of generated report was fixed by properly escaping
+                all output (CVE-2006-1321)
+* urls are now url encoded into a consistent form, solving some problems with
+  urls with non-ascii characters
+* no longer remove unreferenced redirects
+* more debugging info in debug mode
+* more fixes for escaping in generated reports and more support for sites in
+  different character sets
+
+
+changes from 1.9.4 to 1.9.5
+---------------------------
+
+* about page now has some more useful information
+* proxy authentication is implemented
+* fix for using relative paths as output directory
+* add support for parsing html documents in different encodings
+* ensure that all generated html output is properly escaped
+* implemented --internal option to flag internal URLs with regular expressions
+* documentation improvements
+* several bugfixes to get webcheck more robust
+* included fancytooltips by Victor Kulinski to have nicer tooltips
+* generated reports now have friendlier messages for when there is nothing to
+  report
+* there is a Debian package
+
+
+changes from 1.9.3 to 1.9.4
+---------------------------
+
+* split problems into link problems (errors retrieving the document) and page
+  problems (parsing errors, wrong links, etc)
+* some fixes and improvements to the layout of the generated pages
+* redirect loops are now detected
+* transfer result status is now stored
+* addition of a limited css parser that handles imports and url() entries
+* support reading file names for checking from the command line (turning them
+  into file:// urls internally)
+* better error handling of problems writing generated pages and check that we
+  are not overwriting input files
+
+
+changes from 1.9.2 to 1.9.3
+---------------------------
+
+* several improvements to the generated reports, including tooltips with some
+  useful information for the links (does not seem to work very well in
+  firefox)
+* stability improvements to the html parser (thanks to everyone who reported
+  problems) not all problems have been solved but it shouldn't stop webcheck
+  any more
+* reimplementation of the file and ftp modules to read directory contents or
+  read index.html file if present (there are known problems in the ftp module
+  regarding empty directories and recovering from errors)
+* improvements to the url parsing code to warn about spaces in urls
+* only fetch content if we can parse it
+
+
+changes from 1.9.1 to 1.9.2
+---------------------------
+
+* complete reimplementation of the html and http modules
+* added https support
+* some spelling and typo fixes contributed by several people
+* site map now does a proper breadth first traversal of the site structure
+* webcheck homepage has been changed to http://ch.tudelft.nl/~arthur/webcheck/
+* several minor bugfixes and tweaks
+
+
+changes from 1.9.0 to 1.9.1
+---------------------------
+
+* ship an empty css.py to actually run
+* small bugfixes for pages with multiple titles and slow plugin
+
+
+changes from 1.0 to 1.9.0
+-------------------------
+
+* maintainership transferred to Arthur de Jong
+* major structural rewrites of crawling code and plugin structure
+* the documentation was combined and partially rewritten in the README for
+  installation instructions and the manual page for usage information
+* changed output to no longer use frames and produce valid XHTML 1.1 and use
+  CSS for layout
+* config.py is no longer really a configuration file
+
+
+changes from 1.0b10 to 1.0
+--------------------------
+
++ Don't send accept headers, as they weren't valid.
++ WARN_OLD_VERSION no longer works, until I decide what to do about it.
++ Named changed to webcheck.
++ Fixed typos in INSTALL.
++ Changes so it works with python 2.0.
+
+
+changes from 1.0b9 to 1.0b10
+----------------------------
+
+b Fixed bug when server redirects to a document in robots.txt (does not show
+  up as broken (hopefully))
++ Filename mangling in filelink.py to help OS/2 (and Win32) (Patch submitted
+  by Steffen Siebert)
++ Added WARN_OLD_VERSION config.py option. If this option is set to true (the
+  default) Linbot will check it's version number and the version numbers of
+  it's plugins against a global registry on the Net. If it finds that a
+  version is not the latest, it will print a warning on the reports along with
+  a link you can follow to download the latest version. I think it's neat. You
+  might find it annoying.
++ Added preliminary support for authenticating proxies, though it does not
+  work correctly yet.
++ Added -r (redirect depth) and REDIRECT_DEPTH option in config.py to indicate
+  the amount of redirects Linbot should follow when following a link. Thanks
+  to Andrea Glorioso for the patch.
++ Added debugio module that handles debugging and I/O
++ Added -q (quiet option). Use it to suppress output
++ Added -d (debug) option and DEBUG_LEVEL variable in config.py for debugging
++ added version module and removed __version__ and __author__ from all the
+  modules (except plugins).
+b Fixed bug in Linbot using putrequest() instead of putheader() when
+  requesting header information. Thanks to Andrea Glorioso for fixing this
+  glitch (and Seth Chaiklin for noticing).
+
+
+changes from 1.0b8 to 1.0b9
+---------------------------
+
++ If you use the -o command-line option or the OUTPUT_DIR config file option
+  and the directory does not exist, linbot will create it for you (provided
+  that it has the correct permissions, etc.). Thanks to Andrea Glorioso for
+  this feature.
++ Added a CREDITS file and probably left a lot of people out. If you think you
+  should be in it let me know.
+b Linbot will now report to the server that it can accept any MIME type (found
+  in mimetypes.py. This should fix the "406: No acceptable objects found"
+  error that some servers report.
+b Linbot correctly identifies itself as "Linbot <version>" on HEAD requests as
+  well as GET requests.
+
+
+changes from 1.0b6 to 1.0b8
+---------------------------
+
+b Fixed bug when no images are reported for documents having 0 links If you
+  don't know what this means it probably wasn't a problem for you.
+b Fixed code that was messing with arguments passed via -x and -y and caused
+  unexpected results and/or errors.
+b -b flag should work this time (for real)
+b Cosmetic changes (reports didn't look the way I thought they should in IE4.
+  (and may not still as I haven't had a chance to check it yet)
+b Linbot won't follow infinite redirects (currently hardcoded to max of 5
+  redirects per document)
+
+
+changes from 1.0b5 to 1.0b6
+---------------------------
+
++ Minor change in ftplink.py should allow better ftp link checking
++ You can now press CTRL-C (or whatever your operating system supports) to
+  break out of a linbot run. However, the work linbot does is not saved (yet).
+b Fixed problem when server redirects a URL to itself. This fix seems to work
+  for most servers I've tried but there are a few more out there that I need
+  to take a look at.
+b Fixed bug that caused linbot to not check for yanked URLs
++ Added -l command-line option. Usage: -l <url> where <url> is a url pointing
+  to an image to be used as the report's logo.
+b "patched" strings.py so that it can better parse html files created in 
+   Windows/DOS (I think).
++ Made report LOGO a link to the base url
++ httplink does not HEAD a redirected URL if it is already in the link list
+  (performance improvement)
+- Removed LOGO_ALT from config.py
++ Changed my email address to marduk@python.net. The official home page of
+  Linbot will probably also change with the next release so stay tuned.
+
+
+changes from 1.0b4 to 1.0b5
+---------------------------
+
++ Added a contrib directory. Right now it just contains the about plugin.
+  Other plugins will be included if people contribute them. Also, the man page
+  will return once I have updated it. Those ugly buttons are obsolete.
++ Linbot now "inlines" stylesheets. This has the benefits of 1) better support
+  of Netscape browsers (so I hear) and 2) I don't have to document to put
+  linbot.css in the output directory since it grabs it from starship 8*)
+b Handling of error for when robots.txt cannot be retrieved.
++ Malformed urls are trapped (sorry, I had that commented out)
+b FTP link handling is totally rewritten. Fortunately it shouldn't crash
+  anymore Unfortunately it doesn't really work reliably and probably never
+  will. See README.ftp for details.
+b Two bugs in HTTP proxy handling made it almost completely unusable, though
+  conveniently seemed to cancel each other out when I was testing.
+b Too many files error on large sites should be fixed. Thanks to Andrew
+  Kuchling et al for suggestions.
+b Bug when some servers erroneously report (or don't report) Content-Length
+  header fixed.
