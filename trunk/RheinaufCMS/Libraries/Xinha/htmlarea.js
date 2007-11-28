@@ -3,10 +3,10 @@
     --  COMPATABILITY FILE
     --  htmlarea.js is now XinhaCore.js  
     --
-    --  $HeadURL: http://svn.xinha.python-hosting.com/branches/ray/htmlarea.js $
-    --  $LastChangedDate: 2007-02-24 03:18:05 +0100 (Sa, 24 Feb 2007) $
-    --  $LastChangedRevision: 761 $
-    --  $LastChangedBy: ray $
+    --  $HeadURL$
+    --  $LastChangedDate$
+    --  $LastChangedRevision$
+    --  $LastChangedBy$
     --------------------------------------------------------------------------*/
     
 if ( typeof _editor_url == "string" )

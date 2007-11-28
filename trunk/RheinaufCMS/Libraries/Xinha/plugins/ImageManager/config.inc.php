@@ -1,7 +1,7 @@
 <?php
 /**
  * Image Manager configuration file.
- * @author $Author: ray $
+ * @author $Author$
  * @version $Id: config.inc.php 862 2007-07-10 16:38:51Z ray $
  * @package ImageManager
  *

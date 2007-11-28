@@ -12,42 +12,33 @@
 
 class RheinaufCMS
 {
-	var $connection;
-	var $debug = false;
-	var $homepath;
-	var	$pfad;
-	var $path_information;
-	var $uri_components;
-	var	$rubrik;
-	var	$seite;
-	var $navi;
-	var $other_css;
-	var $scripts;
-	var $noframe = false;
-	var $user;
-	var $user_found_in; // Tabelle, in der der User steht
+	public $content;
+	public $connection;
+	public $debug = false;
+	public $pages;
+	public $breadcrumbs = array();
+	public $other_css;
+	public $scripts;
+	public $noframe = false;
 	
-	var $tables = array('navi_table'=>'RheinaufCMS>Navi',
+	public $user;
+	public $user_found_in; // Tabelle, in der der User steht
+	
+	public $tables = array('pages'=>'pages',
 						'user_table'=>'RheinaufCMS>User',
 						'rechte_table'=>'RheinaufCMS>Rechte',
 						'groups_table'=>'RheinaufCMS>Groups');
 	
-	var $user_tables = array('RheinaufCMS>User');
+	public $user_tables = array('RheinaufCMS>User');
 	
 
-	function RheinaufCMS()
+	public function __construct()
 	{
-
 		$this->ini_sets();
 		$this->includes();
-		$this->add_db_prefix();
 
 		$this->connection = new RheinaufDB();
-		$this->navi = $this->navi_array();
-		$this->pfad();
-		$this->title = $this->rubrik;
-
-		print $this->content();
+		//$this->connection->debug = true;
 	}
 
 	function ini_sets()
@@ -66,16 +57,6 @@ class RheinaufCMS
 		setlocale(LC_ALL, 'de_DE');
 	}
 
-	function add_db_prefix()
-	{
-		$db_prefix = (defined(DB_PREFIX)) ? DB_PREFIX :'';
-
-		foreach ($this->tables as $key =>$value)
-		{
-			$this->tables[$key] = $db_prefix.$value;
-		}
-		$this->extract_to_this($this->tables);
-	}
 	function add_incl_path ($path)
 	{
 		set_include_path(get_include_path().PATH_SEPARATOR.$path);
@@ -98,41 +79,71 @@ class RheinaufCMS
 	}
 
 
-	function navi_array()
+	function get_pages()
 	{
-		//if (!$this->connection) $this->connection = new RheinaufDB();
-		$navifromdb = $this->connection->db_assoc("SELECT * FROM `$this->navi_table` ORDER BY `id` ASC");
+		$table = $this->get_table('pages');
+		$n = $this->connection->db_assoc("SELECT * FROM `$table` ORDER BY parentID, ordinalID ASC");
 
 		$navi = array();
-		for ($i=0;$i<count($navifromdb);$i++)
+		for ($i=0;$i<count($n);$i++)
 		{
-			$rubrik_key = $navifromdb[$i]['Rubrik_key'];
-			if ($navifromdb[$i]['Hierarchy']==0)
+			$navi['p'.$n[$i]['id']] =& $n[$i];
+			$n[$i]['children'] = array();
+			if ($n[$i]['parentID'] > 0) 
 			{
-				$navi[$rubrik_key]['Rubrik'] = $navifromdb[$i]['Rubrik'];
-				$navi[$rubrik_key]['Show'] = $navifromdb[$i]['Show'];
-				$navi[$rubrik_key]['Show_to'] = ($navifromdb[$i]['Show_to'] != '') ? explode(',',$navifromdb[$i]['Show_to']):'';
-				$navi[$rubrik_key]['Modul'] = $navifromdb[$i]['Modul'];
-				$navi[$rubrik_key]['ext_link'] = $navifromdb[$i]['ext_link'];
-
-
-				$navi[$rubrik_key]['Subnavi'] = array();
+				$n[$i]['ancestors'] = array();
+				$p = $n[$i]['parentID'];
+				while ($p)
+				{
+					$n[$i]['ancestors'][] =& $navi['p'.$p];
+					$p = $navi['p'.$p]['parentID'];
+				}
+				$navi['p'.$n[$i]['parentID']]['children'][] =& $navi['p'.$n[$i]['id']];
+				
 			}
-			else if ($navifromdb[$i]['Hierarchy']==1)
-			{
-				$page_key = $navifromdb[$i]['Page_key'];
-				$navi[$rubrik_key]['Subnavi'][$page_key]['Seite'] = $navifromdb[$i]['Seite'];
-				$navi[$rubrik_key]['Subnavi'][$page_key]['Show'] = $navifromdb[$i]['Show'];
-				$navi[$rubrik_key]['Subnavi'][$page_key]['Show_to'] = ($navifromdb[$i]['Show_to'] != '') ? explode(',',$navifromdb[$i]['Show_to']):'';
-				$navi[$rubrik_key]['Subnavi'][$page_key]['Modul'] = $navifromdb[$i]['Modul'];
-				$navi[$rubrik_key]['Subnavi'][$page_key]['ext_link'] = $navifromdb[$i]['ext_link'];
-
-			}
-
 		}
 		return $navi;
 	}
+	
+	function get_pages_by_url()
+	{
+		$table = $this->get_table('pages');
+		return $this->connection->db_assoc("SELECT URL, id
+			FROM `$table`
+			ORDER BY CHAR_LENGTH( URL ) ASC");
+	}
+	
+	function get_table ($table)
+	{ 
+		$db_prefix = (defined('DB_PREFIX')) ? DB_PREFIX :'';
+		$table = ($this->tables[$table]) ? $this->tables[$table] : $table;
+		return $db_prefix.$table;
+	}
+	
+	function get_page()
+	{
+		if ($_GET['page_id']) return $_GET['page_id'];
+		
+		$request = $_SERVER['REQUEST_URI'];
+		$request = preg_match("%/$%") ? $request : $request .'/';
+		$pages = $this->get_pages_by_url();
 
+		foreach ($pages as $p)
+		{
+			if (preg_match("%^".$p['URL']."%i",$request)) $page = $p['id'];
+		}
+		
+		return $page;
+	}
+	private function get_page_previledges ($page,$type)
+	{
+		if (!$this->pages)
+			throw new Exception("Called ".__CLASS__.'::'.__FUNCTION__.' without pages array');
+
+		$table = $this->get_table('page_previledges');
+		$sql = "SELECT userID, groupID from `$table` WHERE `pageID` = $page AND `type` = '$type'";
+		$res = $this->connection->db_assoc($sql);
+	}
 	function content()
 	{
 		if (isset($_GET['logout']))
@@ -142,41 +153,38 @@ class RheinaufCMS
 			unset($_SESSION['RheinaufCMS_User']);
 			setcookie('RheinaufCMS_user',false,time() - 3600,'/');
 		}
-		// hier checken, um die Ausführung der show() Methode zu verhindern
+		// check login early to prevent execution of show() 
 		Login::check_login($this);
 		
 		$vars = array();
+		$return = '';
 
-		$this->rubrik = $rubrik = $this->I18n_get_int($this->navi[$_GET['r']]['Rubrik']);
-		$this->seite = $seite =  $this->I18n_get_int($this->navi[$_GET['r']]['Subnavi'][$_GET['s']]['Seite']);
+		$this->pages = $this->get_pages();
+		$page_id = $this->get_page();
+		
+		$page =& $this->pages['p'.$page_id]; 
 
-
-		$vars['rubrik'] = rawurlencode($this->rubrik);
-		$vars['seite'] =  rawurlencode($this->seite);
-
-		$title = ($this->seite != 'index')  ? $rubrik.' | '.$seite : $rubrik;
-
-		if ($this->navi[$_GET['r']]['ext_link'])
+		if ($page['ext_link'])
 		{
-			header("Location: ".$this->navi[$_GET['r']]['ext_link']);
-		}
-		if ($this->navi[$_GET['r']]['Subnavi'][$_GET['s']]['ext_link'])
-		{
-			header("Location: ".$this->navi[$_GET['r']]['Subnavi'][$_GET['s']]['ext_link']);
+			header("Location: ".$page['ext_link']);
 		}
 		
-		if ($this->navi[$_GET['r']]['Modul'] =='' && $this->navi[$_GET['r']]['Subnavi'][$_GET['s']]['Modul']=='')
+		if ( $page['module'])
 		{
-			$return = $this->content_static($title);
+		//	$return = $this->content_module($page,$module);
 		}
 		else
 		{
-			if ($this->navi[$_GET['r']]['Modul']!='') $module = $this->navi[$_GET['r']]['Modul'];
-			else $module = $this->navi[$_GET['r']]['Subnavi'][$_GET['s']]['Modul'];
-			
-			$return = $this->content_module($title,$module);
+			//$return = $this->content_static($page);
 		}
-
+		$a = $page;
+		
+		while ($a = array_shift($a['ancestors']))
+		{
+			$this->breadcrumbs[] = $a;
+			
+			print '<br>'.$a['URL'];
+		}
 		if (is_array($this->navi[$_GET['r']]['Show_to']) || $this->require_valid_user)
 		{
 			if (!$this->valid_user)
@@ -188,6 +196,19 @@ class RheinaufCMS
 				$return = $this->content_module($title,'Login');
 			}
 		}
+ 		return $return;
+		/*$this->rubrik = $rubrik = $this->I18n_get_int($this->navi[$_GET['r']]['Rubrik']);
+		$this->seite = $seite =  $this->I18n_get_int($this->navi[$_GET['r']]['Subnavi'][$_GET['s']]['Seite']);
+
+
+		$vars['rubrik'] = rawurlencode($this->rubrik);
+		$vars['seite'] =  rawurlencode($this->seite);*/
+
+		$title = ($this->seite != 'index')  ? $rubrik.' | '.$seite : $rubrik;
+
+
+
+		
 		return $return;
 	}
 

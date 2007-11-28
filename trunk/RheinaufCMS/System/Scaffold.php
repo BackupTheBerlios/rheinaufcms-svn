@@ -4,10 +4,10 @@
 --
 --  Automatic Database I/O Interface Generation
 --
---  $HeadURL: https://raimund@svn.berlios.de/svnroot/repos/rheinaufcms/trunk/RheinaufCMS/Classes/Admin.php $
---  $LastChangedDate: 2006-10-10 14:49:41 +0200 (Di, 10 Okt 2006) $
---  $LastChangedRevision: 30 $
---  $LastChangedBy: raimund $
+--  $HeadURL$
+--  $LastChangedDate$
+--  $LastChangedRevision$
+--  $LastChangedBy$
 ---------------------------------*/
 
 class Scaffold extends RheinaufCMS

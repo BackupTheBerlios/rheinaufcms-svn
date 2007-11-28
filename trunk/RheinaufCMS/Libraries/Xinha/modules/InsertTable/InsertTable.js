@@ -1,4 +1,4 @@
-InsertTable._pluginInfo={name:"InsertTable",origin:"Xinha Core",version:"$LastChangedRevision: 733 $".replace(/^[^:]*: (.*) \$$/,"$1"),developer:"The Xinha Core Developer Team",developer_url:"$HeadURL: http://svn.xinha.python-hosting.com/trunk/modules/InsertTable/insert_image.js $".replace(/^[^:]*: (.*) \$$/,"$1"),sponsor:"",sponsor_url:"",license:"htmlArea"};
+InsertTable._pluginInfo={name:"InsertTable",origin:"Xinha Core",version:"$LastChangedRevision$".replace(/^[^:]*: (.*) \$$/,"$1"),developer:"The Xinha Core Developer Team",developer_url:"$HeadURL$".replace(/^[^:]*: (.*) \$$/,"$1"),sponsor:"",sponsor_url:"",license:"htmlArea"};
 function InsertTable(_1){
 this.editor=_1;
 var _2=_1.config;

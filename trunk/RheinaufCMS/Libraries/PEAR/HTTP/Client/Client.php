@@ -37,7 +37,7 @@ require_once 'HTTP/Client/CookieManager.php';
  * 
  * @package HTTP_Client
  * @author Alexey Borzov <avb@php.net>
- * @version $Revision: 1.7 $
+ * @version $Revision$
  */
 class HTTP_Client
 {

@@ -5,7 +5,7 @@
  * 
  * @package HTTP_Client
  * @author  Alexey Borzov <avb@php.net>
- * @version $Revision: 1.2 $
+ * @version $Revision$
  * 
  * $Id: link-checker.php,v 1.2 2003/12/12 15:53:23 avb Exp $
  */

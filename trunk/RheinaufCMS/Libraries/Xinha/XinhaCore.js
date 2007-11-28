@@ -1,4 +1,4 @@
-Xinha.version={"Release":"Trunk","Head":"$HeadURL: http://svn.xinha.webfactional.com/branches/ray/XinhaCore.js $".replace(/^[^:]*: (.*) \$$/,"$1"),"Date":"$LastChangedDate: 2007-09-14 20:19:33 +0200 (Fr, 14 Sep 2007) $".replace(/^[^:]*: ([0-9-]*) ([0-9:]*) ([+0-9]*) \((.*)\) \$/,"$4 $2 $3"),"Revision":"$LastChangedRevision: 892 $".replace(/^[^:]*: (.*) \$$/,"$1"),"RevisionBy":"$LastChangedBy: ray $".replace(/^[^:]*: (.*) \$$/,"$1")};
+Xinha.version={"Release":"Trunk","Head":"$HeadURL$".replace(/^[^:]*: (.*) \$$/,"$1"),"Date":"$LastChangedDate$".replace(/^[^:]*: ([0-9-]*) ([0-9:]*) ([+0-9]*) \((.*)\) \$/,"$4 $2 $3"),"Revision":"$LastChangedRevision$".replace(/^[^:]*: (.*) \$$/,"$1"),"RevisionBy":"$LastChangedBy$".replace(/^[^:]*: (.*) \$$/,"$1")};
 Xinha._resolveRelativeUrl=function(_1,_2){
 if(_2.match(/^([^:]+\:)?\//)){
 return _2;

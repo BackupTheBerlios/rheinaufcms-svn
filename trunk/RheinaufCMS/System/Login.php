@@ -2,13 +2,13 @@
 /*--------------------------------
 --  RheinaufCMS Login Page
 --
---  $HeadURL: https://raimund@svn.berlios.de/svnroot/repos/rheinaufcms/trunk/RheinaufCMS/Classes/Admin.php $
---  $LastChangedDate: 2006-11-30 18:14:18 +0100 (Do, 30 Nov 2006) $
---  $LastChangedRevision: 40 $
---  $LastChangedBy: raimund $
+--  $HeadURL$
+--  $LastChangedDate$
+--  $LastChangedRevision$
+--  $LastChangedBy$
 ---------------------------------*/
 
-class Login extends RheinaufCMS
+class Login
 {
 
 	function Login(&$system)

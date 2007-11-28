@@ -23,7 +23,7 @@
  * 
  * @package HTTP_Client
  * @author  Alexey Borzov <avb@php.net>
- * @version $Revision: 1.5 $
+ * @version $Revision$
  */
 class HTTP_Client_CookieManager
 {

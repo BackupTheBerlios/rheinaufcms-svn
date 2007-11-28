@@ -3,10 +3,10 @@ header('Content-type:text/javascript');
 /*--------------------------------
 --  Xinha Editor Configuration
 --
---  $HeadURL: https://raimund@svn.berlios.de/svnroot/repos/rheinaufcms/trunk/RheinaufCMS/Libraries/XinhaConfig/editor.php $
---  $LastChangedDate: 2006-10-17 14:24:30 +0200 (Di, 17 Okt 2006) $
---  $LastChangedRevision: 32 $
---  $LastChangedBy: raimund $
+--  $HeadURL$
+--  $LastChangedDate$
+--  $LastChangedRevision$
+--  $LastChangedBy$
 ---------------------------------*/
 
 ?>

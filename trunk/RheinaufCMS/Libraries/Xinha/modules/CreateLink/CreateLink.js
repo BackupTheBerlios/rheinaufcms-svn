@@ -14,9 +14,9 @@ function CreateLink(editor) {
 CreateLink._pluginInfo = {
   name          : "CreateLink",
   origin        : "Xinha Core",
-  version       : "$LastChangedRevision: 694 $".replace(/^[^:]*: (.*) \$$/, '$1'),
+  version       : "$LastChangedRevision$".replace(/^[^:]*: (.*) \$$/, '$1'),
   developer     : "The Xinha Core Developer Team",
-  developer_url : "$HeadURL: http://svn.xinha.python-hosting.com/trunk/modules/CreateLink/link.js $".replace(/^[^:]*: (.*) \$$/, '$1'),
+  developer_url : "$HeadURL$".replace(/^[^:]*: (.*) \$$/, '$1'),
   sponsor       : "",
   sponsor_url   : "",
   license       : "htmlArea"

@@ -1,7 +1,7 @@
 <?php 
 /**
  * The PHP Image Editor user interface.
- * @author $Author: ray $
+ * @author $Author$
  * @version $Id: editor.php 761 2007-02-24 02:18:05Z ray $
  * @package ImageManager
  */

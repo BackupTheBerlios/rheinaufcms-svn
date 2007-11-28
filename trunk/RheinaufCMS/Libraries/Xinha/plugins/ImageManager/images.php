@@ -1,7 +1,7 @@
 <?php 
 /**
  * Show a list of images in a long horizontal table.
- * @author $Author: ray $
+ * @author $Author$
  * @version $Id: images.php 892 2007-09-14 18:19:33Z ray $
  * @package ImageManager
  */
