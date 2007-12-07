@@ -12,6 +12,8 @@
 
 class RheinaufCMS
 {
+	public $page;
+	
 	public $content;
 	public $connection;
 	public $debug = false;
@@ -41,7 +43,7 @@ class RheinaufCMS
 		//$this->connection->debug = true;
 	}
 
-	function ini_sets()
+	private function ini_sets()
 	{
 		define('DOCUMENT_ROOT',str_replace(INSTALL_PATH.'/System/RheinaufCMS.php','',__FILE__));
 		define('TMPDIR',DOCUMENT_ROOT.'/'.INSTALL_PATH.'/tmp');
@@ -52,19 +54,21 @@ class RheinaufCMS
 //		ini_set('session.save_path',TMPDIR);
 	//	session_name ("rcms_session");
 		
-		header('Content-type: text/html;charset=ISO-8859-1');
+		header('Content-type: text/html;charset=UTF-8');
 		header('Content-Script-Type: text/javascript');
 		setlocale(LC_ALL, 'de_DE');
 	}
 
-	function add_incl_path ($path)
+	public function add_incl_path ($path)
 	{
 		set_include_path(get_include_path().PATH_SEPARATOR.$path);
 	}
 
 
-	function includes()
+	private function includes()
 	{
+		include_once(INSTALL_PATH.'/System/Page.class.php');
+		
 		include_once(INSTALL_PATH.'/System/Seite.php');
 		include_once(INSTALL_PATH.'/Module/Navi.php');
 		include_once(INSTALL_PATH.'/System/Date.php');
@@ -79,30 +83,32 @@ class RheinaufCMS
 	}
 
 
-	function get_pages()
+	private function get_pages()
 	{
 		$table = $this->get_table('pages');
 		$n = $this->connection->db_assoc("SELECT * FROM `$table` ORDER BY parentID, ordinalID ASC");
 
-		$navi = array();
+		$pages = array();
 		for ($i=0;$i<count($n);$i++)
 		{
-			$navi['p'.$n[$i]['id']] =& $n[$i];
-			$n[$i]['children'] = array();
-			if ($n[$i]['parentID'] > 0) 
+			$pageID = $n[$i]['id'];
+			$parentID = $n[$i]['parentID'];
+			
+			$pages['p'.$pageID] = new Page ($n[$i]);
+
+			if ($parentID > -1) 
 			{
-				$n[$i]['ancestors'] = array();
-				$p = $n[$i]['parentID'];
-				while ($p)
+				$p = $parentID;
+				while ($p > -1)
 				{
-					$n[$i]['ancestors'][] =& $navi['p'.$p];
-					$p = $navi['p'.$p]['parentID'];
+					$pages['p'.$pageID]->add_ancestor($pages['p'.$p]);
+					$p = $pages['p'.$p]->get_parent_id();
 				}
-				$navi['p'.$n[$i]['parentID']]['children'][] =& $navi['p'.$n[$i]['id']];
-				
+				$pages['p'.$parentID]->add_child($pages['p'.$pageID]);
 			}
 		}
-		return $navi;
+
+		$this->pages = $pages;
 	}
 	
 	function get_pages_by_url()
@@ -122,10 +128,14 @@ class RheinaufCMS
 	
 	function get_page()
 	{
-		if ($_GET['page_id']) return $_GET['page_id'];
+		if (!$this->pages)
+		{
+			$this->get_pages();
+		}
+		if ($_GET['page_id']) return $this->pages['p'.$_GET['page_id']];
 		
 		$request = $_SERVER['REQUEST_URI'];
-		$request = preg_match("%/$%") ? $request : $request .'/';
+		$request = preg_match("%/$%",$request) ? $request : $request .'/';
 		$pages = $this->get_pages_by_url();
 
 		foreach ($pages as $p)
@@ -133,18 +143,10 @@ class RheinaufCMS
 			if (preg_match("%^".$p['URL']."%i",$request)) $page = $p['id'];
 		}
 		
-		return $page;
+		return $this->pages['p'.$page];
 	}
-	private function get_page_previledges ($page,$type)
-	{
-		if (!$this->pages)
-			throw new Exception("Called ".__CLASS__.'::'.__FUNCTION__.' without pages array');
 
-		$table = $this->get_table('page_previledges');
-		$sql = "SELECT userID, groupID from `$table` WHERE `pageID` = $page AND `type` = '$type'";
-		$res = $this->connection->db_assoc($sql);
-	}
-	function content()
+	public function content()
 	{
 		if (isset($_GET['logout']))
 		{
@@ -159,11 +161,12 @@ class RheinaufCMS
 		$vars = array();
 		$return = '';
 
-		$this->pages = $this->get_pages();
-		$page_id = $this->get_page();
 		
-		$page =& $this->pages['p'.$page_id]; 
-
+		$this->page = $this->get_page();
+		print $this->page->get_breadcrumbs()->to_html();
+		
+		//print_r($this->page);
+		/*
 		if ($page['ext_link'])
 		{
 			header("Location: ".$page['ext_link']);
@@ -171,20 +174,18 @@ class RheinaufCMS
 		
 		if ( $page['module'])
 		{
-		//	$return = $this->content_module($page,$module);
+			$return = $this->content_module($page,$module);
 		}
 		else
 		{
-			//$return = $this->content_static($page);
+			$return = $this->content_static($page);
 		}
 		$a = $page;
+		$this->breadcrumbs[] = $a['URL'];
+*/
 		
-		while ($a = array_shift($a['ancestors']))
-		{
-			$this->breadcrumbs[] = $a;
-			
-			print '<br>'.$a['URL'];
-		}
+		
+ 		return $return;
 		if (is_array($this->navi[$_GET['r']]['Show_to']) || $this->require_valid_user)
 		{
 			if (!$this->valid_user)
@@ -196,7 +197,6 @@ class RheinaufCMS
 				$return = $this->content_module($title,'Login');
 			}
 		}
- 		return $return;
 		/*$this->rubrik = $rubrik = $this->I18n_get_int($this->navi[$_GET['r']]['Rubrik']);
 		$this->seite = $seite =  $this->I18n_get_int($this->navi[$_GET['r']]['Subnavi'][$_GET['s']]['Seite']);
 

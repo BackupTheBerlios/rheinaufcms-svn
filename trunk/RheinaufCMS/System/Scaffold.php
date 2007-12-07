@@ -33,6 +33,7 @@ class Scaffold extends RheinaufCMS
 	#								['upload_max_count']
 	#								['upload_extensions'] => array('jpg','png')
 	#								['upload_size'] =>max size KB
+	#								['max_scale'] => array('x'=>1024,'y'=>768)
 	#								['info']
 	#								['maxlength']
 	#								['multiple']
@@ -1584,7 +1585,7 @@ $search
 			$a = $options_value;
 			foreach ($a as $k => $v)
 			{
-				if (is_numeric($k)) $k = $v;
+				if (is_numeric($k) && !$insert_index) $k = $v;
 				$options[$k] = $v;
 			}
 		}
