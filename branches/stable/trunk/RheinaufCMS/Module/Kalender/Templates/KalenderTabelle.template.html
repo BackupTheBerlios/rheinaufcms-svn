@@ -1,0 +1,18 @@
+<!--PRE-->
+<table>
+<!--/PRE-->
+<!--LOOP-->
+<tr><td colspan="2"><h2>{SUMMARY}</h2></td></tr>
+{IfNotEmpty:DESCRIPTION(<tr><td>Beschreibung</td><td>[DESCRIPTION]</td></tr>)}
+{IfNotEmpty:LOCATION(<tr><td>Ort</td><td>[LOCATION]</td></tr>)}
+{IfNotEmpty:CATEGORIES(<tr><td>Kategorie</td><td>[CATEGORIES]</td></tr>)}
+{IfNotEmpty:URL(<tr><td>URL</td><td>[URL]</td></tr>)}
+{IfNotEmpty:STATUS(<tr><td>Status</td><td>[STATUS]</td></tr>)}
+{IfNotEmpty:DTSTART(<tr><td>Beginn</td><td>[DTSTART]</td></tr>)}
+{IfNotEmpty:DTEND(<tr><td>Ende</td><td>[DTEND]</td></tr>)}
+{IfNotEmpty:CONTACT(<tr><td>Kontaktadresse</td><td>[CONTACT]</td></tr>)}
+<tr><td>Merken</td><td><input type="checkbox" name="memo[]" value="{id}" /></td></tr>
+<!--/LOOP-->
+<!--POST-->
+</table>
+<!--/POST-->

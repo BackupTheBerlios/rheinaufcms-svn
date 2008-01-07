@@ -1,0 +1,13 @@
+<!--PRE-->
+<table style="width:100%">
+<thead>
+<tr><th>Text</th></tr>
+</thead>
+<tbody>
+<!--/PRE-->
+<!--LOOP-->
+<tr id="entry{id}"><td class="alt_col{If:alt_row}">{If:Text}</td><td class="{If:alt_row}">{If:edit_btns}</td></tr>
+<!--/LOOP-->
+<!--POST-->
+</tbody><tfoot><tr><td colspan="2">{If:new_btn}</td></tr></tfoot></table>
+<!--/POST-->

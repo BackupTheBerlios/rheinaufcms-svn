@@ -1,0 +1,236 @@
+ <form  id="neu_termin" method="post" action="../../admin/programm/einfuegen.php" enctype="multipart/form-data" >
+  
+  <table >
+    <tr>
+      <td >&nbsp;</td>
+      <td >Tag</td>
+      <td >Monat</td>
+
+      <td >Jahr</td>
+      <td >Stunde</td>
+      <td width="289" >Minute</td>
+    </tr>
+    <tr>
+      <td width="161" >Datum</td>
+      <td ><input name="tag" type="text"  size="2" id="tag" onfocus="kalender('tag',31,'monat')" />        </td>
+
+      <td ><input name="monat" type="text"  size="2"  id="monat" onfocus="kalender('monat',12,'stunde')" /></td>
+      <td ><input name="jahr" type="text"  size="4" value="2005"  id="jahr" onfocus="kalender('jahr','','stunde')"/></td>
+      <td ><input name="stunde" type="text"  size="2"  id="stunde" onfocus="kalender('stunde',24,'minute')" /></td>
+      <td ><input name="minute" type="text"  size="2"  id="minute" onfocus="kalender('minute','','wer_ueber')"/></td>
+    </tr>
+    <tr><td>&nbsp;</td><td colspan="3"><div id="cal">&nbsp;</div></td></tr>
+    <tr>
+      <td rowspan="2">Standard</td>
+
+      <td colspan="5"><a id="a_standard"></a>
+	  <select name="standard"  id="standard" onchange="fill_standard()">
+	    <option value="" selected="selected">Kein Standard</option>
+        <script type="text/javascript">
+		 document.getElementById("tag").focus();
+		
+		function add_0 (number)
+		{
+			string_number = number.toString();
+			if (string_number.charAt(1) == '')
+			{
+				return '0' + string_number;
+			}
+			else return string_number;
+		}
+		function set_input_value(input_id,value,next)
+		{
+			document.getElementById(input_id).value = add_0 (value);
+			document.getElementById(next).focus();
+		}
+		
+
+		 function kalender (input_id,num_values,next)
+		 {
+		 	var cal_node = document.getElementById("cal");
+		  	switch (input_id)
+		 	{
+		 		case ('minute'):
+		 			var werte_array = new Array('00','04','15','30','45');
+		 		break;
+		 		case('jahr'):
+		 			var werte_array = new Array('2005','2006');
+		 		break;
+		 		case('monat'):
+		 					 			var werte_array = new Array('1','2','3','4','5','6','7','8','9','10','11','12');		 			
+		 		break;
+		 		case('stunde'):
+		 					 			var werte_array = new Array('19','20','21','22','23','24','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18');		 			
+		 		break;
+		 		default:
+					var werte_array = new Array();
+		 				for (var i = 1; i<=num_values;i++)
+		 				{
+		 					werte_array[i-1] = i;
+		 				}
+		 		break;
+		 	}
+		 	while (cal_node.hasChildNodes())
+		 	{
+		 		cal_node.removeChild(cal_node.lastChild);
+		 	}
+		 	for (var i = 0; i<werte_array.length;i++)
+		 	{
+		 		var tag_a = document.createElement("a");
+		 		cal_node.appendChild(tag_a);
+		 		cal_node.appendChild(document.createTextNode(" "));
+		 		tag_a.setAttribute("href","javascript:set_input_value('" + input_id + "',"+ werte_array[i] + ",'" + next + "')");
+		 		
+		 		var tag_text = document.createTextNode(add_0(werte_array[i]));
+		 		 tag_a.appendChild(tag_text);
+		 	}
+		 }
+		
+		 function fill_standard ()
+		 {
+		 	var key = document.getElementById("standard").selectedIndex -1;
+		 	var tag = document.getElementById("tag").value;
+		 	var monat = document.getElementById("monat").value;
+		 	var jahr = document.getElementById("jahr").value;
+		 	var stunde = document.getElementById("stunde").value;
+		 	var minute = document.getElementById("minute").value;
+		 	
+		 	document.getElementById("neu_termin").reset();
+		 	
+		 	document.getElementById("tag").value = tag;
+		 	document.getElementById("monat").value = monat;
+		 	document.getElementById("jahr").value = jahr;
+		 	document.getElementById("stunde").value = stunde;
+		 	document.getElementById("minute").value = minute;
+
+		 	var standard_select = document.getElementById("standard");
+		 	for (var i =0;i < standard_select.length;i++)
+		 	{
+		 		if ( standard_select.options[i].text == standard[key]["name"])  standard_select.options[i].selected = true;
+		 	}
+		 	
+		 	var logo_select = document.getElementById("cafe_logo_select");
+		 
+		 	for (var i=0;i < logo_select.length;i++)
+		 	{
+		 		if ( 'logos/' + logo_select.options[i].text == standard[key]["cafe_logo"])  logo_select.options[i].selected = true;
+		 	}
+			logo();
+		 	document.getElementById("wer_ueber").value = standard[key]["wer_ueber"];	
+						
+			editor.setHTML(standard[key]["wer_text"]);
+			
+			document.getElementById("cafe_logo_select").value = standard[key]["cafe_logo"];	
+			document.getElementById("kostet").value = standard[key]["kostet"];
+			
+			switch (standard[key]["was"])
+			{
+				case "Café":
+					document.getElementById("cafe").checked = true;
+				break;
+				case "Party":
+					document.getElementById("party").checked = true;
+				break;
+				case "Konzert":
+					document.getElementById("konzert").checked = true;
+				break;
+				case "Selbstverwaltung":
+					document.getElementById("selbstverwaltung").checked = true;
+				break;
+				default:
+					document.getElementById("was_text").value = standard[key]["was"];
+				break;
+			}
+			document.getElementById("wer_ueber").focus();
+		}
+		 </script>
+		
+		  <option value="0">Montagscafé</option><option value="1">Donnerstagscafé</option><option value="2">WAX on DECKS</option><option value="3">Black Magic Night</option><option value="4">Vorstandssitzung</option><option value="5">EA-Rat</option><option value="6">Café Schwarz</option><option value="7">Signs´n´Gossip</option><option value="8">Metal Meeting</option><option value="9">Café Drakenheim</option><option value="10">Brunch-Café</option><option value="11">Black Magic Night</option>        
+      </select>        </td>
+
+      </tr>
+    <tr>
+      <td colspan="5"><input type="submit" name="Submit" value="Senden" /></td>
+    </tr>
+    <tr>
+      <td>Überschrift</td>
+      <td colspan="5"><a id="a_wer_ueber"></a><textarea name="wer_ueber"  id="wer_ueber" rows="1" cols="50" onchange="window.location.hash='#a_wer_ueber'"></textarea></td>
+    </tr>
+
+    <tr>
+      <td><p>Beschreibung</p>
+        <p>&nbsp;</p></td>
+
+	  <td colspan="5"><textarea id="wer_text" cols="70" rows="20" name="wer_text"></textarea></textarea></td>
+    </tr>
+    <tr>
+      <td>Cafélogo</td>
+
+      <td colspan="5">       
+	   <select name="cafe_logo_select" id="cafe_logo_select" onchange="logo()">
+		
+        </select>
+        <br />
+	<img src="" id="logo_vorschau" /><br />
+      <script type="text/javascript">
+		
+      
+    	function logo ()
+		{
+			var cafe_logo = document.getElementById('cafe_logo_select').value;
+			
+			document.getElementById('logo_vorschau').src = '/content/programm/logos/' + cafe_logo ;
+		
+		}
+		function event_checked()
+		{
+			document.getElementById('event').checked=true;
+		}
+		
+		</script> 
+        </td>
+    </tr>
+    <tr>
+      <td>Bild für Beschreibung</td>
+
+      <td colspan="5">
+        <input name="bild_bild" type="file" id="bild_bild" size="30" /></td>
+    </tr>
+    <tr>
+      <td>Was</td>
+      <td colspan="5">        
+<input type="radio" name="was[]" id="cafe" value="Café" onclick="event_checked()" />
+Café
+<input type="radio" name="was[]" id="party"  value="Party" onclick="event_checked()" />
+Party
+
+<input type="radio" name="was[]" id="konzert" value="Konzert" onclick="event_checked()" />
+Konzert 
+<input type="radio" name="was[]" id="radio" value="Radiosendung" />
+Radiosendung <br />
+<input type="radio" name="was[]" id="selbstverwaltung" value="Selbstverwaltung" />
+Selbstverwaltung  <br />
+Special
+<input name="was[]" type="text" id="was_text" size="15" onclick="event_checked()" /> 
+
+<input name="event" type="checkbox" id="event" value="1" /> 
+Event? 
+</td>
+    </tr>
+    <tr>
+
+      <td>Kostet (ohne Eurozeichen)</td>
+      <td colspan="5"><input name="kostet" type="text" id="kostet" size="3" /></td>
+    </tr>
+    <tr>
+      <td>Verantwortlich (E-Mail) </td>
+      <td colspan="5"><input name="verantwortlich" type="text" id="verantwortlich" /></td>
+    </tr>
+    <tr>
+
+      <td>&nbsp;</td>
+      <td colspan="5"><input type="submit" name="Submit" value="Senden" /></td>
+    </tr>
+  </table>
+
+</form>

@@ -1,0 +1,102 @@
+.suggestion_list {
+	position : absolute;
+	background-color : white;
+	border : outset black 1px;
+	display : none;
+	list-style : none;
+	height: 200px;
+	overflow:auto;
+	margin:0;
+	padding:0;
+	
+}
+
+.suggestion_list a,.suggestion_list a:visited {
+	color:MenuText;
+	display:block;
+	width:auto;
+	padding:0 5px 0 10px;
+	border:none;
+}
+.suggestion_list a:hover,.suggestion_list a:focus {
+	background-color:Highlight;
+	color:HighlightText;
+	border:none;
+}
+.abwechselnde_flaechen_1,.alt_row_0 {
+	background-color:rgb(245, 245, 245);
+}
+.alt_row_0.alt_col {
+	background-color:rgb(235, 235, 235);
+}
+.abwechselnde_flaechen_2,.alt_row_1 {
+	background-color:white
+}
+.alt_row_1.alt_col {
+}
+/*----Button & pseudo-buttons---*/
+a.active, .button, input[type=submit],button {
+	background-color:rgb(235, 235, 245);
+	color: black;
+	border: 1px solid;
+	border-color:ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+	border-left: none;
+	cursor:default;
+}
+
+.button, input[type=submit],button {
+	padding:1px 4px 2px 4px ;
+	font-size:11px;
+	border: 1px solid;
+	border-color:ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+}
+.button:hover,input[type=submit]:hover,button:hover {
+	/* padding:2px 3px 1px 5px ; */
+	border-color: ButtonShadow ButtonHighlight ButtonHighlight ButtonShadow ;
+}
+.button:focus,input[type=submit]:focus,button:focus,.button:active,input[type=submit]:active,button:active  {
+	background-color:rgb(205, 205, 205);
+}
+.button:focus,input[type=submit]:focus,.button:active  {
+	padding:2px 3px 1px 5px ;
+}
+
+/*----Double it for IE6---*/
+a.active, .button  {
+	background-color:rgb(235, 235, 245);
+	color: black;
+	border: 1px solid;
+	border-color:ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+	border-left: none;
+	cursor:default;
+}
+
+.button {
+	padding:1px 4px 2px 4px ;
+	font-size:11px;
+	border: 1px solid;
+	border-color:ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+}
+.button:hover {
+	/* padding:2px 3px 1px 5px ; */
+	border-color: ButtonShadow ButtonHighlight ButtonHighlight ButtonShadow ;
+}
+.button:focus,.button:active {
+	background-color:rgb(205, 205, 205);
+}
+.button:focus  {
+	padding:2px 3px 1px 5px ;
+}
+#loading {
+	font-size:8em;
+	opacity:0.5;
+	filter:Alpha(opacity=50);
+	color:white;
+	background-color:#666;
+}
+.tooltip {
+	width:250px;
+	background-color:#FFFFCF;
+	border:1px dotted #8F8F86;
+	padding:5px 10px; 
+}

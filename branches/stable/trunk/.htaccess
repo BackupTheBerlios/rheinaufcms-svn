@@ -1,0 +1,42 @@
+#php_flag register_globals off
+AddDefaultCharset ISO-8859-1
+ErrorDocument 404 /CMSinit.php?httperror=404
+ErrorDocument 403 /CMSinit.php?httperror=403
+
+RewriteEngine On
+RewriteBase /
+
+
+#DEV-Mode -- Diese 3 Zeilen bewirken, das man die System-internen Seiten nur
+#sehen kann, wenn man eingelogt ist
+#
+#RewriteCond %{REQUEST_URI} !^/Admin [NC]
+#RewriteCond %{HTTP_COOKIE} !RheinaufCMS_user=
+#RewriteRule .* - [L]
+
+
+RewriteRule ^Download/(.*) RheinaufCMS/Download/$1 [L]
+RewriteRule ^Images/(.*) RheinaufCMS/Images/$1 [L]
+RewriteRule ^CSS/(.*) RheinaufCMS/CSS/$1 [L]
+RewriteRule ^Libraries/(.*) RheinaufCMS/Libraries/$1 [L]
+RewriteRule ^Module/(.*) RheinaufCMS/Module/$1 [L]
+RewriteRule ^Scripts/(.*) RheinaufCMS/Scripts/$1 [L]
+
+RewriteRule \.jpg$ - [L,NC]
+RewriteRule \.gif$ - [L,NC]
+RewriteRule \.png$ - [L,NC]
+RewriteRule \.css$ - [L,NC]
+RewriteRule \.js$ - [L,NC]
+
+#Kein direkter Zugriff auf Content-HTMLs
+RewriteRule ^RheinaufCMS/Content /CMSinit.php?httperror=403
+
+#Nur Domain
+RewriteRule !^. /Home
+
+#--REWRITE_RULES--#
+RewriteRule ^Startseite/index CMSinit.php?r=0&s=0&%{QUERY_STRING} [L,NC]
+RewriteRule ^Startseite CMSinit.php?r=0&s=0&%{QUERY_STRING} [L,NC]
+RewriteRule ^Admin/index CMSinit.php?r=1&s=0&%{QUERY_STRING} [L,NC]
+RewriteRule ^Admin CMSinit.php?r=1&s=0&%{QUERY_STRING} [L,NC]
+#--/REWRITE_RULES--#

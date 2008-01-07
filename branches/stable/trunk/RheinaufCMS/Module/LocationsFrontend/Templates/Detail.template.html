@@ -1,0 +1,27 @@
+<!--PRE-->
+<table>
+<tr><td><h1>{If:Location_name}</h1></td></tr>
+<tr><td>{If:Adresse}</td></tr>
+<tr><td>{If:PLZ} {If:Stadt}</td></tr>
+
+</table>
+<a target="_blank" href="{gmaps_link}">Auf Landkarte anzeigen</a>
+<table id="oewerk">
+ <tbody><!--/PRE-->
+<!--LOOP-->
+  <tr><td colspan="2" style="padding-top:10px;"><h3>{If:Werk}</h3></td></tr>
+  <tr> <td>{IfNotEmpty:Jahr(Jahr:</td><td> [Jahr])}</td></tr>
+  <tr><td>{IfNotEmpty:Technik(Technik:</td><td> [Technik])}</td></tr>
+{IfNotEmpty:Beschreibung(  <tr ><td colspan="2">Beschreibung:<br />[Beschreibung]</td></tr>)}
+{IfNotEmpty:Literatur(  <tr ><td colspan="2">Literatur:<br />[Literatur]</td></tr>)}
+{IfNotEmpty:Mitarbeit(  <tr ><td>Mitarbeit:</td><td>[Mitarbeit]</td></tr>)}
+{IfNotEmpty:Ausführung(  <tr ><td>Ausführung:</td><td>[Ausführung]</td></tr>)}
+{IfNotEmpty:Architekten(  <tr ><td>Architekten:</td><td>[Architekten]</td></tr>)}
+  <tr class="{If:alt_row}"><td colspan="2">{IfNotEmpty:Bilder(<a href="[SELF]/?showlarge=[id]"><img src="[SELF]?thumb=/Images/Locations/[Bilder]" alt="[Werk]" /></a>)}</td></tr>
+<!--/LOOP-->
+<!--POST-->
+ </tbody>
+</table>
+<a href="{SELF}"><img src="/Images/Pfeil_dunkelgrau_oben.gif" style="float:right; margin:30px 10px;" title="Zurück zur Übersicht" alt="Zurück zur Übersicht"  /> </a>
+
+<!--/POST-->
