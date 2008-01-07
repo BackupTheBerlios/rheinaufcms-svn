@@ -1,0 +1,592 @@
+/*  http://cdburnerxp.se/cssparse/css_optimiser.php */
+
+body {
+color:#000;
+font-family:Arial, Helvetica, sans-serif;
+font-size:0.8em;
+margin:0;
+padding:50px 30px 15px;
+text-align:left;
+width:100%;
+}
+
+td,th {
+vertical-align:top;
+}
+
+input,textarea,select {
+border:1px solid;
+border-color:lightgray dimgray dimgray lightgray;
+}
+
+address {
+font-style:normal;
+}
+
+div#content {
+clear:both;
+left:30px;
+padding:0;
+position:absolute;
+top:50px;
+}
+
+img.floatright {
+float:right;
+margin:1em 0 0.5em 1em;
+}
+
+img.floatleft {
+float:left;
+margin:1em 1em 0.5em 0;
+}
+
+img.nonfloat {
+float:none;
+margin:0;
+min-width:5em;
+}
+
+a img {
+border:0;
+border-style:hidden;
+}
+
+a.weiter {
+color:#003455;
+font-weight:500;
+text-decoration:none;
+}
+
+a {
+color:#003455;
+font-weight:600;
+text-decoration:none;
+}
+
+div#navi_top {
+position:absolute;
+top:2px;
+width:100%;
+}
+
+div#tabcontainer {
+margin-right:15%;
+position:relative;
+}
+
+a.menu_tab,a.menu_tab:visited,a.menu_tab:active {
+border-color:#DF1D1F !important;
+border-left:solid 1px;
+color:#233350;
+float:right;
+height:16px;
+margin:0 3px;
+padding:16px 14px 0 7px;
+text-decoration:none;
+vertical-align:bottom;
+}
+
+a.menu_tab:hover {
+background-color:#676767;
+}
+
+/********************* Linke Navi **************************/
+
+.navi_background {
+	z-index:2;
+	position:absolute;
+		top: 0;
+		left: 0;
+	border-width: 0px 0px 6px 0px;
+	border-style: solid;
+	border-color: white;
+	
+}
+
+.navi_links {
+	width: 177px;
+	margin: 0;
+	padding: 0px;
+	list-style:none;
+	border: none;
+	position:absolute;
+		top: 0;
+		left: 0;
+	z-index:3;
+}
+
+.navi_links li {
+	margin:0 0 3px 0;
+}
+
+.navi_links li a {
+	font-size: 13px;
+	line-height: 16px;
+	height: 16px;
+	display:block;
+	color:#000;
+	text-transform:uppercase;
+	text-decoration: none;
+	font-weight: bold;
+	background-color: #fff;
+	cursor: pointer;
+	border: 2px solid white;
+	
+}
+
+.Jugend {
+background-color: #DF1D1F !important;
+
+}
+
+.Eltern {
+background-color: #F9A413 !important;
+
+}
+
+.Pdagogen {
+background-color: #167730 !important;
+}
+
+.Frderer {
+background-color: #233350 !important;
+}
+
+.Partner {
+background-color: #70685B !important;
+}
+
+a.Jugend:hover span{
+background-color: #DF1D1F !important;
+}
+
+a.Eltern:hover span {
+background-color: #F9A413 !important;
+
+}
+
+.Pdagogen:hover span {
+background-color: #167730 !important;
+color:white;
+}
+
+.Frderer:hover span {
+background-color: #233350 !important;
+color:white;
+}
+
+.Partner:hover span {
+background-color: #70685B !important;
+color:white;
+}
+
+.navi_links li a span {
+	height: 16px;
+	text-indent: 4px;
+	display:block;
+	margin-left: 15px;
+	background-color: #FFF;
+}
+
+/*.navi_links li a:hover {
+	/*background: url(/Images/navi_pfeil.gif) no-repeat 0px 1px;
+	background-color: #DF1D1F;
+}*/
+
+/*.navi_links li a:hover span {
+	color:#FFF;
+	background-color: #DF1D1F;
+}*/
+
+li.subnavi a {
+	color:#DF1D1F;
+	background-color: #fff;
+	cursor: pointer;
+}
+
+li.subnavi a span {
+	text-indent: 10px;
+}
+
+/*li.subnavi a:hover {
+	background: url(/Images/navi_pfeil.gif) no-repeat 0px 1px;
+	background-color: #233350;
+}*/
+
+/*li.subnavi a:hover span {
+	color:#FFF;
+	background-color: ;
+}*/
+
+li.navi_active a {
+	background-color: #DF1D1F;
+}
+
+li.navi_active a span {
+	background: url(/Images/navi_pfeilu.gif) no-repeat right;
+	background-color: #DF1D1F;
+}
+
+/*li.subnavi_active a span {
+	color:#FFF;
+	background-color: #233350;	
+}*/
+
+img#illustration {
+border-color:#FFF;
+border-style:solid;
+border-width:0 2px 4px 0;
+display:inline;
+height:240px;
+left:0;
+margin:0;
+overflow:hidden;
+padding:0;
+position:absolute;
+top:0;
+width:663px;
+z-index:1;
+}
+
+.grossillu {
+height:350px !important;
+}
+
+.kleinillu {
+height:160px !important;
+}
+
+div#left {
+background-image:url(/Images/Kachel_hell.gif);
+height:574px;
+left:0;
+margin:0;
+position:absolute;
+top:0;
+width:177px;
+}
+
+p.foerd {
+margin-top:515px;
+padding-top:5px;
+text-align:center;
+font-size:13px;
+border-top: solid white 4px;
+}
+
+img#voda {
+border-color:#FFF;
+border-style:solid;
+border-width:4px 0 0;
+bottom:0;
+position:absolute;
+}
+
+img#projekt_logo {
+bottom:100px;
+float:none;
+left:23px;
+position:absolute;
+}
+
+div #login {
+float:left;
+margin:0 0 0 180px;
+}
+
+div.box-mitte {
+background-color:#CDD1D7;
+float:left;
+margin:164px 2px 2px 182px;
+padding:0 20px;
+width:441px;
+}
+
+div.mittekurz {
+height:220px !important;
+margin-top:354px !important;
+overflow:hidden;
+}
+
+div.mitte-mittleres-bild {
+margin-top:244px !important;
+}
+
+div#rechte-spalte {
+background-image:url(/Images/buddy_schriftzug_50px.gif);
+background-position:60px 80px;
+background-repeat:no-repeat;
+float:left;
+margin:0;
+padding-top:140px;
+width:250px;
+}
+
+div#center {
+margin-left:180px;
+width:441px;
+float:left;
+}
+
+div.box-ro {
+background-image:url(/Images/Kachel_hell.gif);
+background-repeat:repeat;
+margin:24px 2px 4px;
+padding:0 0 10px 13px;
+}
+
+div.rokurz {
+height:198px !important;
+margin-top:2px !important;
+}
+
+div.ro-mittleres-Bild {
+margin-top:104px !important;
+}
+
+div.box-ru {
+background-image:url(/Images/kachel_dunkelblau.gif);
+background-repeat:repeat;
+margin:0;
+padding:0 30px 1em 13px;
+}
+
+.rukurz {
+height:220px;
+padding-bottom:0 !important;
+}
+
+span.ev {
+color:#DF1D1F;
+font-size:0.8em;
+font-variant:small-caps;
+}
+
+p.vorspann {
+color:#222;
+font-size:1em;
+font-weight:600;
+line-height:1.2em;
+}
+
+p.abschluss {
+color:#243172;
+font-family:'Verdana','Arial';
+font-size:10px;
+}
+
+H1 {
+font-size:1.6em;
+}
+
+H2 {
+font-size:1.2em;
+margin-top:3em;
+}
+
+H2.zwischenueberschrift {
+font-size:1.2em;
+margin-top:0.8em;
+}
+
+div.box-mitte H1 {
+margin:0;
+padding:1em 0 0.3em;
+}
+
+div.box-ro H1 {
+background-color:#DF1D1F;
+border-color:#FFF;
+border-style:solid;
+border-width:0 0 3px;
+color:#FFF;
+font-size:1.2em;
+margin:0 0 -13px -13px;
+padding:5px 0 5px 13px;
+text-transform:uppercase;
+}
+
+div.box-ru H1 {
+font-size:1.3em;
+font-weight:bolder;
+margin-top:0;
+padding-top:1em;
+}
+
+span.rot {
+color:red;
+}
+
+.kasten {
+background-color:#E7E7EF;
+margin:10px;
+width:200px;
+}
+
+.kasten_ueberschrift {
+color:#888;
+font-family:'Verdana','Arial';
+font-size:10px;
+font-weight:700;
+text-align:center;
+}
+
+dl.bild_hochkant_links {
+color:#666;
+float:left;
+font-family:'Verdana','Arial';
+font-size:9px;
+margin-right:-22px;
+margin-top:18px;
+}
+
+dl.bild_hochkant_rechts {
+color:#666;
+float:right;
+font-family:'Verdana','Arial';
+font-size:9px;
+margin-left:22px;
+margin-right:-50px;
+margin-top:18px;
+}
+
+dl.bild_quer_links {
+color:#666;
+float:left;
+font-family:'Verdana','Arial';
+font-size:9px;
+margin-right:22px;
+margin-top:18px;
+}
+
+dl.bild_quer_rechts {
+color:#666;
+float:right;
+font-family:'Verdana','Arial';
+font-size:9px;
+margin-left:22px;
+margin-right:0;
+margin-top:18px;
+}
+
+span.bild_rechts, span.bild_links {
+	text-align: center;
+	padding: 1.25em 1.25em 0.25em 0.25em;
+	color:#243172;
+	font-family:'Verdana','Arial';
+	font-size:10px;
+	
+}
+
+span.bild_rechts  {
+	float: right;
+}
+
+span.bild_links  {
+	float: left;
+}
+
+span.bild_links img,span.bild_rechts  img {
+	display: block;
+}
+
+.tabelle {
+background-color:#fff;
+border-spacing:2px;
+padding-top:10px;
+width:474px;
+}
+
+.tabellenkopf {
+background-color:#CECEEA;
+font-weight:700;
+text-align:center;
+}
+
+td {
+font-size:11px;
+line-height:14px;
+padding:4px 8px;
+}
+
+.tabelle_alt1 {
+background-color:#E7E7EF;
+}
+
+.tabelle_alt2 {
+background-color:#F3F3FA;
+}
+
+.tabellen_unterschrift {
+color:#666;
+font-family:'Verdana','Arial';
+font-size:9px;
+}
+
+div.box-mitte p.rot {
+color:#DF1D1F;
+}
+
+a.weiter:hover,a:hover {
+text-decoration:underline;
+}
+
+span.buddy,H1 H2 H3 {
+color:#233350;
+}
+
+dl.bild_hochkant_links dt,dl.bild_hochkant_rechts dt,dl.bild_quer_links dt,dl.bild_quer_rechts dt {
+margin-bottom:0;
+}
+
+dl.bild_hochkant_links dd,dl.bild_hochkant_rechts dd,dl.bild_quer_links dd,dl.bild_quer_rechts dd {
+margin:0;
+}
+
+div.message_box {
+border: dotted 1px black;
+margin: 1em;
+padding:1em;
+}
+
+ul.deko-null {
+list-style-type:none;
+}
+
+ul.deko-null li {
+margin-top:1em
+}
+
+table#kontaktformular {
+border-spacing:2px;
+padding-top:10px;
+}
+
+table#kontaktformular .spalte1 {
+width:2em;
+}
+
+div#bl-linke-spalte {
+float:left;
+width:300px;
+}
+
+div#bl-rechte-spalte {
+float:left;
+width:200px;
+background:url(/Images/buddy_logo.gif) no-repeat bottom;
+padding:2em 0 0 1em;
+min-height:300px;
+margin-left:20px;
+}
+
+div.bildbox {
+background-color: white;
+width:80%;
+padding:1em;
+margin-bottom:1em;
+clear:left;
+float:left;}
+
+

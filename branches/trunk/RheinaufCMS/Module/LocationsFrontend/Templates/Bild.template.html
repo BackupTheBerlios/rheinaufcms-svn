@@ -1,0 +1,54 @@
+<!--LOOP-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+
+   <title>Emil Wachter Stiftung - Bilder</title>
+	<link rel="stylesheet" href="/CSS/Screen.css" media="screen" type="text/css" />
+	<!--[if IE]>
+	   <link rel="stylesheet" href="/RheinaufCMS/CSS/ie_zusatz.css" type="text/css" />
+	<![endif]-->
+
+
+	<meta name="author" content="Emil Wachter Stiftung" />
+
+	<meta name="description" content="Homepage der Emil-Wachter-Stiftung, Karlsruhe" />
+
+	<meta http-equiv="imagetoolbar" content="no" />
+
+
+<!-- compliance patch for microsoft browsers -->
+<!--[if lt IE 7]>
+<script src="/RheinaufCMS/Libraries/ie7/ie7-standard-p.js" type="text/javascript">
+</script>
+<![endif]-->
+
+</head>
+
+<body>
+<table id="einzelbild" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+  <td class="einzel-haupt" align="center" valign="middle">
+
+	<img src="{SELF}?bigimg=/Images/Locations/{Bilder}" alt="{Werk}" />
+
+</td>
+<td class="einzel-rechts" valign="top" style="width:200px">
+<a href="/Startseite">
+
+<img src="/Images/ew_signatur_md.gif"  alt="Signatur Emil Wachter - EWa" title="Zurück zur Startseite" class="zentriert" /> </a>
+
+<h2 style="margin-top:310px;">{Werk}</h2>
+	<p>
+	{Location_name}, {Stadt}<br />
+	{Technik}<br />
+	 {Jahr}
+	 </p>
+
+
+<a href="{SELF}?id={Location_id}"><img src="/Images/Pfeil_hellgrau_oben.gif" style="float:right; margin:30px 10px;" title="Zurück zur Standort-Übersicht" alt="Zurück zur Standort-Übersicht"  /> </a>
+</tr></table>
+
+</body>
+</html>
+<!--/LOOP-->
