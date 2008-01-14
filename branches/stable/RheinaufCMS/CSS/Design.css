@@ -1,0 +1,167 @@
+#editorhtml {
+	color:#000;
+	font-family:Georgia,Arial,Helvetica,sans-serif;
+	font-size:1em;
+	margin:0;
+	padding:0;
+	text-align:left;
+	background-color:#B22222;
+	background-color:DarkGreen;
+}
+#editorbody {
+	margin:0 auto 0 auto;
+	text-align:left;
+	width:500px;
+	background-color:#ffffcc;
+	padding:13px;
+}
+
+body {
+	color:#000;
+	font-family:Georgia,Arial,Helvetica,sans-serif;
+	font-size:0.8em;
+	margin:0;
+	padding:0;
+	text-align:left;
+	background-color:DarkGreen;
+}
+
+td,th {
+	vertical-align:top;
+}
+
+h1 {
+	margin-top:15px;
+	border-bottom:1px #B22222 solid ;
+	padding-bottom:3px;
+}
+
+h3 {
+	font-variant:small-caps;
+}
+
+input,textarea,select {
+	border:1px solid;
+	border-color:lightgrey dimgrey dimgrey lightgrey;
+}
+
+address {
+	font-style:normal;
+}
+
+#wrapper {
+	width:526px;
+	margin:13px auto 10px auto;
+	background-color: #ffffcc;
+	text-align:center;
+	padding-top:13px;
+	padding-bottom:20px;
+}
+
+#illu {
+	overflow:hidden;
+	margin:0 auto 0 auto;
+	height:70px;
+	width:500px;
+	background-image:url(/Images/illu.jpg);
+	background-position:0px -166px;
+}
+
+#content {
+	margin:0 auto 0 auto;
+	text-align:left;
+	width:500px;
+}
+
+#footline {
+	margin:5px auto 20px auto;
+	text-align:center;
+	width:500px;
+	background-color:transparent;
+	font-size:10px;
+	border-top:thin solid #B22222;
+	color:#ffffcc;
+}
+#footline a {
+	color:black;
+	text-decoration: underline
+}
+
+a {
+	color:#B22222;
+	font-weight:600;
+	text-decoration:none;
+}
+a:hover {
+	text-decoration: underline
+}
+
+
+/********************* Linke Navi **************************/
+
+
+.navi {
+	margin: 0;
+	padding: 0px;
+	list-style:none;
+	border: none;
+}
+
+.navi li {
+	margin:0 3px  3px 3px ;
+	display:inline;
+	height: 16px;
+}
+
+.navi li a {
+	font-size: 12px;
+	line-height: 16px;
+	text-decoration: none;
+	font-weight: bold;
+	color:black;
+	padding:0 3px 0 3px;
+}
+
+
+.navi li a span {
+	padding:0 3px 0 3px;
+}
+
+.navi li a:hover {
+}
+
+.navi li a:hover span {
+	border-bottom:thin solid #B22222;
+}
+li.subnavi a {
+	color:#DF1D1F;
+	background-color: #fff;
+	cursor: pointer;
+}
+
+li.subnavi a:hover {
+	background-color: #B22222;
+}
+
+/*li.subnavi a:hover span {
+	color:#FFF;
+	background-color: ;
+}*/
+
+li.navi_active a:hover {
+	cursor:default;
+}
+li.navi_active a span {
+	background: url(/Images/navipfeil.gif) no-repeat left;
+	background-color: #ffffcc;
+	padding-left:8px;
+}
+
+li.navi_active a:hover span {
+	border:none;
+}
+/*li.subnavi_active a span {
+	color:#FFF;
+	background-color: #233350;
+}*/
+

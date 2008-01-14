@@ -36,7 +36,7 @@
 }
 /*----Button & pseudo-buttons---*/
 a.active, .button, input[type=submit],button {
-	background-color:rgb(235, 235, 245);
+	background-color:#eee;
 	color: black;
 	border: 1px solid;
 	border-color:ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
@@ -63,7 +63,7 @@ a.active, .button, input[type=submit],button {
 
 /*----Double it for IE6---*/
 a.active, .button  {
-	background-color:rgb(235, 235, 245);
+	background-color:#eee;
 	color: black;
 	border: 1px solid;
 	border-color:ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;

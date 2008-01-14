@@ -1,16 +1,19 @@
 * {
 border:0;
-
+padding:0;
+margin:0;
+-moz-border-radius:2px
 }
 body {
 	font-family: Arial, Helvetica, sans-serif;
-	background-color:whitesmoke;
+	background-color:#eee;
 	background-image:url(/Images/admin_logo.png);
 	background-repeat:no-repeat;
 	background-position:top right;
 	font-size:0.8em;
 }
-a { text-decoration:none}
+a { text-decoration:none; color:black; }
+a:visited { color:black; }
 
 h1 {
 	margin-bottom:10px;
@@ -19,18 +22,6 @@ h1 {
 caption {
 	font-weight:bold;
 	text-align:left;
-}
-a.block {
-	display:block;
-	padding:10px;
-	width:100%;
-	height:100%;
-	border-left: 2px solid rgb(0, 52, 85);
-}
-a.block:hover {
-	padding:11px 9px 9px 11px;
-	background-color:rgb(160, 154, 255);
-	color: rgb(255,255,255);
 }
 table.scaffold  {
 	min-width:400px;
@@ -78,6 +69,7 @@ input,select,fieldset,textarea {
 }
 fieldset {
 background-color:whitesmoke;
+padding:7px;
 }
 legend {
 	color:gray;
@@ -102,31 +94,79 @@ li ul {
 
 #content {
 background-color:white;
-background-image:url(/Images/buddy_schriftzug_50px.gif);
-
-background-repeat:no-repeat;  
 opacity:0.9;
 filter:Alpha(opacity=90);
 border:1px solid;
-border-color:  ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+border-color:  #ddd ButtonShadow ButtonShadow #ddd;
+border-left:none;
 margin:0;
-padding:35px 0px;
+margin-left:80px;
+padding:15px;
+padding-top:45px;
+min-height:600px;
+position:relative;
+-moz-border-radius-topleft:30px;
 }
 
 
 #groups_table td,th {
 text-align:center;
 }
-.menu_row {
-	width:50px;
-}
-.menu_item {
+.menu_row,#menu_appendix {
+	width:80px;
+	background:#eee;
 	text-align:center;
+	position:absolute;
+	left:0;
+}
+#menu_appendix {
+	width:84px;
+	height:80px;
+	top:20px;
+}
+#admin_top{
+	height:20px;
+	background:#eee;
+	padding:3px 0 0 95px;
+}
+.menu_row {
+top:80px;
+padding-left:5px;
+border-right:1px solid;
+border-color:#ddd;
+}
+
+.menu_item {
+
 	font-size:10px;
 }
+
+
+.menu_item a {
+  padding:10px;
+	display:block;
+	border:solid #ddd;
+	border-width: 0 1px 0 0 ;
+	background:#eee;
+}
+.menu_item a:hover {
+	padding:11px 9px 9px 11px;
+	/*background-color:rgb(160, 154, 255);
+	color: rgb(255,255,255);*/
+}
+.menu_item a.active {
+	border-width: 1px 0 1px 1px;
+	-moz-border-radius:10px 0 0 10px;
+	background:white;
+}
+.menu_item a.active:hover {
+	padding:10px;
+	cursor:default
+}
+
 /*----Button & pseudo-buttons---*/
-a.active, .button, input[type=submit],button {
-	background-color:rgb(235, 235, 245);
+.button, input[type=submit],button {
+	background-color:#eee;
 	color: black;
 	border: 1px solid;
 	border-color:ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
@@ -153,8 +193,8 @@ a.active, .button, input[type=submit],button {
 }
 
 /*----Double it for IE6---*/
-a.active, .button  {
-	background-color:rgb(235, 235, 245);
+.button  {
+	background-color:#eee;
 	color: black;
 	border: 1px solid;
 	border-color:ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
@@ -211,4 +251,47 @@ width: 70% ;
 	background-color:#FFFFCF;
 	border:1px dotted #8F8F86;
 	padding:5px 10px; 
+}
+
+#lo_logo {
+	background: url(/Images/rlogo.gif) center no-repeat;
+	height:80px;
+	width:85px;
+	position:absolute;
+	z-index:20;
+	top:0;
+	left:0;	
+}
+#module_name {
+	font-size:30px;
+	opacity:0.1;
+	filter:Alpha(opacity=10);
+	text-align:right;
+	position:absolute;
+	top:10px;
+	right:0px;
+	font-family: "Arial Black",Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	color:#555;
+	
+}
+#logout {
+	position:absolute;
+	top:3px;
+	right:5px;
+	letter-spacing:1px;
+	font-weight:bold;
+}
+#logout a {
+	color:grey;
+	font-size:smaller;
+}
+#admin_tabs {
+	position:absolute;
+	top:-5px;
+	left:26px;
+}
+#admin_tabs .button{
+	border-top:none;
+	-moz-border-radius: 0 0 10px 10px;
 }

@@ -35,7 +35,7 @@ class Template
 	function parse_template($name='',$var_array = array())
 	{
 		if (!is_array($var_array)) $var_array = array($var_array);
-		$var_array = array_merge($var_array,$this->snippets);
+		$var_array = array_merge((array)$var_array,(array)$this->snippets);
 		if (is_array($GLOBALS['TemplateVars'])) $var_array = array_merge($var_array,$GLOBALS['TemplateVars']);
 		@include(DOCUMENT_ROOT.INSTALL_PATH.'/Templates/TemplateVars.php');
 		if ($name == '') $name = 'all';
