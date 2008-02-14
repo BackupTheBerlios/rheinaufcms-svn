@@ -1,15 +1,13 @@
 <?php
-$long_name = 'Termine verwalten';
-$icon = 'date.png';
+$class = 'KalenderAdmin';
 class KalenderAdmin extends Admin
 {
 	var $return = '';
 
-	function KalenderAdmin($db_connection,$path_information)
+	function KalenderAdmin(&$system)
 	{
-		$this->connection = $db_connection;
-		$this->path_information = $path_information;
-		$this->extract_to_this($path_information);
+		$this->system =& $system;
+		$this->connection = $system->connection;
 
 		$this->make_scaffold();
 		$this->event_listen();
@@ -21,7 +19,7 @@ class KalenderAdmin extends Admin
 	function make_scaffold ()
 	{
 		if (!class_exists('FormScaffold')) include_once('FormScaffold.php');
-		$this->scaff = new FormScaffold('RheinaufCMS>Kalender>Termine',$this->connection,$this->path_information);
+		$this->scaff = new FormScaffold('RheinaufCMS>Kalender>Termine',$this->connection);
 
 		//$this->scaff->re_entry = true;
 
@@ -109,8 +107,8 @@ class KalenderAdmin extends Admin
 
 	function obere_navi()
 	{
-		$img_termin_neu = Html::img('/'.INSTALL_PATH . '/Classes/Admin/Icons/16x16/appointment.png','Neuer Termin',array('title'=>'Neuer Termin'));
-		$img_termin_bearbeiten = Html::img('/'.INSTALL_PATH . '/Classes/Admin/Icons/16x16/today.png','Termin bearbeiten',array('title'=>'Termin bearbeiten'));
+		$img_termin_neu = Html::img('/'.INSTALL_PATH . '/Libraries/Icons/16x16/appointment.png','Neuer Termin',array('title'=>'Neuer Termin'));
+		$img_termin_bearbeiten = Html::img('/'.INSTALL_PATH . '/Libraries/Icons/16x16/today.png','Termin bearbeiten',array('title'=>'Termin bearbeiten'));
 		$termin_neu_button = Html::a('/Admin/KalenderAdmin/NeuerEintrag',$img_termin_neu.'Neuer Termin',array('class'=>'button'));
 		$termin_bearbeiten_button = Html::a('/Admin/KalenderAdmin/Bearbeiten',$img_termin_bearbeiten.'Termine bearbeiten',array('class'=>'button'));
 
@@ -153,25 +151,25 @@ class KalenderAdmin extends Admin
 			$this->return .= Html::div( $results_table.$nav,array('style'=>'margin-top:10px'));*/
 			if (!class_exists('Kalender')) include_once('Kalender.php');
 			$kalender = new Kalender();
-			$kalender->class_init($this->connection,$this->path_information);
+			$kalender->class_init($this->system);
 			$kalender->scaff->edit_enabled = true;
 
-			$kalender->template = INSTALL_PATH.'/Classes/Admin/Templates/TermineListe.template.html';
+			$kalender->template = INSTALL_PATH.'/Module/Kalender/Templates/TermineListe.template.html';
 
 			$this->return .= $kalender->show();
 			$context_menu ="var ctx_menu = {}\n";
 			foreach ($kalender->cal->cal_ids as $cal_id)
 			{
-				$new_entry_ctx = '["Neuer Eintrag",function () {ctx_new_entry("'.$cal_id.'")},null,"'.'/'.INSTALL_PATH . '/Classes/Admin/Icons/16x16/appointment.png'.'"]';
+				$new_entry_ctx = '["Neuer Eintrag",function () {ctx_new_entry("'.$cal_id.'")},null,"'.'/'.INSTALL_PATH . '/Libraries/Icons/16x16/appointment.png'.'"]';
 				$context_menu .= "ctx_menu['$cal_id'] = [$new_entry_ctx];\n";
 
 			}
 			foreach ($kalender->cal->cal_links as $key => $link)
 			{
-				$context_menu .= "ctx_menu['$key'] = [['Neuer Eintrag',function () {ctx_new_entry(\"".$link[0][2]."\")},null,'".'/'.INSTALL_PATH . '/Classes/Admin/Icons/16x16/appointment.png'."']];\n";
+				$context_menu .= "ctx_menu['$key'] = [['Neuer Eintrag',function () {ctx_new_entry(\"".$link[0][2]."\")},null,'".'/'.INSTALL_PATH . '/Libraries/Icons/16x16/appointment.png'."']];\n";
 				foreach ($link as $entry)
 				{
-					$context_menu .= 'ctx_menu["'.$key.'"].push(["Bearbeiten '.$entry[1].'",function(){ctx_edit('.$entry[0].')},null,"'.'/'.INSTALL_PATH . '/Classes/Admin/Icons/16x16/today.png'.'"]);'."\n";
+					$context_menu .= 'ctx_menu["'.$key.'"].push(["Bearbeiten '.$entry[1].'",function(){ctx_edit('.$entry[0].')},null,"'.'/'.INSTALL_PATH . '/Libraries/Icons/16x16/today.png'.'"]);'."\n";
 				}
 			}
 			$this->return .= Html::script($context_menu);
@@ -233,10 +231,10 @@ class KalenderAdmin extends Admin
 		}
 		else
 		{
-			$img_apply = Html::img('/'.INSTALL_PATH . '/Classes/Admin/Icons/16x16/apply.png','Speichern');
-			$img_apply_path = '/'.INSTALL_PATH . '/Classes/Admin/Icons/16x16/apply.png';
-			$img_add = Html::img('/'.INSTALL_PATH . '/Classes/Admin/Icons/16x16/edit_add.png','Neu');
-			$img_add_path = '/'.INSTALL_PATH . '/Classes/Admin/Icons/16x16/edit_add.png';
+			$img_apply = Html::img('/'.INSTALL_PATH . '/Libraries/Icons/16x16/apply.png','Speichern');
+			$img_apply_path = '/'.INSTALL_PATH . '/Libraries/Icons/16x16/apply.png';
+			$img_add = Html::img('/'.INSTALL_PATH . '/Libraries/Icons/16x16/edit_add.png','Neu');
+			$img_add_path = '/'.INSTALL_PATH . '/Libraries/Icons/16x16/edit_add.png';
 
 			$return_string ='';
 			$form = new Form();

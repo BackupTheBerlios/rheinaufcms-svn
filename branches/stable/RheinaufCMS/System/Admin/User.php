@@ -128,9 +128,9 @@ class User extends Admin
 
 		if (!isset($_GET['showpw']))
 		{
-			$pwshow = Html::a($_SERVER['REDIRECT_URL'].'?showpw',$img_show_pw,array('title'=>'Passwörter zeigen'));
+			$pwshow = Html::a(SELF_URL.'?showpw',$img_show_pw,array('title'=>'Passwörter zeigen'));
 		}
-		else $pwshow = Html::a($_SERVER['REDIRECT_URL'],$img_hide_pw,array('title'=>'Passwörter verstecken'));
+		else $pwshow = Html::a(SELF_URL,$img_hide_pw,array('title'=>'Passwörter verstecken'));
 
 		$table->add_th(array('Benutzer','E-Mail','Passwort '.$pwshow,'Gruppe'));
 
@@ -167,10 +167,10 @@ class User extends Admin
 			}
 			else $groupshow = $user['Group'];
 
-			//$edit_group_button = Html::a($_SERVER['REDIRECT_URL'].'?editgroup='.$this->existent_users[$i]['id'],$img_edit_group);
-			$edit_user_button = Html::a($_SERVER['REDIRECT_URL'].'?edituser='.$user['id'],$img_edit);
+			//$edit_group_button = Html::a(SELF_URL.'?editgroup='.$this->existent_users[$i]['id'],$img_edit_group);
+			$edit_user_button = Html::a(SELF_URL.'?edituser='.$user['id'],$img_edit);
 			$delete_user_confirm = array('onclick'=>'return confirm(\'Wollen Sie '.addcslashes($user['Name'],"'").' wirklich l?schen?\')');
-			$delete_user_button = Html::a($_SERVER['REDIRECT_URL'].'?deleteuser='.$user['id'],$img_delete_user,$delete_user_confirm);
+			$delete_user_button = Html::a(SELF_URL.'?deleteuser='.$user['id'],$img_delete_user,$delete_user_confirm);
 
 			$user_row = array	(	$user['Name'],
 									$user['E-Mail'],
@@ -203,7 +203,7 @@ class User extends Admin
 			$i++;
 		}
 
-		$new_user_link = Html::a($_SERVER['REDIRECT_URL'].'?newuser',$img_new_user.' Benutzer hinzufügen');
+		$new_user_link = Html::a(SELF_URL.'?newuser',$img_new_user.' Benutzer hinzufügen');
 
 		if (isset($_GET['newuser']))
 		{

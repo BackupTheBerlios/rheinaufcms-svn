@@ -317,7 +317,7 @@ function dublette(name,typ)
 	function folder_table()
 	{
 
-		$return_string .= Form::form_tag($_SERVER['REDIRECT_URL'],'post','application/x-www-form-urlencoded',array('onsubmit'=>'try {return dublette(document.getElementById(\'new_rubrik_name\').value,\'rubriken\')} catch (e) {}'));
+		$return_string .= Form::form_tag(SELF,'post','application/x-www-form-urlencoded',array('onsubmit'=>'try {return dublette(document.getElementById(\'new_rubrik_name\').value,\'rubriken\')} catch (e) {}'));
 		$navi_table = new Table(3,array('style'=>'float:left;margin-right:30px'));
 		$navi_table->add_caption('Rubriken');
 		$navi_table->add_th(array('','Name',''));
@@ -356,7 +356,7 @@ function dublette(name,typ)
 				}
 				
 				$ext_link_input =  Html::bold('URL ').'(optional) '.Html::br().Form::add_input('text','ext_link',rawurldecode($this->navi[$i]['ext_link']),array('id'=>'ext_link_rubrik'));
-				$navi_table->add_td(array('',$ext_link_input,(isset($_GET['browse'])) ? '' : Html::br(). Html::a($_SERVER['REDIRECT_URL'].'?browse&amp;edit='.$i,$this->images['browse'])));
+				$navi_table->add_td(array('',$ext_link_input,(isset($_GET['browse'])) ? '' : Html::br(). Html::a(SELF_URL.'?browse&amp;edit='.$i,$this->images['browse'])));
 				if (isset($_GET['browse']))
 				{
 					$navi_table->add_td(array('',$this->make_tree('ext_link_rubrik')));
@@ -370,12 +370,12 @@ function dublette(name,typ)
 				if ($this->navi[$i]['Show']==0)
 				{
 					$visible_img = $this->images['invisible'];
-					$visible_button = Html::a($_SERVER['REDIRECT_URL'].'?visible=1&amp;edit='.$i,$visible_img);
+					$visible_button = Html::a(SELF.'?visible=1&amp;edit='.$i,$visible_img);
 				}
 				else
 				{
 					$visible_img = $this->images['visible'];
-					$visible_button = Html::a($_SERVER['REDIRECT_URL'].'?visible=0&amp;edit='.$i,$visible_img);
+					$visible_button = Html::a(SELF.'?visible=0&amp;edit='.$i,$visible_img);
 				}
 
 				$modul = ($this->navi[$i]['Modul'] != '') ? $this->images['modul'] : '';
@@ -383,15 +383,15 @@ function dublette(name,typ)
 				$locked = ($this->navi[$i]['Show_to'] != '') ? $this->images['locked'] : '';
 
 				$name = $this->I18n_get_real($this->navi[$i]['Rubrik']);
-				$edit_button = Html::a($_SERVER['REDIRECT_URL'].'?edit='.$i,$this->images['edit']);
-				$delete_button = Html::a($_SERVER['REDIRECT_URL'].'?delete='.$i,$this->images['delete'],array('onclick'=>"return delete_confirm('$name')"));
+				$edit_button = Html::a(SELF.'?edit='.$i,$this->images['edit']);
+				$delete_button = Html::a(SELF.'?delete='.$i,$this->images['delete'],array('onclick'=>"return delete_confirm('$name')"));
 				$navi_table->add_td(array( $visible_button,$modul.$locked.$international.$name,$edit_button.$delete_button));
 			}
 		}
 
 
-		$add_rubrik_button = Html::a($_SERVER['REDIRECT_URL'].'?newfolder',$this->images['add_rubrik'].'Neue Rubrik');
-		$reihenfolge_button = Html::a($_SERVER['REDIRECT_URL'].'?reorder',$this->images['order'].'Reihenfolge ändern');
+		$add_rubrik_button = Html::a(SELF_URL.'?newfolder',$this->images['add_rubrik'].'Neue Rubrik');
+		$reihenfolge_button = Html::a(SELF_URL.'?reorder',$this->images['order'].'Reihenfolge ändern');
 		if (isset($_GET['newfolder']))
 		{
 			$name_input = Form::add_input('text','new_name','',array('title'=>'Name','id'=>'new_rubrik_name'));
@@ -403,7 +403,7 @@ function dublette(name,typ)
 			$navi_table->add_td(array($visble_check,$name_input.$count,$apply_button.$this->buttons['cancel']));
 
 			$ext_link_input =  Html::bold('URL ').'(optional) '.Html::br().Form::add_input('text','ext_link',$this->navi[$i]['ext_link'],array('id'=>'ext_link_rubrik'));
-			$navi_table->add_td(array('',$ext_link_input,(isset($_GET['browse'])) ? '' : Html::br(). Html::a($_SERVER['REDIRECT_URL'].'?browse&amp;newfolder',$this->images['browse'])));
+			$navi_table->add_td(array('',$ext_link_input,(isset($_GET['browse'])) ? '' : Html::br(). Html::a(SELF_URL.'?browse&amp;newfolder',$this->images['browse'])));
 			if (isset($_GET['browse']))
 			{
 				$navi_table->add_td(array('',$this->make_tree('ext_link_rubrik')));
@@ -432,7 +432,7 @@ function dublette(name,typ)
 	function pages_table($j)
 	{
 
-		$return_string .= Form::form_tag($_SERVER['REDIRECT_URL'].'?edit='.$j,'post','application/x-www-form-urlencoded',array('onsubmit'=>'return dublette(document.getElementById(\'new_page_name\').value,\'seiten\')'));
+		$return_string .= Form::form_tag(SELF_URL.'?edit='.$j,'post','application/x-www-form-urlencoded',array('onsubmit'=>'return dublette(document.getElementById(\'new_page_name\').value,\'seiten\')'));
 		$navi_table = new Table(3);
 		$navi_table->add_caption('Seiten in '.$this->I18n_get_real($this->navi[$j]['Rubrik']));
 		$navi_table->add_th(array('','Name',''));
@@ -463,7 +463,7 @@ function dublette(name,typ)
 				}
 
 				$ext_link_input =  Html::bold('URL ').'(optional) '.Html::br().Form::add_input('text','ext_link',rawurldecode($this->navi[$j]['Subnavi'][$i]['ext_link']),array('id'=>'ext_link_page'));
-				$navi_table->add_td(array('',$ext_link_input,(isset($_GET['browse'])) ? '' : Html::br(). Html::a($_SERVER['REDIRECT_URL'].'?browse&amp;edit_page='.$i.'&amp;edit='.$j,$this->images['browse'])));
+				$navi_table->add_td(array('',$ext_link_input,(isset($_GET['browse'])) ? '' : Html::br(). Html::a(SELF_URL.'?browse&amp;edit_page='.$i.'&amp;edit='.$j,$this->images['browse'])));
 				if (isset($_GET['browse']))
 				{
 					$navi_table->add_td(array('',$this->make_tree('ext_link_page')));
@@ -476,12 +476,12 @@ function dublette(name,typ)
 				if ($this->navi[$j]['Subnavi'][$i]['Show']==0)
 				{
 					$visible_img = $this->images['invisible'];
-					$visible_button = Html::a($_SERVER['REDIRECT_URL'].'?visible=1&amp;edit_page='.$i.'&amp;edit='.$j,$visible_img);
+					$visible_button = Html::a(SELF_URL.'?visible=1&amp;edit_page='.$i.'&amp;edit='.$j,$visible_img);
 				}
 				else
 				{
 					$visible_img = $this->images['visible'];
-					$visible_button = Html::a($_SERVER['REDIRECT_URL'].'?visible=0&amp;edit_page='.$i.'&amp;edit='.$j,$visible_img);
+					$visible_button = Html::a(SELF_URL.'?visible=0&amp;edit_page='.$i.'&amp;edit='.$j,$visible_img);
 				}
 
 				$modul = ($this->navi[$j]['Subnavi'][$i]['Modul'] != '') ? $this->images['modul'] : '';
@@ -490,15 +490,15 @@ function dublette(name,typ)
 
 				$name = $this->I18n_get_real($this->navi[$j]['Subnavi'][$i]['Seite']);
 
-				$edit_button = Html::a($_SERVER['REDIRECT_URL'].'?edit_page='.$i.'&amp;edit='.$j,$this->images['edit']);
-				$delete_button = Html::a($_SERVER['REDIRECT_URL'].'?delete_page='.$i.'&amp;edit='.$j,$this->images['delete'],array('onclick'=>"return delete_confirm('$name')"));
+				$edit_button = Html::a(SELF_URL.'?edit_page='.$i.'&amp;edit='.$j,$this->images['edit']);
+				$delete_button = Html::a(SELF_URL.'?delete_page='.$i.'&amp;edit='.$j,$this->images['delete'],array('onclick'=>"return delete_confirm('$name')"));
 				$navi_table->add_td(array( $visible_button,$modul.$locked.$international.$name,$edit_button.$delete_button));
 			}
 		}
 
 
-		$add_page_button = Html::a($_SERVER['REDIRECT_URL'].'?newpage&amp;edit='.$j,$this->images['new_file'].'Neue Seite');
-		$reihenfolge_button = Html::a($_SERVER['REDIRECT_URL'].'?reorder_pages&amp;edit='.$j,$this->images['order'].'Reihenfolge ändern');
+		$add_page_button = Html::a(SELF_URL.'?newpage&amp;edit='.$j,$this->images['new_file'].'Neue Seite');
+		$reihenfolge_button = Html::a(SELF_URL.'?reorder_pages&amp;edit='.$j,$this->images['order'].'Reihenfolge ändern');
 		if (isset($_GET['newpage']))
 		{
 
@@ -509,7 +509,7 @@ function dublette(name,typ)
 
 			$navi_table->add_td(array($visble_check,$count.$name_input,$apply_button.$this->buttons['cancel_page']));
 			$ext_link_input =  Html::bold('URL ').'(optional) '.Html::br().Form::add_input('text','ext_link',$this->navi[$i]['ext_link'],array('id'=>'ext_link_page'));
-			$navi_table->add_td(array('',$ext_link_input,(isset($_GET['browse'])) ? '' : Html::br(). Html::a($_SERVER['REDIRECT_URL'].'?browse&amp;newpage&amp;edit='.$j,$this->images['browse'])));
+			$navi_table->add_td(array('',$ext_link_input,(isset($_GET['browse'])) ? '' : Html::br(). Html::a(SELF_URL.'?browse&amp;newpage&amp;edit='.$j,$this->images['browse'])));
 			if (isset($_GET['browse']))
 			{
 				$navi_table->add_td(array('',$this->make_tree('ext_link_page')));
@@ -550,7 +550,7 @@ function dublette(name,typ)
 
 	function rubrik_reorder()
 	{
-		$form_tag = Form::form_tag($_SERVER['REDIRECT_URL'],'post','application/x-www-form-urlencoded',array('name'=>'draglist_form'));
+		$form_tag = Form::form_tag(SELF_URL,'post','application/x-www-form-urlencoded',array('name'=>'draglist_form'));
 		$draglist_scripts = Html::script('',array('src'=>'/'.INSTALL_PATH.'/Libraries/Draglist/assets/dom-drag.js'));
 		$draglist_scripts .= Html::script('',array('src'=>'/'.INSTALL_PATH.'/Libraries/Draglist/assets/draglist.js'));
 		$dragable_divs ='';
@@ -582,7 +582,7 @@ function dublette(name,typ)
 
 	function pages_reorder($j)
 	{
-		$form_tag = Form::form_tag($_SERVER['REDIRECT_URL'].'?edit='.$j,'post','application/x-www-form-urlencoded',array('name'=>'draglist_form'));
+		$form_tag = Form::form_tag(SELF_URL.'?edit='.$j,'post','application/x-www-form-urlencoded',array('name'=>'draglist_form'));
 		$draglist_scripts = Html::script('',array('src'=>'/'.INSTALL_PATH.'/Libraries/Draglist/assets/dom-drag.js'));
 		$draglist_scripts .= Html::script('',array('src'=>'/'.INSTALL_PATH.'/Libraries/Draglist/assets/draglist.js'));
 		$dragable_divs ='';

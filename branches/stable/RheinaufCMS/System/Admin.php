@@ -114,7 +114,7 @@ class Admin extends RheinaufCMS
 			$this->scripts = (isset($instance->scripts)) ? $instance->scripts : '';
 			
 		}
-		$return = Html::div(Html::span($this->system->backend->tabs),array('id'=>'admin_tabs')).$return; 
+		if ($this->system->backend->tabs) $return = Html::div(Html::span($this->system->backend->tabs),array('id'=>'admin_tabs')).$return; 
 		if ($this->system->noframe ||isset($_GET['noframe']))
 		{
 			return $return;

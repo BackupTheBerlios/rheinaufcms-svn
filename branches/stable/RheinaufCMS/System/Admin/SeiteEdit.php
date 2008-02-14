@@ -76,7 +76,7 @@ class SeiteEdit extends Admin
 			if ($this->navi[$i]['Modul']=='')
 			{
 				$name = $this->I18n_get_real($this->navi[$i]['Rubrik']);
-				$edit_button = Html::a($_SERVER['REDIRECT_URL'].'?edit='.$i,$name);
+				$edit_button = Html::a(SELF_URL.'?edit='.$i,$name);
 				$navi_table->add_td(array( $edit_button));
 			}
 		}

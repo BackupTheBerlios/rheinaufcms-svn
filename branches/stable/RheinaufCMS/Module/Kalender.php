@@ -39,19 +39,21 @@ class Kalender extends RheinaufCMS
     {
     	 $this->num_show_next_dates = $num_show_next_dates;
     }
-	function class_init($db_connection='',$path_information='')
+	function class_init(&$system)
 	{
+		$this->system =& $system;
+		$this->connection = $system->connection;
+		
 		if ($this->check_right('KalenderIntern')&& !stristr(SELF,'admin')  && stristr(SELF,'Kalender') )
 		{
 			header("Location: http://".$_SERVER['SERVER_NAME']."/Admin/KalenderAdmin");
 		}
 		else $GLOBALS['TemplateVars']['NaviLogin'] = true;
-		$this->connection = ($db_connection != '') ? $db_connection : new RheinaufDB();//$this->connection->debug =true;
 		
 		if (!class_exists('FormScaffold')) include_once('FormScaffold.php');
 		if (!class_exists('KalFormScaff')) include_once('Kalender/KalFormScaff.php');
 
-		$this->scaff = new KalFormScaff($this->db_table,$this->connection,$this->path_information);
+		$this->scaff = new KalFormScaff($this->db_table,$this->connection);
 		$this->scaff->monate = $this->monate;
 		$this->scaff->cols_array['STATUS']['options'] = array('CONFIRMED'=>'fest','TENTATIVE'=>'vorläufig','CANCELLED'=>'storniert');
 		$this->scaff->cols_array['CLASS']['options'] = array('PUBLIC'=>'öffentlich','PRIVATE'=>'nicht öffentlich');

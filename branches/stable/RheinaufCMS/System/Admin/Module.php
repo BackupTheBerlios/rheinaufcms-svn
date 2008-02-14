@@ -207,7 +207,7 @@ class Module extends Admin
 		$array_to_reorder = $this->connection->db_assoc("SELECT `id`,`sysID`,`Name` FROM `RheinaufCMS>Module` WHERE `Backend` != '' ORDER BY `id` ASC");
 		$array_name_to_reorder = 'admin_module';
 		
-		$form_tag = Form::form_tag($_SERVER['REDIRECT_URL'],'post','application/x-www-form-urlencoded',array('name'=>'draglist_form'));
+		$form_tag = Form::form_tag(SELF,'post','application/x-www-form-urlencoded',array('name'=>'draglist_form'));
 		$draglist_scripts = Html::script('',array('src'=>'/'.INSTALL_PATH.'/Libraries/Draglist/assets/dom-drag.js'));
 		$draglist_scripts .= Html::script('',array('src'=>'/'.INSTALL_PATH.'/Libraries/Draglist/assets/draglist.js'));
 		$dragable_divs ='';

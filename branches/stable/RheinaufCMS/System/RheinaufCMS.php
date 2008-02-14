@@ -321,7 +321,7 @@ class RheinaufCMS
 		$pfad = array();
 		$self =array();
 		if (!$this->navi) $this->navi = $this->navi_array();
-		$redirect = $_SERVER['REDIRECT_URL'];
+		$redirect = $_SERVER['SCRIPT_URL'];
 		$this->path_information['rubrik'] = (isset($_GET['r'])) ? $this->I18n_get_real($this->navi[$_GET['r']]['Rubrik']) : HOMEPAGE;
 		$this->path_information['seite'] = ($_GET['s'] != 0) ?   $this->I18n_get_real($this->navi[$_GET['r']]['Subnavi'][$_GET['s']]['Seite']) : 'index';
 
