@@ -150,7 +150,7 @@ class exhibitions extends RheinaufExhibitionAdmin
 
 		$return =  Html::h(2,'Räume auswählen',array('style'=>'display:inline') );
 
-		$return .= $this->rooms_scaff->make_table($rooms_sql,INSTALL_PATH.'/Module/RheinaufExhibition/Backend//Templates/ExhibitionExhibitionAddRooms.template.html');
+		$return .= $this->rooms_scaff->make_table($rooms_sql,INSTALL_PATH.'/Classes/Admin/RheinaufExhibitionAdmin/Templates/ExhibitionExhibitionAddRooms.template.html');
 
 		return $return;
 	}
@@ -207,7 +207,7 @@ class exhibitions extends RheinaufExhibitionAdmin
 		LEFT JOIN `$this->indices_db_table` `indices`
 		     ON rooms.RoomId = indices.Raum_id
 		WHERE indices.Exhibition_id = ".$_GET['order']."
-		ORDER BY indices.index ASC";
+		ORDER BY indices.index ASC, indices.id ASC";
 
 		$rooms = $this->connection->db_assoc($rooms_sql);
 

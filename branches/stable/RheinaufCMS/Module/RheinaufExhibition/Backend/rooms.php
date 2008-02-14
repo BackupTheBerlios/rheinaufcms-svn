@@ -148,10 +148,30 @@ class rooms extends RheinaufExhibitionAdmin
 	}
 	function add_pictures_table()
 	{
+				$this->pics_scaff->add_search_field('Name');
+		$this->pics_scaff->add_search_field('Jahr');
 
-		$images_sql = $all_images_sql= "SELECT * FROM `$this->pics_db_table`";
+		$this->pics_scaff->template_vars['Name_value'] = ($_GET['Name']) ? $_GET['Name'] :'';
+		if ($name = $_GET['Name']) $_GET['Name'] = "%$name%";
 
-		$order = ($_GET['order']) ? "&amp;order=".$_GET['order']:'';
+		$this->pics_scaff->template_vars['Jahr_value'] = ($_GET['Jahr']) ? $_GET['Jahr'] :'';
+		if ($jahr = $_GET['Jahr']) $_GET['Jahr'] = "%$jahr%";
+
+		$where = array();
+		foreach ($this->pics_scaff->enable_search_for as $spalte)
+		{
+			if ($_GET[$spalte])
+			{
+				$value = General::input_clean($_GET[$spalte],true);
+				$where[] = "`$spalte` LIKE '$value'";
+
+			}
+		}
+		$where = ($where) ? "WHERE ".implode($this->pics_scaff->search_combinate,$where) :'';
+
+		$images_sql = $all_images_sql= "SELECT * FROM `$this->pics_db_table` $where";
+
+		$order = ($_GET['order']) ? "&amp;order=".$_GET['order'] : '';
 
 		if ($_GET['dir'] == 'desc')
 		{
@@ -169,8 +189,8 @@ class rooms extends RheinaufExhibitionAdmin
 		}
 		else
 		{
-			$dir = 'ASC';
-			$desc ='&amp;dir=desc';
+			$dir = 'DESC';
+			$desc ='&amp;dir=asc';
 		}
 
 
@@ -187,7 +207,7 @@ class rooms extends RheinaufExhibitionAdmin
 			$this->pics_scaff->template_vars[$col['name'].'_button'] = Html::a('/Admin/RheinaufExhibitionAdmin/Rooms?add='.$_GET['add'].'&amp;order='.rawurlencode($col['name']).$desc,$name);
 		}
 
-		$order = ($_GET['order']) ? rawurldecode($_GET['order']) : 'Name';
+		$order = ($_GET['order']) ? rawurldecode($_GET['order']) : ' id';
 
 		$this->pics_scaff->results_per_page = 30;
 
@@ -197,21 +217,21 @@ class rooms extends RheinaufExhibitionAdmin
 		$next_link = ($next =  $this->pics_scaff->next_link())? Html::a(SELF.'?add='.$_GET['add'].'&amp;order='.$_GET['order'].'&amp;dir='.$_GET['dir'].'&amp;'.$next,'>>>',array('class'=>'button')):'';
 
 		$this->pics_scaff->template_vars['pagination'] = $pagination.$prev_link."Seite ".$this->pics_scaff->get_page().' von '.$pages.' '.$next_link;
+		$this->pics_scaff->template_vars['room_id'] = $_GET['add'];
 
 		$return =  Html::h(2,'Bilder auswählen',array('style'=>'display:inline') );
 
-		$return .= $this->pics_scaff->make_table("$images_sql ORDER BY $order $dir",INSTALL_PATH.'/Module/RheinaufExhibition/Backend/Templates/ExhibitionAddPictures.template.html');
+		$return .= $this->pics_scaff->make_table("$images_sql ORDER BY $order $dir",INSTALL_PATH.'/Classes/Admin/RheinaufExhibitionAdmin/Templates/ExhibitionAddPictures.template.html');
 
 		return $return;
 	}
 
 	function order_rooms()
 	{
-		$script = $this->order_script();
 		$return = Html::h(2,'Räume: Reihenfolge bearbeiten');
 		$return .= Form::form_tag(SELF.'?orderrooms','','',array('onsubmit'=>'updateOrder()','id'=>'orderform'));
 
-		$GLOBALS['scripts'] .=Html::script($script);
+		$GLOBALS['scripts'] .= Html::script('',array('src'=>'/'.INSTALL_PATH.'/Classes/Admin/RheinaufExhibitionAdmin/order.js'));
 
 		$select = new Select('select[]',array('size'=>24,'id'=>'select'));
 
@@ -257,143 +277,48 @@ class rooms extends RheinaufExhibitionAdmin
 		LEFT JOIN `$this->indices_db_table` `indices`
 		     ON bilder.id = indices.Bild_id
 		WHERE indices.Raum_id = ".$_GET['order']."
-		ORDER BY indices.index,bilder.Name ASC";
+		ORDER BY indices.index, indices.id ASC, bilder.Name ASC";
 
 		$images = $this->connection->db_assoc($images_sql);
 
-		$script = $this->order_script();
 		$room_info = $this->get_room_info($_GET['order']);
 
 		$return = Html::h(2,$room_info['Roomname'].': Reihenfolge bearbeiten');
 		$return .= Form::form_tag(SELF.'?order='.$_GET['order'],'','',array('onsubmit'=>'updateOrder()','id'=>'orderform','style'=>'float:left;margin-right:20px;'));
 
-		$GLOBALS['scripts'] .=Html::script($script);
+		$GLOBALS['scripts'] .= Html::script('',array('src'=>'/'.INSTALL_PATH.'/Classes/Admin/RheinaufExhibitionAdmin/order.js'));
 
-		$select = new Select('select[]',array('size'=>24,'id'=>'select'));
+		$select = new Select('select[]',array('size'=>24,'id'=>'select', 'onclick'=>"preview(this)" ));
 
 		foreach ($images as $img)
 		{
-			$select->add_option($img['id'],$img['Dateiname']);
+			$dateiname = $img['Dateiname'];
+			$select->add_option($img['id'],$dateiname.'  '.$img['Name'], array('filename'=>$dateiname));
 		}
 		$return .= $select->flush_select().Html::br();
 
-		$return .= Html::a('javascript:up();','Hoch',array('class'=>'button'));
-		$return .= Html::a('javascript:down();','Runter',array('class'=>'button'));
-		$return .= Html::a('javascript:del();','Löschen',array('class'=>'button'));
-		$return .= Html::a('javascript:coverpic();','Titelbild',array('class'=>'button'));
+		$return .= Html::a('javascript:void(0);','Hoch',array('class'=>'button', 'onclick'=>'up()'));
+		$return .= Html::a('javascript:void(0);','Runter',array('class'=>'button', 'onclick'=>'down()'));
+		$return .= Html::a('javascript:void(0);','Löschen',array('class'=>'button', 'onclick'=>'del()'));
+		$return .= Html::a('javascript:void(0);','Titelbild',array('class'=>'button', 'onclick'=>'coverpic()'));
 
 		if (!$room_info['Titelbild']) $room_info['Titelbild'] = $images[0]['Dateiname'];
 		$return .= Form::add_input('hidden','coverpic',$room_info['Titelbild'],array('id'=>'coverpic'));
 		$return .= Form::add_input('submit','submit','Speichern',array('class'=>'button'));
 		$return .= Html::a(SELF,'Zurück',array('class'=>'button','onclick'=>'return getChanged()'));
 		$return .= Form::close_form();
+		
+		$return .= Html::div('Ausgewähltes Bild'.Html::br().Html::img('','',array('id'=>'selected_preview')), array('style'=>'display:none'));
+
+		$return .= Html::br();
 		$return .= 'Titelbild'.Html::br();
 		$return .= Html::img('/Images/Galerie/180/'.$room_info['Titelbild'],'Noch nicht festgelegt',array('id'=>'coverpic_preview'));
+		
+		
 		return $return;
 	}
 
-	function order_script()
-	{
-		return '
-		var changed = false;
 
-		function updateOrder() {
-			var form = document.getElementById("orderform");
-			var new_order = "";
-			var new_input;
-			for (var i=0;i<form.select.options.length;i++) {
-				new_input = document.createElement("input");
-				new_input.name = "new_world_order[]";
-				new_input.value = form.select.options[i].value;
-				new_input.type = "hidden";
-				form.appendChild(new_input);
-			}
-		}
-		function up() {
-
-			var form = document.getElementById("orderform");
-
-			if (form.select.selectedIndex <= 0) return;
-
-			changed = true;
-
-			var selected = form.select.options[form.select.selectedIndex];
-			var selected_minus = form.select.options[form.select.selectedIndex-1];
-
-			var value_1 = {id:selected.value,text:selected.text};
-			var value_2 = {id:selected_minus.value,text:selected_minus.text};
-
-			selected_minus.value = value_1.id;
-			selected_minus.text = value_1.text;
-			selected.value = value_2.id;
-			selected.text = value_2.text;
-
-			form.select.selectedIndex = form.select.selectedIndex-1;
-		}
-
-		function down() {
-
-			var form = document.getElementById("orderform");
-
-			if (form.select.selectedIndex == -1 || form.select.selectedIndex == form.select.options.length-1) return;
-
-			changed = true;
-
-			var selected = form.select.options[form.select.selectedIndex];
-			var selected_plus = form.select.options[form.select.selectedIndex+1];
-
-			var value_1 = {id:selected.value,text:selected.text};
-			var value_2 = {id:selected_plus.value,text:selected_plus.text};
-
-			selected_plus.value = value_1.id;
-			selected_plus.text = value_1.text;
-			selected.value = value_2.id;
-			selected.text = value_2.text;
-
-			form.select.selectedIndex = form.select.selectedIndex+1;
-		}
-
-		function del() {
-
-			var form = document.getElementById("orderform");
-
-			if (form.select.selectedIndex == -1) return;
-
-			changed = true;
-
-			var selected = form.select.options[form.select.selectedIndex];
-			form.select.remove(form.select.selectedIndex);
-
-
-		}
-
-		function coverpic()
-		{
-			var form = document.getElementById("orderform");
-			var input = document.getElementById("coverpic");
-			var preview = document.getElementById("coverpic_preview");
-			var old_val = input.value;
-
-			if (form.select.selectedIndex == -1) return;
-
-			changed = true;
-
-			var selected = form.select.options[form.select.selectedIndex];
-			var new_val =  selected.text;
-			input.value = new_val;
-
-			preview.src = "/Images/Galerie/180/" + new_val;
-		}
-
-		function getChanged() {
-			if (changed) {
-				return confirm("Wenn Sie jetzt zurückgehen, verlieren Sie eventuelle Änderungen.\n\nTrotzdem zurückgehen?");
-			} else return true;
-
-		}
-
-		';
-	}
 	function get_room_info ($id)
 	{
 		$result = $this->connection->db_single_row ("SELECT * FROM `$this->rooms_db_table` WHERE `RoomId` = ".$id);

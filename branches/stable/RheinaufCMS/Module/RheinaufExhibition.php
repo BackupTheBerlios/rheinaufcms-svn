@@ -34,7 +34,7 @@ class RheinaufExhibition extends RheinaufCMS
 			$this->get_room_info();
 		}
 		else $this->room_name = 'Bildauswahl';
-		$this->exhibition_list = $this->scaff->template_vars['list'] = $this->exhibition_list(3);
+		$this->exhibition_list = $this->scaff->template_vars['list'] = $this->exhibition_list();
 
 		if (isset($_GET['Einzelansicht'])) return $this->einzel();
 		else if (isset($_GET['Einzelansicht'])) return $this->einzel();
@@ -48,15 +48,14 @@ class RheinaufExhibition extends RheinaufCMS
 	}
 
 
-	function exhibition_list($id)
+	function exhibition_list($id='')
 	{
 		$exhibition_sql = "SELECT rooms.*, indices.Raum_id,indices.Exhibition_id,indices.index
 			FROM `RheinaufCMS>Exhibition>Rooms` `rooms`
 			LEFT JOIN `RheinaufCMS>Exhibition>ExhibitionIndices` `indices`
-			     ON rooms.RoomId = indices.Raum_id
-			     WHERE indices.Exhibition_id = '".$id."'
-			     ORDER BY indices.index
-			     ";
+			     ON rooms.RoomId = indices.Raum_id";
+			    if ($id) $exhibition_sql .= "WHERE indices.Exhibition_id = '".$id;
+			     $exhibition_sql .= " ORDER BY indices.index ASC, indices.id ASC";
 		$this->rooms_list = $this->connection->db_assoc($exhibition_sql);
 
 		$list1 = new HtmlList('ul',array('id'=>'drop'));
@@ -98,7 +97,7 @@ class RheinaufExhibition extends RheinaufCMS
 			LEFT JOIN `RheinaufCMS>Exhibition>Indices` `indices`
 			     ON bilder.id = indices.Bild_id
 			     WHERE indices.Raum_id = '".$this->room_id."'
-			     ORDER BY indices.index
+			     ORDER BY indices.index ASC, indices.id ASC
 			     ";
 		return $this->scaff->make_table($images_sql,INSTALL_PATH.'/Module/RheinaufExhibition/Templates/GalerieTabelle.template.html');
 	}
@@ -113,7 +112,7 @@ class RheinaufExhibition extends RheinaufCMS
 			LEFT JOIN `RheinaufCMS>Exhibition>Indices` `indices`
 			     ON bilder.id = indices.Bild_id
 			     WHERE indices.Raum_id = '".$this->room_id."'
-			     ORDER BY indices.index
+			     ORDER BY indices.index ASC, indices.id ASC
 			     ";
 			if (!$this->num_rows) $num_rows = $this->scaff->num_rows = $this->connection->db_num_rows($sql);
 		}
@@ -124,8 +123,9 @@ class RheinaufExhibition extends RheinaufCMS
 			if (!$this->num_rows) $num_rows = $this->scaff->num_rows = $this->connection->db_num_rows($sql);
 		}
 
-		$this->scaff->template_vars['detail_link'] = SELF.'?room='.$_GET['room'].'&start='.$_GET['start'].'&Detailansicht='.$_GET['Einzelansicht'];
-		$this->scaff->template_vars['up'] = SELF.'?room='.$_GET['room'].'&start='.$_GET['start'];
+
+		$this->scaff->template_vars['detail_link'] = SELF.'?room='.$_GET['room'].'&amp;start='.$_GET['start'].'&amp;Detailansicht='.$_GET['Einzelansicht'];
+		$this->scaff->template_vars['up'] = SELF.'?room='.$_GET['room'].'&amp;start='.$_GET['start'];
 
 		$next_start = $_GET['start'];
 		if (($next = $_GET['Einzelansicht']+1) == $this->scaff->results_per_page)
@@ -138,7 +138,7 @@ class RheinaufExhibition extends RheinaufCMS
 			$next_start = 0;
 			$next = 0;
 		}
-		$this->scaff->template_vars['next'] = SELF.'?room='.$_GET['room'].'&start='.$next_start.'&Einzelansicht='.$next;
+		$this->scaff->template_vars['next'] = SELF.'?room='.$_GET['room'].'&amp;start='.$next_start.'&amp;Einzelansicht='.$next;
 
 		if (($back = $_GET['Einzelansicht']-1) < 0)
 		{
@@ -152,8 +152,7 @@ class RheinaufExhibition extends RheinaufCMS
 			$_GET['start'] = $this->scaff->num_pages * $this->scaff->results_per_page - $this->scaff->results_per_page;
 			$back = $num_rows -1- $_GET['start'];
 		}
-		$this->scaff->template_vars['back'] = SELF.'?room='.$_GET['room'].'&start='.$_GET['start'].'&Einzelansicht='.$back;
-
+		$this->scaff->template_vars['back'] = SELF.'?room='.$_GET['room'].'&amp;start='.$_GET['start'].'&amp;Einzelansicht='.$back;
 
 		return $this->scaff->parse_single($sql." LIMIT $einzel,1",INSTALL_PATH . '/Module/RheinaufExhibition/Templates/Einzel.template.html');
 	}
@@ -168,7 +167,7 @@ class RheinaufExhibition extends RheinaufCMS
 			LEFT JOIN `RheinaufCMS>Exhibition>Indices` `indices`
 			     ON bilder.id = indices.Bild_id
 			     WHERE indices.Raum_id = '".$this->room_id."'
-			     ORDER BY indices.index
+			     ORDER BY indices.index ASC, indices.id ASC
 			     ";
 			if (!$this->num_rows) $num_rows = $this->scaff->num_rows = $this->connection->db_num_rows($sql);
 		}
@@ -181,8 +180,8 @@ class RheinaufExhibition extends RheinaufCMS
 			if (!$this->num_rows) $num_rows = $this->scaff->num_rows = $this->connection->db_num_rows($sql);
 		}
 
-		$this->scaff->template_vars['einzel_link'] = (isset($_GET['room'])) ? SELF.'?room='.$_GET['room'].'&start='.$_GET['start'].'&Einzelansicht='.$_GET['Detailansicht']: 'javascript:window.history.back();';
-		$this->scaff->template_vars['up'] = SELF.'?room='.$_GET['room'].'&start='.$_GET['start'];
+		$this->scaff->template_vars['einzel_link'] = (isset($_GET['room'])) ? SELF.'?room='.$_GET['room'].'&amp;start='.$_GET['start'].'&amp;Einzelansicht='.$_GET['Detailansicht']: 'javascript:window.history.back();';
+		$this->scaff->template_vars['up'] = SELF.'?room='.$_GET['room'].'&amp;start='.$_GET['start'];
 
 
 		if (($next = $_GET['Detailansicht']+1) == $this->scaff->results_per_page)
@@ -195,7 +194,7 @@ class RheinaufExhibition extends RheinaufCMS
 			$_GET['start'] = 0;
 			$next = 0;
 		}
-		$this->scaff->template_vars['next'] =  SELF.'?room='.$_GET['room'].'&start='.$_GET['start'].'&Einzelansicht='.$next;
+		$this->scaff->template_vars['next'] =  SELF.'?room='.$_GET['room'].'&amp;start='.$_GET['start'].'&amp;Einzelansicht='.$next;
 
 		if (($back = $_GET['Detailansicht']-1) < 0)
 		{
@@ -209,7 +208,7 @@ class RheinaufExhibition extends RheinaufCMS
 			$_GET['start'] = $this->scaff->num_pages * $this->scaff->results_per_page - $this->scaff->results_per_page;
 			$back = $num_rows -1- $_GET['start'];
 		}
-		$this->scaff->template_vars['back'] = SELF.'?room='.$_GET['room'].'&start='.$_GET['start'].'&Einzelansicht='.$back;
+		$this->scaff->template_vars['back'] = SELF.'?room='.$_GET['room'].'&amp;start='.$_GET['start'].'&amp;Einzelansicht='.$back;
 
 		$sql .= " LIMIT $einzel,1";
 		return $this->scaff->parse_single($sql,INSTALL_PATH . '/Module/RheinaufExhibition/Templates/Detail.template.html');

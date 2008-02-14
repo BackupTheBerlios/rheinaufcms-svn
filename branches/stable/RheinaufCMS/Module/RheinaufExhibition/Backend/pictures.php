@@ -10,21 +10,13 @@ class pictures extends RheinaufExhibitionAdmin
 		$this->pics_scaff = $scaff;
 
 		if ($_POST['edit_id']) $this->pics_scaff->db_insert();
-
-		$this->event_listen();
 	}
-
-	function event_listen()
-	{
-		if ($_GET['id'] && $_GET['setbdm']) $this->set_bdm();
-	}
-
 	function show()
 	{
-		$img_scan = Html::img('/Module/RheinaufExhibition/Backend/icons/search.png','');
+		$img_scan = Html::img('/'.INSTALL_PATH . '/Classes/Admin/Icons/16x16/search.png','');
 		$scan_button = Html::a('/Admin/RheinaufExhibitionAdmin/Scan',$img_scan.'Ordner scannen',array('class'=>'button'));
 
-		$img_up = Html::img('/Module/RheinaufExhibition/Backend/icons/up.png','');
+		$img_up = Html::img('/'.INSTALL_PATH . '/Classes/Admin/Icons/16x16/up.png','');
 		$up_button = Html::a('/Admin/RheinaufExhibitionAdmin/Upload',$img_up.'Bilder hochladen',array('class'=>'button'));
 
 		$return = Html::div($scan_button.$up_button);
@@ -32,7 +24,9 @@ class pictures extends RheinaufExhibitionAdmin
 		if ($_GET['edit'])
 		{
 			$entry = $this->pics_scaff->get_entry($_GET['edit']);
-			return $return.Html::div($this->pics_scaff->make_form($_GET['edit']),array('style'=>'float:left')).Html::div(Html::img(SELF.'/InputPreview?img='.$entry['Dateiname'],'Vorschau'));
+
+
+			return $return.Html::div($this->pics_scaff->make_form($_GET['edit']),array('style'=>'float:left')).Html::div(Html::img(SELF.'/InputPreview?img='.$entry['Dateiname']));
 		}
 		return $return.$this->overview();
 	}
@@ -100,42 +94,14 @@ class pictures extends RheinaufExhibitionAdmin
 
 		$pages = $this->pics_scaff->get_pages($all_images_sql);
 		$pagination = $this->pics_scaff->num_rows." Bilder auf $pages Seiten  ";
-		$prev_link = ($prev =  $this->pics_scaff->prev_link())? Html::a(SELF.'?order='.$_GET['order'].'&amp;dir='.$_GET['dir'].'&amp;'.$prev,htmlspecialchars('<<<'),array('class'=>'button')):'';
-		$next_link = ($next =  $this->pics_scaff->next_link())? Html::a(SELF.'?order='.$_GET['order'].'&amp;dir='.$_GET['dir'].'&amp;'.$next,htmlspecialchars('>>>'),array('class'=>'button')):'';
+		$prev_link = ($prev =  $this->pics_scaff->prev_link())? Html::a(SELF.'?order='.$_GET['order'].'&amp;dir='.$_GET['dir'].'&amp;'.$prev,'<<<',array('class'=>'button')):'';
+		$next_link = ($next =  $this->pics_scaff->next_link())? Html::a(SELF.'?order='.$_GET['order'].'&amp;dir='.$_GET['dir'].'&amp;'.$next,'>>>',array('class'=>'button')):'';
 
 
 		$this->pics_scaff->template_vars['pagination'] = $pagination.$prev_link."Seite ".$this->pics_scaff->get_page().' von '.$pages.' '.$next_link;
 
 		$order = ($_GET['order']) ? rawurldecode($_GET['order']) : 'Name';
-
-		//Bild des Monats
-		$sql = "SELECT * FROM `$this->db_table` WHERE `BildDesMonats` != '' ORDER BY `BildDesMonats` DESC";//BDM_Monat`='$month' AND `BDM_Jahr`='$year'";
-		$result = $this->connection->db_single_row($sql);
-
-		$last_bdm = $result['BildDesMonats'];
-
-		$this->pics_scaff->template_vars['next_bdm'] = $next_bdm = substr(Date::add($last_bdm.'01','month',1),0,6);
-		$this->pics_scaff->template_vars['next_bdm_str'] = substr($next_bdm,4,2). '/'.substr($next_bdm,0,4);
-
-		$this->pics_scaff->cols_array['BildDesMonats']['transform'] = '($value) ? substr($value,4,2). "/" .substr($value,0,4):"";';
-		$this->pics_scaff->cols_array['Beschreibung']['transform'] = '($value) ? "ja":"nein";';
-		$this->pics_scaff->cols_array['Höhe']['transform'] = '($value) ? $value :"n.a.";';
-		$this->pics_scaff->cols_array['Breite']['transform'] = '($value) ? $value :"n.a.";';
-		$this->pics_scaff->cols_array['Name']['transform'] = 'General::wrap_string($value,20);';
-
-
-		$sql = "$images_sql ORDER BY $order $dir";
-
-
-		return Html::h(2,'Alle Bilder' ).$this->pics_scaff->make_table($sql,INSTALL_PATH.'/Module/RheinaufExhibition/Backend/Templates/ExhibitionPicturesOverview.template.html');
-	}
-
-	function set_bdm()
-	{
-		$id = $_GET['id'];
-		$date = $_GET['setbdm'];
-
-		$this->connection->db_update($this->db_table,array('BildDesMonats'=>$date),"`id`='$id'");
+		return Html::h(2,'Alle Bilder' ).$this->pics_scaff->make_table("$images_sql ORDER BY $order $dir",INSTALL_PATH.'/Classes/Admin/RheinaufExhibitionAdmin/Templates/ExhibitionPicturesOverview.template.html');
 	}
 }
 
