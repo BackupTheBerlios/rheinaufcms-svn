@@ -26,7 +26,6 @@ header('Content-type:text/javascript');
 	'ExtendedFileManager',
 	'SuperClean',
 	'PasteText',
-	'RheinaufCMSLinker',
 	'DoubleClick',
 	'Stylist',
 	'SmartReplace',
@@ -36,7 +35,7 @@ header('Content-type:text/javascript');
 
 	xinha_editors = xinha_editors ? xinha_editors :
 	[
-	'input_1'
+	'input_2'
 	];
 	     // THIS BIT OF JAVASCRIPT LOADS THE PLUGINS, NO TOUCHING  :)
 	     if(!Xinha.loadPlugins(xinha_plugins, xinha_init)) return;
@@ -46,6 +45,7 @@ header('Content-type:text/javascript');
 
 	xinha_config.height = 400 + 'px';
 	xinha_config.width = 600 + 'px';
+	xinha_config.fullScreenMargins = [20,0,0,80];
 
 	xinha_config.toolbar =
 	 [
@@ -62,7 +62,8 @@ header('Content-type:text/javascript');
 	xinha_config.stripBaseHref = true;
 	xinha_config.baseHref = "<?php print 'http://'. $_SERVER['SERVER_NAME'] ?>";
 
-  xinha_config.Linker.backend =  '/Libraries/XinhaConfig/rheinauf_cms_db_scan.php',
+  	xinha_config.Linker.backend =  '/RheinaufCMS/Libraries/XinhaConfig/rheinauf_cms_db_scan.php';
+
 
 	xinha_config.SuperClean.show_dialog = true;
     xinha_config.SuperClean.filters = {
