@@ -1,18 +1,40 @@
 <!--PRE-->
-<table>
+<table id="termine">
+<thead>
+<tr>
+<th>Datum</th><th>Termin</th><th>Kategorie</th><th>Ort</th>
+</tr>
+</thead>
+<tbody>
 <!--/PRE-->
 <!--LOOP-->
-<tr><td colspan="2"><h2>{SUMMARY}</h2></td></tr>
-{IfNotEmpty:DESCRIPTION(<tr><td>Beschreibung</td><td>[DESCRIPTION]</td></tr>)}
-{IfNotEmpty:LOCATION(<tr><td>Ort</td><td>[LOCATION]</td></tr>)}
-{IfNotEmpty:CATEGORIES(<tr><td>Kategorie</td><td>[CATEGORIES]</td></tr>)}
-{IfNotEmpty:URL(<tr><td>URL</td><td>[URL]</td></tr>)}
-{IfNotEmpty:STATUS(<tr><td>Status</td><td>[STATUS]</td></tr>)}
-{IfNotEmpty:DTSTART(<tr><td>Beginn</td><td>[DTSTART]</td></tr>)}
-{IfNotEmpty:DTEND(<tr><td>Ende</td><td>[DTEND]</td></tr>)}
-{IfNotEmpty:CONTACT(<tr><td>Kontaktadresse</td><td>[CONTACT]</td></tr>)}
-<tr><td>Merken</td><td><input type="checkbox" name="memo[]" value="{id}" /></td></tr>
+{IfNotEmpty:MONTH_HEAD(<tr class="month-head"><td colspan="4">[MONTH_HEAD]</td></tr>)}
+
+<tr class="{alt_row}">
+ <td>{If:DTSTART}{IfNotEmpty:DTEND( - [DTEND])}</td><td><strong>{If:SUMMARY}</strong></td><td>{If:CATEGORIES}</td><td>{If:LOCATION}</td>
+</tr>
+<tr  class="{alt_row}">
+ <td></td>
+ <td colspan="2" class="linie">
+ {If:DESCRIPTION}
+ {IfNotEmpty:URL(<br /><a href="[URL]">Weitere Informationen</a>)}
+
+
+ {IfNotEmpty:CONTACT(<br />Kontakt: [CONTACT]<a href="[SELF]?Kontakt=[id]"  onclick="var popup=window.open('[SELF]?Kontakt=[id]&amp;noframe','Kontakt','menubar=no,scrollbars=yes,width=500,height=450');popup.focus();return false;"><img src="/RheinaufCMS/Module/Kalender/mail.png" title="Kontakt" alt="Kontakt" /></a>)}
+
+ </td>
+ <td class="linie"><!--<input type="checkbox" name="memo[]" style="float:left" value="{id}" {If:checked}/><label for="{id}">Termin vormerken</label>--></td>
+</tr>
 <!--/LOOP-->
 <!--POST-->
+</tbody>
 </table>
+<!--
+<label for="memo_email">Adresse für Erinnerungsmail</label>
+<input type="text" id="memo_email" name="memo_email"/>
+<input type="submit" value="Eintragen" />
+-->
 <!--/POST-->
+<!--NOENTRYFOUND-->
+Für diese Auswahl wurden keine Termine gefunden.
+<!--/NOENTRYFOUND-->

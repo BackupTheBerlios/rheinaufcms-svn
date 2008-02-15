@@ -16,7 +16,10 @@ class Kontakt extends RheinaufCMS
 		$this->id = $id;
 		$this->event_listen();
 	}
-
+	function class_init(&$system)
+	{
+		$this->system = $system;
+	}
 	function show()
 	{
 		$page = new Template(INSTALL_PATH.'/Module/Kontakt/Kontakt.template.html');

@@ -43,7 +43,7 @@ class Kalender extends RheinaufCMS
 	{
 		$this->system =& $system;
 		$this->connection = $system->connection;
-		
+		$this->pfad();
 		if ($this->check_right('KalenderIntern')&& !stristr(SELF,'admin')  && stristr(SELF,'Kalender') )
 		{
 			header("Location: http://".$_SERVER['SERVER_NAME']."/Admin/KalenderAdmin");
@@ -63,22 +63,7 @@ class Kalender extends RheinaufCMS
 
 		$this->categories = $this->connection->db_assoc("SELECT * FROM `RheinaufCMS>Kalender>Kategorien`");
 
-		$GLOBALS['other_css'] = Html::style('
-
-		table {border-collapse:collapse;}
-		#termine {width:100%;margin-bottom:10px;border-bottom:1px solid #33466B}
-		#monatskalender .calendarHeader {text-align:right;color:#33466B}
-		#monatskalender .termin a {font-weight:900;cursor:pointer}
-		#monatskalender .calendarToday {background-color:#33466B;color:white}
-		#monatskalender .termin{background-color:rgb(206, 211, 214)}
-		#monatskalender .calendar td {width:2em;height:2em;vertical-align:middle;text-align:center;padding:0;cursor:default}
-		#cat_select td {padding:0;line-height:auto}
-		caption,thead,#termine .month-head {background-color:#33466B;color:white;font-weight:normal}
-		#box-mitte {float:left;padding:0 2px 10px 2px;min-height:800px;width:500px}
-
-		label {font-size:0.8em;color:#33466B;line-height:0.85em;}
-		.alt_row_0 {background-color:white}
-		');
+		$GLOBALS['other_css'] = Html::link(array('rel'=>'stylesheet', 'type'=>'text/css','href'=>'/Module/Kalender/Kalender.css'));
 
 		$this->event_listen();
 	}
@@ -129,7 +114,11 @@ class Kalender extends RheinaufCMS
 			{
 				if ($cat['Access']=='PUBLIC') $allowed_categories[] = "`CATEGORIES` = '".$cat['Name']."'";
 			}
-			$access = "AND `CLASS` = 'PUBLIC' AND (" . implode(' OR ',$allowed_categories).")";
+			$access = "AND `CLASS` = 'PUBLIC'";
+			if ($allowed_categories)
+			{
+				$access .= " AND (" . implode(' OR ',$allowed_categories).")";
+			} 
 
 		}
 		if (isset($_GET['Kategorie']))
