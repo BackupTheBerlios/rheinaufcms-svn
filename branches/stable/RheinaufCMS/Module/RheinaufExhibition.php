@@ -9,20 +9,20 @@ class RheinaufExhibition extends RheinaufCMS
 	{
 
 	}
-	function class_init($db_connection='',$path_information='')
+	function class_init(&$system)
 	{
-		$this->connection = ($db_connection != '') ? $db_connection : new RheinaufDB();
-		($path_information != '') ? $this->extract_to_this($path_information) : $this->pfad();
+		$this->system &= $system;
+		$this->connection &= $system->connection;
+		
 		if (!class_exists('FormScaffold')) include_once('FormScaffold.php');
 		if (!class_exists('GalerieScaffold')) include_once('RheinaufExhibition/GalerieScaffold.php');
-		$this->scaff = new GalerieScaffold($this->bilder_db_table,$db_connection,$path_information);
+		
+		$this->scaff = new GalerieScaffold($this->bilder_db_table,$db_connection);
 		$this->scaff->order_by = 'Jahr';
 		$this->scaff->cols_array['Dateiname']['type'] = 'upload';
 
 		$rooms_sql = "SELECT * FROM `$this->rooms_db_table`";
 		//$this->rooms =  $this->connection->db_assoc($rooms_sql);
-		$this->path_information = $path_information;
-
 	}
 
 

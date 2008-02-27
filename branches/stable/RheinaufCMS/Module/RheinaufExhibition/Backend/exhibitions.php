@@ -8,20 +8,19 @@ class exhibitions extends RheinaufExhibitionAdmin
 	var $rooms_db_table;
 	var $rooms_scaff;
 
-	function exhibitions($scaff,$db_connection='',$path_information='')
+	function exhibitions(&$scaff,&$system)
 	{
-
-		$this->connection = $db_connection;
-		$this->path_information = $path_information;
+		$this->system &= $system;
+		$this->connection &= $system->connection;
 
 		$this->exhibitions_db_table = 'RheinaufCMS>Exhibition>Exhibitions';
 		$this->indices_db_table =  'RheinaufCMS>Exhibition>ExhibitionIndices';
 		$this->rooms_db_table = 'RheinaufCMS>Exhibition>Rooms';
 
-		$this->rooms_scaff = $scaff;
+		$this->rooms_scaff &= $scaff;
 
-		$this->indices_scaff = new FormScaffold($this->indices_db_table,$this->connection,$this->path_information);
-		$this->exhibitions_scaff = new FormScaffold($this->exhibitions_db_table,$this->connection,$this->path_information);
+		$this->indices_scaff = new FormScaffold($this->indices_db_table,$this->connection);
+		$this->exhibitions_scaff = new FormScaffold($this->exhibitions_db_table,$this->connection);
 
 		$this->exhibitions_sql = "SELECT * FROM `$this->exhibitions_db_table` ORDER BY `ExhibitionIndex`";
 		$this->exhibitions = $this->connection->db_assoc($this->exhibitions_sql);

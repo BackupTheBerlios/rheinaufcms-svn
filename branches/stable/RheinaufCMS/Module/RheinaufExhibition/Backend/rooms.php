@@ -8,20 +8,19 @@ class rooms extends RheinaufExhibitionAdmin
 	var $pics_db_table;
 	var $pics_scaff;
 
-	function rooms($scaff,$db_connection='',$path_information='')
+	function rooms(&$scaff,&$system)
 	{
 
-		$this->connection = $db_connection;
-		$this->path_information = $path_information;
-
+		$this->connection &= $system->connection;
+		
 		$this->rooms_db_table = 'RheinaufCMS>Exhibition>Rooms';
 		$this->indices_db_table =  'RheinaufCMS>Exhibition>Indices';
 		$this->pics_db_table = 'RheinaufCMS>Exhibition>Bilder';
 
-		$this->pics_scaff = $scaff;
+		$this->pics_scaff &= $scaff;
 
-		$this->indices_scaff = new FormScaffold($this->indices_db_table,$this->connection,$this->path_information);
-		$this->rooms_scaff = new FormScaffold($this->rooms_db_table,$this->connection,$this->path_information);
+		$this->indices_scaff = new FormScaffold($this->indices_db_table,$this->connection);
+		$this->rooms_scaff = new FormScaffold($this->rooms_db_table,$this->connection);
 
 		$this->rooms_sql = "SELECT * FROM `$this->rooms_db_table` ORDER BY `RoomIndex`";
 		$this->rooms = $this->connection->db_assoc($this->rooms_sql);

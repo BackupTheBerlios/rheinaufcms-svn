@@ -1,7 +1,7 @@
 <!--PRE-->
 <div id="kopf">
-  <a href="/Startseite"><img src="/Images/ew_signatur_110.gif"  style="margin:20px 50px 0 0;" title="Zurück zur Startseite" alt="Signatur Emil Wachter - EWa" class="zentriert" /> </a>
-	<h1>Emil Wachter Stiftung</h1>&nbsp;
+  <a href="/Startseite"><img src="/Images/teambuctou_logo_grau.jpg"  style="margin:20px 50px 0 0;" title="Zurück zur Startseite" alt="Teambuctou" class="zentriert" /> </a>
+	<h1>Bildergalerie</h1>&nbsp;
 	{If:list}
 
   </div><!--kopf-->
@@ -9,15 +9,9 @@
 <!--/PRE-->
 <!--LOOP-->
 <td class="gal_element">
-	<div class="gal_bild_zentr">
-	 <a href="{einzel_link}">
-	  {IfNotEmpty:Dateiname(<img src="/Images/Galerie/180/[Dateiname]" alt="[Name]" title="[Name]" />)}
-	  {IfNotEmpty:Titelbild(<img src="/Images/Galerie/180/[Titelbild]" alt="[Roomname]" title="[Roomname]" />)}
-	 </a>
-    </div>
-	<p title="{If:Name}{If:Roomname}"><a href="{einzel_link}">{If:clip_name}{If:Roomname}</a><br />
-	<span class="grau">{IfNotEmpty:Jahr([Jahr])}{IfNotEmpty:Höhe(, [Höhe] x [Breite] cm)}</span></p>
-
+	<div class="gal_bild_zentr"><a href="{einzel_link}"><img src="/Images/Galerie/180/{If:Dateiname}{If:Titelbild}" alt="{If:Name}{If:Roomname}" title="{If:Name}{If:Roomname}" /></a></div>
+	<p title="{If:Name}">{If:clip_name}{If:Roomname}<br />
+	<span class="grau">{IfNotEmpty:Jahr([Jahr])}</span></p>
 </td> <!--gal-element-->
 <!--/LOOP-->
 <!--POST-->
@@ -25,11 +19,11 @@
 <div id="fuss">
 
 {IfNotEmpty:next_link(<a href="[next_link]#galerie"><img src="/Images/Pfeil_dunkelgrau_rechts.gif" style="float:right; margin:0 40px 0 10px;"title="Zur nächsten Galerie-Seite" alt="Zur nächsten Galerie-Seite"  /> </a>)}
-<a href="{If:up|/}"><img src="/Images/Pfeil_dunkelgrau_oben.gif" style="float:right; margin:0 10px;"title="Zur Startseite" alt="Zur Startseite"  /> </a>
+<a href="{If:up|/Startseite}"><img src="/Images/Pfeil_dunkelgrau_oben.gif" style="float:right; margin:0 10px;"title="Zur Startseite" alt="Zur Startseite"  /> </a>
 {IfNotEmpty:prev_link(<a href="[prev_link]#galerie"><img src="/Images/Pfeil_dunkelgrau_links.gif" style="float:right; margin:0 10px;"title="Zur vorigen Galerie-Seite" alt="Zur vorigen Galerie-Seite"  /> </a>)}
 
 	<h2 style="float:right; margin:4px 10px 0 0;">Bildauswahl {page}/{pages}</h2>
-<p class="link-unten" style="clear:right; margin-left:15px;">&copy; bei Emil Wachter, Karlsruhe und VG Bild Kunst, Bonn</p>
+<p class="link-unten" style="clear:right; margin-left:15px;">&copy; bei Teambuctou</p>
 	</div><!--fuss-->
 
 <!--/POST-->

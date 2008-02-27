@@ -14,15 +14,15 @@ class RheinaufExhibitionAdmin extends Admin
 	var $landscape_thumb_width = 170;
 	var $landscape_thumb_dir = 'thumb_landscape/';
 
- 	function RheinaufExhibitionAdmin($db_connection='',$path_information='')
+ 	function RheinaufExhibitionAdmin(&$system)
 	{
+		$this->system =& $system;
+		$this->connection &= $system->connection;
 		if (!$this->check_right('ExhibitionAdmin')) return;
 		$this->return='';
-		$this->connection = ($db_connection != '') ? $db_connection : new RheinaufDB();
-		($path_information != '') ? $this->extract_to_this($path_information) : $this->pfad();
-		$this->path_information = $path_information;
+		
 		if (!class_exists('FormScaffold')) include_once('FormScaffold.php');
-		$this->scaff = new FormScaffold($this->db_table,$db_connection,$path_information);
+		$this->scaff = new FormScaffold($this->db_table,$this->connection);
 
 		$this->scaff->cols_array['Dateiname']['type'] = 'upload';
 		//$this->scaff->cols_array['Beschreibung']['html'] = true;
@@ -56,33 +56,33 @@ class RheinaufExhibitionAdmin extends Admin
 		if (preg_match('/Rooms$/',SELF))
 		{
 			include_once(INSTALL_PATH.'/Module/RheinaufExhibition/Backend/rooms.php');
-			$rooms = new rooms($this->scaff,$this->connection,$this->path_information);
+			$rooms = new rooms($this->scaff,$this->system);
 			$this->return .= $GLOBALS['backchannel'];
 			$this->return .= $rooms->show();
 		}
 		if (preg_match('/Exhibitions$/',SELF))
 		{
 			include_once(INSTALL_PATH.'/Module/RheinaufExhibition/Backend/exhibitions.php');
-			$instance = new exhibitions($this->scaff,$this->connection,$this->path_information);
+			$instance = new exhibitions($this->scaff,$this->system);
 			$this->return .= $GLOBALS['backchannel'];
 			$this->return .= $instance->show();
 		}
 		if (preg_match('/Pictures$/',SELF))
 		{
 			include_once(INSTALL_PATH.'/Module/RheinaufExhibition/Backend/pictures.php');
-			$instance = new pictures($this->scaff,$this->connection,$this->path_information);
+			$instance = new pictures($this->scaff,$this->system);
 			return  $this->return .= $instance->show();
 		}
 		if (preg_match('/Locations$/',SELF))
 		{
 			include_once(INSTALL_PATH.'/Module/RheinaufExhibition/Backend/LocationsBackend.php');
-			$instance = new LocationsBackend($this->connection,$this->path_information);
+			$instance = new LocationsBackend($this->system);
 			return  $this->return .= $instance->show();
 		}
 		if (preg_match('/BildDesMonats$/',SELF))
 		{
 			include_once(INSTALL_PATH.'/Module/RheinaufExhibition/Backend/bdm.php');
-			$instance = new bdm($this->scaff,$this->connection,$this->path_information);
+			$instance = new bdm($this->scaff,$this->system);
 			return  $this->return .= $instance->show();
 		}
 

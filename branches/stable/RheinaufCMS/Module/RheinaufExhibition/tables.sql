@@ -81,4 +81,4 @@ CREATE TABLE `RheinaufCMS>Exhibition>Rooms` (
 -------------------
 INSERT INTO `RheinaufCMS>Rechte` VALUES ('ExhibitionAdmin', 'Backend', 'RheinaufExhibitionAdmin', 'Austellungen bearbeiten');
 
-INSERT INTO `RheinaufCMS>Admin>Module` VALUES ('', 'RheinaufExhibitionAdmin', 'Galerie bearbeiten', 'Module/RheinaufExhibition/Backend/icons/gallery_icon.png', 'Module/RheinaufExhibition/Backend/RheinaufExhibitionAdmin.php');
+INSERT INTO `RheinaufCMS>Module` VALUES ('', 'RheinaufExhibitionAdmin', 'Galerie bearbeiten', 'Module/RheinaufExhibition/RheinaufExhibition.php' , 'Module/RheinaufExhibition/Backend/RheinaufExhibitionAdmin.php','Module/RheinaufExhibition/Backend/icons/gallery_icon.png',0);

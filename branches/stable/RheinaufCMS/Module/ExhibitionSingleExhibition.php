@@ -29,7 +29,7 @@ class ExhibitionSingleExhibition extends RheinaufExhibition
 			LEFT JOIN `RheinaufCMS>Exhibition>ExhibitionIndices` `indices`
 			     ON rooms.RoomId = indices.Raum_id
 			     WHERE indices.Exhibition_id = '".$this->exhibition."'
-			     ORDER BY indices.index
+			     ORDER BY indices.index ASC, indices.id ASC
 			     ";
 			$this->scaff->exhibition_room_selection = true;
 			return $this->scaff->make_table($exhibition_sql,INSTALL_PATH.'/Module/RheinaufExhibition/Templates/GalerieTabelle.template.html');

@@ -3,12 +3,13 @@ class GalerieScaffold extends FormScaffold
 {
 	var $results_per_page = 8;
 	var $room;
-	function  GalerieScaffold ($table,$db_connection='')
+	function  GalerieScaffold ($table,&$system)
 	{
-		$this->connection = ($db_connection != '') ? $db_connection : new RheinaufDB();
+		$this->system &= $system;
+		$this->connection &= $system->connection;
 
 		$this->table = $table;
-//$this->connection->debug = true;
+
 	}
 	function make_table($sql ='',$template='')
 	{
@@ -74,8 +75,6 @@ class GalerieScaffold extends FormScaffold
 				{
 					$result[$i][$key] = htmlspecialchars($value);
 				}
-
-				$result[$i][$key] = nl2br($value);
 			}
 			$result[$i]['Dateiname'] = rawurlencode($result[$i]['Dateiname']);
 			$result[$i]['Titelbild'] = rawurlencode($result[$i]['Titelbild']);
@@ -139,12 +138,37 @@ class GalerieScaffold extends FormScaffold
 			{
 				$result[$key] = htmlspecialchars($value);
 			}
+			//if ($this->cols_array[$key]['type'] == 'textarea')
+			//{
+				$result[$key] =  nl2br($value);
+			//}
 		}
 		$result['Dateiname'] = rawurlencode($result['Dateiname']);
 		$result['alt_row'] = ' alt_row_'.$alternatig_rows;
+		$result['Beschreibung_clipped'] = $this->clip_words($result['Beschreibung'],200);
+		$result['more'] = (preg_match('/\.\.\.$/s',$result['Beschreibung_clipped'])) ? 'more' :'';
 		$return_string .= $template->parse_template('LOOP',$result);
 
 		return $return_string;
+	}
+
+	function clip_words($string, $max_length)
+	{
+		$string = $string_cache = html_entity_decode($string);
+
+		$br_array = array('<br>','<br />',"\n");
+		//$string = str_replace ($br_array, ' ',$string);
+		if (strlen($string) > $max_length )
+		{
+			$string = substr ($string, 0, $max_length);
+			$string_clipped = explode (' ', $string);
+			array_pop ($string_clipped);
+			$string_clipped = implode (' ', $string_clipped);
+
+			$string = ( $string_clipped != '') ? $string_clipped.'...' : $string;
+
+		}
+		return $string;//Html::span($string,array('title'=>$string_cache)) ;
 	}
 }
 

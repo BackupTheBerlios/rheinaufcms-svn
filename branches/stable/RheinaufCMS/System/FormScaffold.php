@@ -28,19 +28,13 @@ class FormScaffold extends RheinaufCMS
 	var $search_combinate =  ' AND ';
 	var $search_method = '=';
 
-	function  FormScaffold ($table,$db_connection='',$path_information='')
+	function  FormScaffold ($table,&$db_connection)
 	{
 		$this->upload_path = INSTALL_PATH.'/Download/';
 		$GLOBALS['input_id'] = (isset($GLOBALS['input_id'])) ? $GLOBALS['input_id'] :0;
 		$this->table = $table;
-		$this->connection = ($db_connection != '') ? $db_connection : new RheinaufDB();
-/*		
-		if ($path_information != '')
-		{
-			$this->extract_to_this($path_information);
-			$this->path_information = $path_information;
-		}
-		else $this->pfad();*/
+		$this->connection &=  $db_connection ;
+
 		$this->construct_array();
 		$this->scripts();
 	}

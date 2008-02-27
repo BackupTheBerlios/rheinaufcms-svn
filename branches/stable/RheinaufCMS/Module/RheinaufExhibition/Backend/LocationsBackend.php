@@ -4,14 +4,14 @@ class LocationsBackend extends Admin
 {
 	var $db_table = 'RheinaufCMS>Locations';
 
-	function LocationsBackend ($db_connection,$path_information)
+	function LocationsBackend (&$system)
 	{
-		$this->connection = $db_connection;
-		$this->extract_to_this($path_information);
+		$this->system &= $system;
+		$this->connection &= $system->connection;
 
 		if (!class_exists('FormScaffold')) include_once('FormScaffold.php');
 
-		$this->scaff = new FormScaffold($this->db_table,$this->db_connection,$path_information);
+		$this->scaff = new FormScaffold($this->db_table,$this->connection);
 		$this->scaff->edit_enabled =true;
 		$this->scaff->upload_path = INSTALL_PATH.'/Images/Locations/';
 		$this->scaff->upload_folder = 'Location_id';

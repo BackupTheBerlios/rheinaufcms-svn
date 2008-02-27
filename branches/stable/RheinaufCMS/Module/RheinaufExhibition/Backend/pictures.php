@@ -1,13 +1,13 @@
 <?php
 class pictures extends RheinaufExhibitionAdmin
 {
-	function pictures($scaff,$db_connection='',$path_information='')
+	function pictures(&$scaff,&$system)
 	{
-		$this->connection = $db_connection;
-		$this->path_information = $path_information;
+		$this->system &= $system;
+		$this->connection &= $system->connection;
 
 		$this->pics_db_table = 'RheinaufCMS>Exhibition>Bilder';
-		$this->pics_scaff = $scaff;
+		$this->pics_scaff &= $scaff;
 
 		if ($_POST['edit_id']) $this->pics_scaff->db_insert();
 	}
