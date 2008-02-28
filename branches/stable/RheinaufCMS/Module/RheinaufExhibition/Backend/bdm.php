@@ -1,10 +1,10 @@
 <?php
 class bdm extends RheinaufExhibitionAdmin
 {
-	function bdm($scaff,$db_connection='',$path_information='')
+	function bdm(&$scaff,&$system)
 	{
-		$this->connection = $db_connection;
-		$this->path_information = $path_information;
+		$this->system &= $system;
+		$this->connection = $system->connection;
 
 		$this->pics_db_table = 'RheinaufCMS>Exhibition>Bilder';
 		$this->scaff = $scaff;

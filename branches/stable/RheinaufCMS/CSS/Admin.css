@@ -191,7 +191,9 @@ border-color:#ddd;
 .button:focus,input[type=submit]:focus,.button:active  {
 	padding:2px 3px 1px 5px ;
 }
-
+.active {
+	background-color:#fff;
+}
 /*----Double it for IE6---*/
 .button  {
 	background-color:#eee;

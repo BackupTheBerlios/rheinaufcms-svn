@@ -8,7 +8,7 @@ class KalenderAdmin extends Admin
 	{
 		$this->system =& $system;
 		$this->connection = $system->connection;
-
+		$this->pfad();
 		$this->make_scaffold();
 		$this->event_listen();
 	}
@@ -80,7 +80,7 @@ class KalenderAdmin extends Admin
 		
 		$this->scaff->cols_array['X-OTHER-VCAL']['type'] = 'hidden';
 
-
+		include ('Kalender/DefaultValues.php');
 	}
 
 	function show()
@@ -109,11 +109,12 @@ class KalenderAdmin extends Admin
 	{
 		$img_termin_neu = Html::img('/'.INSTALL_PATH . '/Libraries/Icons/16x16/appointment.png','Neuer Termin',array('title'=>'Neuer Termin'));
 		$img_termin_bearbeiten = Html::img('/'.INSTALL_PATH . '/Libraries/Icons/16x16/today.png','Termin bearbeiten',array('title'=>'Termin bearbeiten'));
-		$termin_neu_button = Html::a('/Admin/KalenderAdmin/NeuerEintrag',$img_termin_neu.'Neuer Termin',array('class'=>'button'));
-		$termin_bearbeiten_button = Html::a('/Admin/KalenderAdmin/Bearbeiten',$img_termin_bearbeiten.'Termine bearbeiten',array('class'=>'button'));
+		$termin_neu_button = Html::a('/Admin/Kalender/NeuerEintrag',$img_termin_neu.'Neuer Termin',array('class'=>'button'));
+		$termin_bearbeiten_button = Html::a('/Admin/Kalender/Bearbeiten',$img_termin_bearbeiten.'Termine bearbeiten',array('class'=>'button'));
 
-		if ($this->check_right('KalenderAdminTerminNeu')) $this->return .= $termin_neu_button;
-		if ($this->check_right('KalenderAdminTerminEdit'))$this->return .= ' '.$termin_bearbeiten_button;
+		if ($this->check_right('KalenderAdminTerminNeu')) $this->system->backend->tabs .= $termin_neu_button;
+		if ($this->check_right('KalenderAdminTerminEdit')) $this->system->backend->tabs .= ' '.$termin_bearbeiten_button;
+		
 	}
 
 	function edit()
@@ -154,7 +155,7 @@ class KalenderAdmin extends Admin
 			$kalender->class_init($this->system);
 			$kalender->scaff->edit_enabled = true;
 
-			$kalender->template = INSTALL_PATH.'/Module/Kalender/Templates/TermineListe.template.html';
+			$kalender->template = INSTALL_PATH.'/Module/Kalender/Templates/KalenderAdminListe.template.html';
 
 			$this->return .= $kalender->show();
 			$context_menu ="var ctx_menu = {}\n";

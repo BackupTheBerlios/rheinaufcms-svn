@@ -11,13 +11,13 @@ class exhibitions extends RheinaufExhibitionAdmin
 	function exhibitions(&$scaff,&$system)
 	{
 		$this->system &= $system;
-		$this->connection &= $system->connection;
+		$this->connection = $system->connection;
 
 		$this->exhibitions_db_table = 'RheinaufCMS>Exhibition>Exhibitions';
 		$this->indices_db_table =  'RheinaufCMS>Exhibition>ExhibitionIndices';
 		$this->rooms_db_table = 'RheinaufCMS>Exhibition>Rooms';
 
-		$this->rooms_scaff &= $scaff;
+		$this->rooms_scaff = $scaff;
 
 		$this->indices_scaff = new FormScaffold($this->indices_db_table,$this->connection);
 		$this->exhibitions_scaff = new FormScaffold($this->exhibitions_db_table,$this->connection);
@@ -149,7 +149,7 @@ class exhibitions extends RheinaufExhibitionAdmin
 
 		$return =  Html::h(2,'Räume auswählen',array('style'=>'display:inline') );
 
-		$return .= $this->rooms_scaff->make_table($rooms_sql,INSTALL_PATH.'/Classes/Admin/RheinaufExhibitionAdmin/Templates/ExhibitionExhibitionAddRooms.template.html');
+		$return .= $this->rooms_scaff->make_table($rooms_sql,INSTALL_PATH.'/Module/RheinaufExhibition/Backend/Templates/ExhibitionExhibitionAddRooms.template.html');
 
 		return $return;
 	}

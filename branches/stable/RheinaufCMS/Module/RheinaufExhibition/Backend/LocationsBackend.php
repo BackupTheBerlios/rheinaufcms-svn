@@ -7,7 +7,7 @@ class LocationsBackend extends Admin
 	function LocationsBackend (&$system)
 	{
 		$this->system &= $system;
-		$this->connection &= $system->connection;
+		$this->connection = $system->connection;
 
 		if (!class_exists('FormScaffold')) include_once('FormScaffold.php');
 
@@ -94,7 +94,7 @@ class LocationsBackend extends Admin
 		if ($stadt = $_GET['Stadt']) $_GET['Stadt'] = "%$stadt%";
 
 
-		return $this->scaff->make_table($sql,INSTALL_PATH.'/Classes/Admin/RheinaufExhibitionAdmin/Templates/LocationsOverview.template.html');
+		return $this->scaff->make_table($sql,INSTALL_PATH.'/Module/RheinaufExhibition/Backend/Templates/LocationsOverview.template.html');
 	}
 
 
@@ -176,7 +176,7 @@ class LocationsBackend extends Admin
 		$this->scaff->result_array = $result = $this->connection->db_assoc($sql);
 		$this->scaff->order_by = 'Jahr';
 		$this->scaff->template_vars = $result[0];
-		$return = $this->scaff->make_table($sql,INSTALL_PATH.'/Classes/Admin/RheinaufExhibitionAdmin/Templates/EditWorksOverview.template.html');
+		$return = $this->scaff->make_table($sql,INSTALL_PATH.'/Module/RheinaufExhibition/Backend/Templates/EditWorksOverview.template.html');
 
 		return $return;
 	}

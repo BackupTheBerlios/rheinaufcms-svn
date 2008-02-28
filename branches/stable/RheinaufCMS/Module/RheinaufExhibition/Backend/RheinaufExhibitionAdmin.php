@@ -1,10 +1,8 @@
 <?php
-$long_name = 'Ausstellung Bearbeiten';
-$icon = 'lphoto.png';
 class RheinaufExhibitionAdmin extends Admin
 {
 
-	var $filepath = 'Images/Galerie/';
+	var $filepath;
 	var $db_table = 'RheinaufCMS>Exhibition>Bilder';
 	var $max_scale = array('x'=>1024,'y'=>768);
 
@@ -17,7 +15,7 @@ class RheinaufExhibitionAdmin extends Admin
  	function RheinaufExhibitionAdmin(&$system)
 	{
 		$this->system =& $system;
-		$this->connection &= $system->connection;
+		$this->connection = $system->connection;
 		if (!$this->check_right('ExhibitionAdmin')) return;
 		$this->return='';
 		
@@ -33,11 +31,15 @@ class RheinaufExhibitionAdmin extends Admin
 
 
 		$this->scaff->cols_array['BildDesMonats']['type'] = 'hidden';
-
+		
+		include ('RheinaufExhibition/config.php');
 
 		if (!class_exists('Bilder')) include_once('Bilder.php');
 
 		$this->event_listen();
+		
+		$GLOBALS['scripts'] .= Html::script("var RheinaufExhibitionImagesDir = '/{$this->filepath}'; var RheinaufExhibitionThumbsDir = '{$this->portrait_thumb_dir}' ");
+
 	}
 
 	function event_listen()
@@ -50,7 +52,10 @@ class RheinaufExhibitionAdmin extends Admin
 	function show()
 	{
 		if (!$this->check_right('ExhibitionAdmin')) return Html::h(2,'Dazu haben Sie kein Recht!');
-		$this->return .=  $this->obere_navi();
+		$this->system->backend->tabs =  $this->obere_navi();
+		
+		if ($this->check_folder_rights()) return $this->check_folder_rights();
+		
 		if (preg_match('/Scan$/',SELF)) $this->return .= $this->scan();
 		if (preg_match('/Upload$/',SELF))$this->return .=$this->upload();
 		if (preg_match('/Rooms$/',SELF))
@@ -89,14 +94,25 @@ class RheinaufExhibitionAdmin extends Admin
 
 		return $this->return;
 	}
-
+	function check_folder_rights()
+	{
+		if (!is_dir($this->filepath))
+		{
+			return 'Pfad für Bilder "'.$this->filepath.'" existiert nicht.';
+		}
+		if (!is_writeable($this->filepath))
+		{
+			return 'Pfad für Bilder "'.$this->filepath.'" ist nicht beschreibbar. Bitte Rechte 777 geben.';
+		}
+		return null;
+	}
 	function obere_navi()
 	{
-
-		$rooms_button = Html::a('/Admin/RheinaufExhibitionAdmin/Rooms','Räume zusammenstellen',array('class'=>'button'));
-		$pictures_button = Html::a('/Admin/RheinaufExhibitionAdmin/Pictures','Bilder verwalten',array('class'=>'button'));
-		$exhibitions_button = Html::a('/Admin/RheinaufExhibitionAdmin/Exhibitions','Ausstellungen zusammenstellen',array('class'=>'button'));
-		$locations_button = Html::a('/Admin/RheinaufExhibitionAdmin/Locations','Orte',array('class'=>'button'));
+		
+		$rooms_button = Html::a('/Admin/RheinaufExhibitionAdmin/Rooms','Räume zusammenstellen',array('class'=>'button'.(preg_match('/Rooms/', SELF_URL) ? ' active' : '')));
+		$pictures_button = Html::a('/Admin/RheinaufExhibitionAdmin/Pictures','Bilder verwalten',array('class'=>'button'.(preg_match('/Pictures|Scan|Upload/', SELF_URL) ? ' active' : '')));
+		$exhibitions_button = Html::a('/Admin/RheinaufExhibitionAdmin/Exhibitions','Ausstellungen zusammenstellen',array('class'=>'button'.(preg_match('/Exhibitions/', SELF_URL) ? ' active' : '')));
+		$locations_button = Html::a('/Admin/RheinaufExhibitionAdmin/Locations','Orte',array('class'=>'button'.(preg_match('/Orte/', SELF_URL) ? ' active' : '')));
 
 		return $pictures_button.$rooms_button.$exhibitions_button.$locations_button;
 	}
@@ -108,7 +124,7 @@ class RheinaufExhibitionAdmin extends Admin
 			$meldung = 'Datei '.$_POST['Dateiname'].' gespeichert.';
 		}
 		$db_files = $this->connection->db_assoc("SELECT `Dateiname` FROM `$this->db_table`");
-		$scanned_files = RheinaufFile::dir_array(INSTALL_PATH.'/'.$this->filepath,false,'jpg');
+		$scanned_files = RheinaufFile::dir_array($this->filepath, false,'jpg');
 		$existent_files =array();
 		foreach ($db_files as $entry)
 		{
@@ -136,7 +152,7 @@ class RheinaufExhibitionAdmin extends Admin
 		$this->scaff->cols_array['delete']['type'] = 'custom';
 		$this->scaff->cols_array['delete']['custom_input'] = Html::a(SELF."?delete_file=".$new_files[0],'Datei löschen',array('class'=>'button','onclick'=>"return confirm('Datei löschen?');"));
 
-		$this->maxscale(INSTALL_PATH.'/'.$this->filepath.$new_files[0]);
+		$this->maxscale($this->filepath.$new_files[0]);
 		$this->make_thumbs($new_files[0]);
 		return $meldung.Html::div($this->scaff->make_form(),array('style'=>'float:left')).Html::div(Html::img(SELF.'/InputPreview?img='.$new_files[0]));
 
@@ -144,20 +160,20 @@ class RheinaufExhibitionAdmin extends Admin
 
 	function del_file()
 	{
-		$file = INSTALL_PATH.'/'.$this->filepath.$_GET['delete_file'];
+		$file = $this->filepath.$_GET['delete_file'];
 		RheinaufFile::delete($file);
 
 	}
 	function upload()
 	{
-		$this->scaff->upload_path = INSTALL_PATH.'/'.$this->filepath;
+		$this->scaff->upload_path = $this->filepath;
 		//$this->scaff->cols_array['Dateiname']['type'] = 'upload';
 
 		if (isset($_FILES['Dateiname_upload']))
 		{
 			if ($error = $_FILES['Dateiname_upload']['error']>0) return General::upload_error($error);
 
-			$file = INSTALL_PATH.'/'.$this->filepath.$_FILES['Dateiname_upload']['name'];
+			$file = $this->filepath.$_FILES['Dateiname_upload']['name'];
 
 			move_uploaded_file($_FILES['Dateiname_upload']['tmp_name'], $file);
 			RheinaufFile::chmod($file,'777');
@@ -187,7 +203,7 @@ class RheinaufExhibitionAdmin extends Admin
 		$file = rawurldecode($_GET['img']);
 		$x = ($_GET['x']) ? $_GET['x'] : 300;
 
-		$img = new Bilder(INSTALL_PATH.'/'.$this->filepath.$file);
+		$img = new Bilder( $this->filepath.$file);
 		$img->scaleMaxX($x);
 		$img->output();
 		exit;
@@ -195,18 +211,18 @@ class RheinaufExhibitionAdmin extends Admin
 
 	function make_thumbs($filename)
 	{
-		if (!is_dir(INSTALL_PATH.'/'.$this->filepath.$this->portrait_thumb_dir))
+		if (!is_dir($this->filepath.$this->portrait_thumb_dir))
 		{
-			RheinaufFile::mkdir(INSTALL_PATH.'/'.$this->filepath.$this->portrait_thumb_dir);
-			RheinaufFile::chmod(INSTALL_PATH.'/'.$this->filepath.$this->portrait_thumb_dir,'777');
+			RheinaufFile::mkdir($this->filepath.$this->portrait_thumb_dir);
+			RheinaufFile::chmod($this->filepath.$this->portrait_thumb_dir,'777');
 		}
-		if (!is_dir(INSTALL_PATH.'/'.$this->filepath.$this->landscape_thumb_dir))
+		if (!is_dir($this->filepath.$this->landscape_thumb_dir))
 		{
-			RheinaufFile::mkdir(INSTALL_PATH.'/'.$this->filepath.$this->landscape_thumb_dir);
-			RheinaufFile::chmod(INSTALL_PATH.'/'.$this->filepath.$this->landscape_thumb_dir,'777');
+			RheinaufFile::mkdir($this->filepath.$this->landscape_thumb_dir);
+			RheinaufFile::chmod($this->filepath.$this->landscape_thumb_dir,'777');
 		}
-		$this->make_portrait_thumb(INSTALL_PATH.'/'.$this->filepath.$filename,INSTALL_PATH.'/'.$this->filepath.$this->portrait_thumb_dir.$filename,$this->portrait_thumb_height);
-		$this->make_landscape_thumb(INSTALL_PATH.'/'.$this->filepath.$filename,INSTALL_PATH.'/'.$this->filepath.$this->landscape_thumb_dir.$filename,$this->landscape_thumb_width);
+		$this->make_portrait_thumb($this->filepath.$filename,$this->filepath.$this->portrait_thumb_dir.$filename,$this->portrait_thumb_height);
+		$this->make_landscape_thumb($this->filepath.$filename,$this->filepath.$this->landscape_thumb_dir.$filename,$this->landscape_thumb_width);
 
 	}
 

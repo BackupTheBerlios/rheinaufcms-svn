@@ -1,0 +1,25 @@
+<!--FORM-->
+<div class="pagelogin">
+<form action="{action}" method="post">
+  <p>
+   User <br />
+	<input name="user" type="text" />
+</p>
+  <p>Passwort <br />
+    <input name="pass" type="password" />
+
+</p>
+  <p>
+   <input type="submit" name="login_submit" value="Senden" />
+   <input type="hidden" name="uuid" value="{uuid}" />
+</p>
+</form>
+</div>
+<!--/FORM-->
+<!--LOGGED_IN-->
+<div class="pagelogin">
+Hallo, <strong>{user}</strong><br />
+<small><a href="?logout={user}">abmelden</a></small>
+</div>
+<!--/LOGGED_IN-->
+

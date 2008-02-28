@@ -1,5 +1,5 @@
 table#termine {border-collapse:collapse;}
-#termine {width:100%;margin-bottom:10px;border-bottom:1px solid #33466B}
+#termine {width:475px;margin-bottom:10px;border-bottom:1px solid #33466B}
 #monatskalender .calendarHeader {text-align:right;color:#33466B}
 #monatskalender .termin a {font-weight:900;cursor:pointer}
 #monatskalender .calendarToday {background-color:#33466B;color:white}

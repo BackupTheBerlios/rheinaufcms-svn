@@ -3,7 +3,13 @@
 <!--/PRE-->
 
 <!--LOOP-->
-<tr><td class="ticker"><span class="rot">{tag}. {monat} {jahr}:</span></td><td class="ticker"> <a href="/Veranstaltungen/{jahr}/{num_monat}/{tag}" class="aktuell">{clip}</a></td></tr>
+<tr>
+	<td class="ticker">
+		<span class="rot">{start_tag}. {start_monat} {start_jahr}:</span>
+	</td>
+	<td class="ticker"> 
+		<a href="/Termine/{start_jahr}/{start_num_monat}/{start_tag}" class="aktuell">{clip}</a>
+	</td></tr>
 <!--/LOOP-->
 
 <!--POST-->

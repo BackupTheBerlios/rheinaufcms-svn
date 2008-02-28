@@ -33,7 +33,7 @@ class FormScaffold extends RheinaufCMS
 		$this->upload_path = INSTALL_PATH.'/Download/';
 		$GLOBALS['input_id'] = (isset($GLOBALS['input_id'])) ? $GLOBALS['input_id'] :0;
 		$this->table = $table;
-		$this->connection &=  $db_connection ;
+		$this->connection =  $db_connection ;
 
 		$this->construct_array();
 		$this->scripts();

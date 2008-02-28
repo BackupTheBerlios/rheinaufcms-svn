@@ -44,23 +44,22 @@ class Login extends RheinaufCMS
 		}
 		else
 		{
-			/*if ($this->check_login($system))
-			{
-				//if (HTTPS) header("Location: ".'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
-				header("Location: ".'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
-			}
-			else
-			{*/
 				$vars['meldung'] .= Html::br().$meldungen['FAIL'];
 				return Html::div($login_form->parse_template('FORM',$vars));
-		//	}
 		}
 	}
 
 	function check_login(&$system)
 	{
 		if (!isset($_SESSION)) session_start();
-
+		
+		if (isset($_GET['logout']))
+		{
+			if ($_GET['logout'] == '') $_GET['logout'] = $_SESSION['RheinaufCMS_User']['Anrede'].' '.$_SESSION['RheinaufCMS_User']['Name'];
+			unset($_SESSION['RheinaufCMS_User']);
+			setcookie('RheinaufCMS_user',false,time() - 3600,'/');
+		}
+		
 		if ($_SESSION['RheinaufCMS_User']['Login'])
 		{
 			$system->user = $_SESSION['RheinaufCMS_User'];

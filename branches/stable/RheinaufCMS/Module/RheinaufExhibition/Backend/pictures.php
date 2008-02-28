@@ -4,19 +4,19 @@ class pictures extends RheinaufExhibitionAdmin
 	function pictures(&$scaff,&$system)
 	{
 		$this->system &= $system;
-		$this->connection &= $system->connection;
+		$this->connection = $system->connection;
 
 		$this->pics_db_table = 'RheinaufCMS>Exhibition>Bilder';
-		$this->pics_scaff &= $scaff;
+		$this->pics_scaff = $scaff;
 
 		if ($_POST['edit_id']) $this->pics_scaff->db_insert();
 	}
 	function show()
 	{
-		$img_scan = Html::img('/'.INSTALL_PATH . '/Classes/Admin/Icons/16x16/search.png','');
+		$img_scan = Html::img('/'.INSTALL_PATH . '/Module/RheinaufExhibition/Backend/Icons/16x16/search.png','');
 		$scan_button = Html::a('/Admin/RheinaufExhibitionAdmin/Scan',$img_scan.'Ordner scannen',array('class'=>'button'));
 
-		$img_up = Html::img('/'.INSTALL_PATH . '/Classes/Admin/Icons/16x16/up.png','');
+		$img_up = Html::img('/'.INSTALL_PATH . '/Module/RheinaufExhibition/Backend/Icons/16x16/up.png','');
 		$up_button = Html::a('/Admin/RheinaufExhibitionAdmin/Upload',$img_up.'Bilder hochladen',array('class'=>'button'));
 
 		$return = Html::div($scan_button.$up_button);
@@ -101,7 +101,7 @@ class pictures extends RheinaufExhibitionAdmin
 		$this->pics_scaff->template_vars['pagination'] = $pagination.$prev_link."Seite ".$this->pics_scaff->get_page().' von '.$pages.' '.$next_link;
 
 		$order = ($_GET['order']) ? rawurldecode($_GET['order']) : 'Name';
-		return Html::h(2,'Alle Bilder' ).$this->pics_scaff->make_table("$images_sql ORDER BY $order $dir",INSTALL_PATH.'/Classes/Admin/RheinaufExhibitionAdmin/Templates/ExhibitionPicturesOverview.template.html');
+		return Html::h(2,'Alle Bilder' ).$this->pics_scaff->make_table("$images_sql ORDER BY $order $dir",INSTALL_PATH.'/Module/RheinaufExhibition/Backend/Templates/ExhibitionPicturesOverview.template.html');
 	}
 }
 

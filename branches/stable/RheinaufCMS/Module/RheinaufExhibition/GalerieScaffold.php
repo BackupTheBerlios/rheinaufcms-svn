@@ -3,10 +3,10 @@ class GalerieScaffold extends FormScaffold
 {
 	var $results_per_page = 8;
 	var $room;
-	function  GalerieScaffold ($table,&$system)
+	function  GalerieScaffold ($table,&$db_connection)
 	{
 		$this->system &= $system;
-		$this->connection &= $system->connection;
+		$this->connection = $db_connection;
 
 		$this->table = $table;
 

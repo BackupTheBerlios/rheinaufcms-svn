@@ -11,13 +11,13 @@ class rooms extends RheinaufExhibitionAdmin
 	function rooms(&$scaff,&$system)
 	{
 
-		$this->connection &= $system->connection;
+		$this->connection = $system->connection;
 		
 		$this->rooms_db_table = 'RheinaufCMS>Exhibition>Rooms';
 		$this->indices_db_table =  'RheinaufCMS>Exhibition>Indices';
 		$this->pics_db_table = 'RheinaufCMS>Exhibition>Bilder';
 
-		$this->pics_scaff &= $scaff;
+		$this->pics_scaff = $scaff;
 
 		$this->indices_scaff = new FormScaffold($this->indices_db_table,$this->connection);
 		$this->rooms_scaff = new FormScaffold($this->rooms_db_table,$this->connection);
@@ -220,7 +220,7 @@ class rooms extends RheinaufExhibitionAdmin
 
 		$return =  Html::h(2,'Bilder auswählen',array('style'=>'display:inline') );
 
-		$return .= $this->pics_scaff->make_table("$images_sql ORDER BY $order $dir",INSTALL_PATH.'/Classes/Admin/RheinaufExhibitionAdmin/Templates/ExhibitionAddPictures.template.html');
+		$return .= $this->pics_scaff->make_table("$images_sql ORDER BY $order $dir",INSTALL_PATH.'/Module/RheinaufExhibition/Backend/Templates/ExhibitionAddPictures.template.html');
 
 		return $return;
 	}
@@ -230,7 +230,7 @@ class rooms extends RheinaufExhibitionAdmin
 		$return = Html::h(2,'Räume: Reihenfolge bearbeiten');
 		$return .= Form::form_tag(SELF.'?orderrooms','','',array('onsubmit'=>'updateOrder()','id'=>'orderform'));
 
-		$GLOBALS['scripts'] .= Html::script('',array('src'=>'/'.INSTALL_PATH.'/Classes/Admin/RheinaufExhibitionAdmin/order.js'));
+		$GLOBALS['scripts'] .= Html::script('',array('src'=>'/'.INSTALL_PATH.'/Module/RheinaufExhibition/Backend/order.js'));
 
 		$select = new Select('select[]',array('size'=>24,'id'=>'select'));
 
@@ -285,7 +285,7 @@ class rooms extends RheinaufExhibitionAdmin
 		$return = Html::h(2,$room_info['Roomname'].': Reihenfolge bearbeiten');
 		$return .= Form::form_tag(SELF.'?order='.$_GET['order'],'','',array('onsubmit'=>'updateOrder()','id'=>'orderform','style'=>'float:left;margin-right:20px;'));
 
-		$GLOBALS['scripts'] .= Html::script('',array('src'=>'/'.INSTALL_PATH.'/Classes/Admin/RheinaufExhibitionAdmin/order.js'));
+		$GLOBALS['scripts'] .= Html::script('',array('src'=>'/'.INSTALL_PATH.'/Module/RheinaufExhibition/Backend/order.js'));
 
 		$select = new Select('select[]',array('size'=>24,'id'=>'select', 'onclick'=>"preview(this)" ));
 

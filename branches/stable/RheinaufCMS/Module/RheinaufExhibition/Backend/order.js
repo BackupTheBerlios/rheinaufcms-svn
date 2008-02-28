@@ -103,17 +103,17 @@ function coverpic()
 	changed = true;
 
 	var selected = form.select.options[form.select.selectedIndex];
-	var new_val =  selected.text;
+	var new_val =  selected.getAttribute('filename');
 	input.value = new_val;
 
-	preview.src = "/Images/Galerie/180/" + new_val;
+	preview.src = RheinaufExhibitionImagesDir + RheinaufExhibitionThumbsDir  + new_val;
 }
 function preview(select)
 {
 	var selected = select.options[select.selectedIndex];
 	var preview = document.getElementById('selected_preview');
 	if (preview.parentNode.style.display == 'none' ) preview.parentNode.style.display = '';
-	preview.src = '/Images/Galerie/180/' + selected.getAttribute('filename');
+	preview.src = RheinaufExhibitionImagesDir + RheinaufExhibitionThumbsDir + selected.getAttribute('filename');
 }
 
 function getChanged() {

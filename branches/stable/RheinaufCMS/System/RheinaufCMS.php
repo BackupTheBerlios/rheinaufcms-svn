@@ -4,10 +4,10 @@
 --
 --  Open Source (GPL)
 --
---  $HeadURL$
---  $LastChangedDate$
---  $LastChangedRevision$
---  $LastChangedBy$
+--  $HeadURL:https://raimund@svn.berlios.de/svnroot/repos/rheinaufcms/branches/stable/RheinaufCMS/System/RheinaufCMS.php $
+--  $LastChangedDate:2008-02-14 15:48:56 +0100 (Do, 14 Feb 2008) $
+--  $LastChangedRevision:73 $
+--  $LastChangedBy:raimund $
 ---------------------------------*/
 
 class RheinaufCMS
@@ -158,9 +158,8 @@ class RheinaufCMS
 		{
 			header("Location: ".$this->navi[$_GET['r']]['Subnavi'][$_GET['s']]['ext_link']);
 		}
-		
 		if ($this->navi[$_GET['r']]['Modul'] =='' && $this->navi[$_GET['r']]['Subnavi'][$_GET['s']]['Modul']=='')
-		{
+		{ 
 			$return = $this->content_static($title);
 		}
 		else
@@ -275,7 +274,9 @@ class RheinaufCMS
 		if (isset($GLOBALS['other_css'])) $vars['other_css'] .= $GLOBALS['other_css'];
 
 		if (isset($instance->scripts))	$vars['scripts'] = $instance->scripts;
+		if ($this->scripts)  $vars['scripts'] .= implode("\n", $this->scripts); //that's the way to do it now: $this->system->add_js($string)
 		if (isset($GLOBALS['scripts'])) $vars['scripts'] .= $GLOBALS['scripts'];
+		
 
 		if ( isset($_GET['noframe']) || $this->noframe)
 		{
