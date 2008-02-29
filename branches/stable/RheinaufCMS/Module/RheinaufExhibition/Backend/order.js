@@ -4,13 +4,24 @@ function updateOrder() {
 	var form = document.getElementById("orderform");
 	var new_order = "";
 	var new_input;
-	for (var i=0;i<form.select.options.length;i++) {
+	if (form.select.options.length)
+	{
+		for (var i=0;i<form.select.options.length;i++) {
+			new_input = document.createElement("input");
+			new_input.name = "new_world_order[]";
+			new_input.value = form.select.options[i].value;
+			new_input.type = "hidden";
+			form.appendChild(new_input);
+		}
+	}
+	else
+	{
 		new_input = document.createElement("input");
-		new_input.name = "new_world_order[]";
-		new_input.value = form.select.options[i].value;
+		new_input.name = "new_world_order";
 		new_input.type = "hidden";
 		form.appendChild(new_input);
 	}
+
 }
 function up() {
 
@@ -24,13 +35,15 @@ function up() {
 	var selected = select.options[select.selectedIndex];
 	var selected_minus = select.options[select.selectedIndex-1];
 
-	var value_1 = {id:selected.value,text:selected.text};
-	var value_2 = {id:selected_minus.value,text:selected_minus.text};
+	var value_1 = {id:selected.value,text:selected.text, filename: selected.getAttribute('filename')};
+	var value_2 = {id:selected_minus.value,text:selected_minus.text, filename: selected_minus.getAttribute('filename')};
 
 	selected_minus.value = value_1.id;
 	selected_minus.text = value_1.text;
+	selected_minus.setAttribute('filename', value_1.filename) ;
 	selected.value = value_2.id;
 	selected.text = value_2.text;
+	selected.setAttribute('filename',  value_2.filename);
 
 	select.selectedIndex = select.selectedIndex-1;
 
@@ -56,13 +69,16 @@ function down() {
 	var selected = select.options[select.selectedIndex];
 	var selected_plus = select.options[select.selectedIndex+1];
 
-	var value_1 = {id:selected.value,text:selected.text};
-	var value_2 = {id:selected_plus.value,text:selected_plus.text};
+	var value_1 = {id:selected.value,text:selected.text, filename: selected.getAttribute('filename')};
+	var value_2 = {id:selected_plus.value,text:selected_plus.text, filename: selected_plus.getAttribute('filename')};
 
 	selected_plus.value = value_1.id;
 	selected_plus.text = value_1.text;
+	selected_plus.setAttribute('filename', value_1.filename);
+	
 	selected.value = value_2.id;
 	selected.text = value_2.text;
+	selected.setAttribute('filename', value_2.filename);
 
 	select.selectedIndex = select.selectedIndex+1;
 	var x = select.offsetTop + select.offsetHeight + scrollTop - selected.offsetHeight ;

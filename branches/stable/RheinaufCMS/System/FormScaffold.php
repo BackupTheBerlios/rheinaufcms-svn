@@ -176,8 +176,8 @@ class FormScaffold extends RheinaufCMS
 			}
 			if ($this->edit_enabled)
 			{
-				$icons['edit'] = Html::img('/'.INSTALL_PATH.'/Classes/Admin/Icons/16x16/edit.png','');
-				$icons['delete'] = Html::img('/'.INSTALL_PATH.'/Classes/Admin/Icons/16x16/cancel.png','');
+				$icons['edit'] = Html::img('/'.INSTALL_PATH.'/Libraries/Icons/16x16/edit.png','');
+				$icons['delete'] = Html::img('/'.INSTALL_PATH.'/Libraries/Icons/16x16/cancel.png','');
 
 				$btns['edit'] = Html::a(SELF.'?edit='.$entry['id'],$icons['edit'],array('title'=>'Eintrag bearbeiten'));
 				$btns['delete'] = Html::a(SELF.'?delete='.$entry['id'],$icons['delete'],array('title'=>'Eintrag löschen','onclick'=>'return delete_confirm(\''.$entry['id'].'\')'));

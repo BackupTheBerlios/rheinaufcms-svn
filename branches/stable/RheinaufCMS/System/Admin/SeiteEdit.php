@@ -62,6 +62,8 @@ class SeiteEdit extends Admin
 		else if (isset($_POST['editor_text'])) {$this->save();}
 		if (isset($_GET['golive'])) $this->golive();
 		if (isset($_GET['workingvmenu'])) print $this->revert_menu_js();
+		if (isset($_GET['getsnippets'])) $this->snippets_to_xinha();
+		
 	}
 
 	function navi_table()
@@ -115,10 +117,10 @@ class SeiteEdit extends Admin
 			{
 				$name = $this->I18n_get_real($this->navi[$j]['Subnavi'][$i]['Seite']);
 				$seite_folder = $this->path_encode($name);
-				$edit_button = Html::a(SELF.'?edit_page='.$i.'&edit='.$j,$name.$this->images['edit'],array('onclick'=>"editor($i,$j);return false"));
-				$working_version_button = Html::a(SELF.'?workingversion&edit_page='.$i.'&edit='.$j,$name.$this->images['edit'],array('onclick'=>"window.open('/Admin/SeiteEdit?workingversion&edit_page=$i&edit=$j','Editor','resizable=yes,status=no');return false"));
+				$edit_button = Html::a(SELF_URL.'?edit_page='.$i.'&edit='.$j,$name.$this->images['edit'],array('onclick'=>"editor($i,$j);return false"));
+				$working_version_button = Html::a(SELF_URL.'?workingversion&edit_page='.$i.'&edit='.$j,$name.$this->images['edit'],array('onclick'=>"window.open('/Admin/SeiteEdit?workingversion&edit_page=$i&edit=$j','Editor','resizable=yes,status=no');return false"));
 				$vorschau_button = ' '.Html::a('/'.rawurlencode($rubrik_folder).'/'.rawurlencode($seite_folder).'/Arbeitsversion/','Vorschau');
-				$golive_button = ' | '.Html::a(SELF.SELF.'?golive&edit_page='.$i.'&edit='.$j,'Go Live!');
+				$golive_button = ' | '.Html::a(SELF_URL.'?golive&edit_page='.$i.'&edit='.$j,'Go Live!');
 				$navi_table->add_td(array($edit_button,$working_version_button,$vorschau_button.$golive_button),array('style:padding-right:5px;'));
 			}
 		}
@@ -250,7 +252,7 @@ class SeiteEdit extends Admin
 			$get_working_version = 'workingversion&';
 		}
 		else $get_working_version = '';
-		$form->form_tag(SELF.'?'.$get_working_version.'edit='.$_GET['edit'].'&edit_page='.$_GET['edit_page'],'post','application/x-www-urlencoded',array('id'=>'editor_form'));
+		$form->form_tag(SELF_URL.'?'.$get_working_version.'edit='.$_GET['edit'].'&edit_page='.$_GET['edit_page'],'post','application/x-www-urlencoded',array('id'=>'editor_form'));
 		$form->add_input('hidden','rubrik',$rubrik);
 		$form->add_input('hidden','seite',$seite);
 		$form->add_input('hidden','tmp_file',(RheinaufFile::is_file($this->work_folder().'tmp.html'))?'true':'false' ,array('id'=>'tmp_file'));
@@ -278,8 +280,8 @@ class SeiteEdit extends Admin
 			$get_working_version = 'workingversion&';
 		}
 
-		$list->add_li(Html::a('javascript:;','Liveversion',array('onclick'=>"save(xinha_editors.editor,'".SELF.'?edit='.strval($_GET['edit']).'&edit_page='.strval($_GET['edit_page'])."')")));
-		$list->add_li(Html::a('javascript:;','Arbeitsversion',array('onclick'=>"save(xinha_editors.editor,'".SELF.'?workingversion&edit='.strval($_GET['edit']).'&edit_page='.strval($_GET['edit_page'])."')")));
+		$list->add_li(Html::a('javascript:;','Liveversion',array('onclick'=>"save(xinha_editors.editor,'".SELF_URL.'?edit='.strval($_GET['edit']).'&edit_page='.strval($_GET['edit_page'])."')")));
+		$list->add_li(Html::a('javascript:;','Arbeitsversion',array('onclick'=>"save(xinha_editors.editor,'".SELF_URL.'?workingversion&edit='.strval($_GET['edit']).'&edit_page='.strval($_GET['edit_page'])."')")));
 		return $list->flush_list();
 	}
 
@@ -339,7 +341,7 @@ class SeiteEdit extends Admin
 		{
 			if ($file != 'content.html' && $file != 'tmp.html')
 			{
-				//$href = SELF.'?'.$get_working_version.'edit='.$_GET['edit'].'&edit_page='.$_GET['edit_page'].'&revert='.$file;
+				//$href = SELF_URL.'?'.$get_working_version.'edit='.$_GET['edit'].'&edit_page='.$_GET['edit_page'].'&revert='.$file;
 				$onclick = "revert(\"".$file."\",xinha_editors.editor)";
 				$content = Date::timestamp2datum(preg_replace('#(.*?)\.html$#'. ' ',"$1",$file));
 
@@ -387,7 +389,11 @@ class SeiteEdit extends Admin
 
 		while (count($files)>10)
 		{
-			RheinaufFile::delete($folder.end($files));
+			$f = end($files);
+			if ($f != 'content.html')
+			{ 
+				RheinaufFile::delete($folder.$f);
+			}
 			array_pop($files);
 		}
 		
@@ -402,7 +408,7 @@ class SeiteEdit extends Admin
 			$saved = 'false';
 			$message = 'Beim Speichern ist ein Fehler aufgetreten.\nBitte versuchen Sie es noch einmal.\nSollte sich das Problem nicht beheben lassen, melden Sie es bitte dem Administrator.'; 
 		}
-		print $message = "{'saved':$saved,'message':'$message'};";
+		die( "{'saved':$saved,'message':'$message'};");
 	}
 	function save_tmp()
 	{
@@ -476,6 +482,35 @@ class SeiteEdit extends Admin
 	{
 		$regex ='/(href="|src=")(http:\/\/'.$_SERVER['SERVER_NAME'].'|https:\/\/'.$_SERVER['SERVER_NAME'].')(.*?")/si';
 		return preg_replace($regex,'$1$3',$html);
+	}
+	function snippets_to_xinha()
+	{
+		header("Content-type: text/xml");
+		print '<?xml version="1.0" encoding="ISO-8859-1"?>
+<snXML>
+<categories>'."\n";
+		
+		$categories = $this->connection->db_assoc("SELECT Text as name FROM `RheinaufCMS>Snippets>Options` WHERE `context` = 'Categories'");
+		$snippets = $this->connection->db_assoc("SELECT Name as name, category, Content as html FROM `RheinaufCMS>Snippets`");
+		foreach ($categories as $c) {
+			print '<c n="'.htmlspecialchars($c['name']).'" />'."\n";
+		}
+		print '
+</categories>
+<snippets>';
+		foreach ($snippets as $s)
+		{
+			$s['varname'] = '{'.$s['name'].'}';
+			print '<s n="'.htmlspecialchars($s['name']).'" v="'.htmlspecialchars($s['varname']).'" c="'.htmlspecialchars($s['category']).'">
+<![CDATA[
+	'.$s['html'].'
+]]>
+</s>'."\n"; 
+		}
+		print '
+</snippets>
+</snXML>';
+		exit;
 	}
 }
 ?>

@@ -27,9 +27,14 @@ class Seite
 	function header($vars=array())
 	{
 		$rubr_enc = $this->system->path_encode($this->system->rubrik);
-		if (RheinaufFile::is_file(DOCUMENT_ROOT.INSTALL_PATH . '/CSS/'.$rubr_enc.'.css'))
+		$seite_enc = $this->system->path_encode($this->system->seite);
+		if (RheinaufFile::is_file(DOCUMENT_ROOT.INSTALL_PATH . "/CSS/{$rubr_enc}/{$seite_enc}.css"))
 		{
-				$vars['other_css'] .= '<link rel="stylesheet" href="/'.INSTALL_PATH.'/CSS/'.rawurlencode($rubr_enc).'.css" media="screen" type="text/css" />';
+				$vars['other_css'] .= '<link rel="stylesheet" href="'."/CSS/{$rubr_enc}/{$seite_enc}.css".'" media="screen" type="text/css" />';
+		}
+		else if (RheinaufFile::is_file(DOCUMENT_ROOT.INSTALL_PATH . "/CSS/{$rubr_enc}.css"))
+		{
+				$vars['other_css'] .= '<link rel="stylesheet" href="'."/CSS/{$rubr_enc}.css".'" media="screen" type="text/css" />';
 		}
 
 		return $this->template->parse_template('HEADER',$vars);

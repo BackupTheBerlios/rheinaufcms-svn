@@ -6,6 +6,10 @@
 #
 # If/else
 #
+if ($vars_geklammert[$i] == '{debug}')
+{
+	$return = str_replace($vars_geklammert[$i],print_r($var_array,true),$return);
+}
 if (preg_match('#{If:(.*?)\|(.*?)}#s',$vars_geklammert[$i],$match))
 {
 	if ($var_array[$match[1]])
@@ -61,7 +65,17 @@ if (preg_match('#{IfEmpty:(.*?)\((.*?)\)}#s',$vars_geklammert[$i],$match))
 {
 	if ($var_array[$match[1]] =='')
 	{
-		$replace = str_replace($match[3],$var_array[$match[4]],$match[2]);
+		preg_match_all('/\[(.*?)\]/',$match[2],$subpatterns);
+		$sub_vars = $subpatterns[1];
+
+		$sub_replace =array();
+		foreach ($sub_vars as $key =>$sub_var)
+		{
+			$sub_replace[$key] = $var_array[$sub_var];
+			$sub_vars[$key] = "[$sub_var]";
+		}
+		$replace = str_replace($sub_vars,$sub_replace,$match[2]);
+
 		$return = str_replace($match[0],$replace, $return);
 	}
 	else $return = str_replace($match[0],'',$return);

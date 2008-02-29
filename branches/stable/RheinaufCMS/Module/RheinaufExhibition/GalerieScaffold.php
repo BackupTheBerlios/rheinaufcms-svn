@@ -57,6 +57,7 @@ class GalerieScaffold extends FormScaffold
 		{
 			$loop_count++;
 			$result[$i] = array_merge($vars,$result[$i]);
+			
 			foreach ($result[$i] as $key =>$value)
 			{
 				if (is_array($this->cols_array[$key]['options']))

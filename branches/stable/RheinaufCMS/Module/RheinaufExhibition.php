@@ -51,7 +51,11 @@ class RheinaufExhibition extends RheinaufCMS
 		else if($_GET['room']) return $this->rooms();
 		else
 		{
-			return $this->scaff->make_table('',INSTALL_PATH.'/Module/RheinaufExhibition/Templates/GalerieTabelle.template.html');
+			$exhibition_sql = "SELECT rooms.*, indices.Raum_id,indices.Exhibition_id,indices.index
+			FROM `RheinaufCMS>Exhibition>Rooms` `rooms`
+			LEFT JOIN `RheinaufCMS>Exhibition>ExhibitionIndices` `indices`
+			     ON rooms.RoomId = indices.Raum_id";
+			return $this->scaff->make_table($exhibition_sql,INSTALL_PATH.'/Module/RheinaufExhibition/Templates/GalerieTabelle.template.html');
 		}
 
 	}

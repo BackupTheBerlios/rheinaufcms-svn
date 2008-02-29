@@ -22,7 +22,15 @@ class Login extends RheinaufCMS
 		{
 			header("Location: ".'https://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
 		}
-		$vars['uuid'] = $_SESSION['uuid'] = General::uuid(); 
+		if ($_SESSION['uuid'])
+		{
+			$vars['uuid'] = $_SESSION['uuid']; 
+		}
+		else
+		{
+			$vars['uuid'] = $_SESSION['uuid'] = General::uuid(); 
+		}
+		
 		$template = $this->system->login_template ? $this->system->login_template : INSTALL_PATH.'/Templates/Login.template.html';
 		$login_form = new Template($template);
 
@@ -35,6 +43,7 @@ class Login extends RheinaufCMS
 		{
 			$vars['user'] = $_GET['logout'];
 			$vars['meldung'] = $login_form->parse_template('LOGOUT-MELDUNG',$vars);
+			return  Html::div($login_form->parse_template('FORM',$vars));
 		}
 
 		if (!isset ($_POST['user']) || !isset ($_POST['pass']) )
@@ -60,7 +69,7 @@ class Login extends RheinaufCMS
 			setcookie('RheinaufCMS_user',false,time() - 3600,'/');
 		}
 		
-		if ($_SESSION['RheinaufCMS_User']['Login'])
+		if ($_SESSION['RheinaufCMS_User'])
 		{
 			$system->user = $_SESSION['RheinaufCMS_User'];
 			$system->valid_user = true;

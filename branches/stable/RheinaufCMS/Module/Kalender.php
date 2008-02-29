@@ -308,7 +308,7 @@ class Kalender extends RheinaufCMS
 				$labels[] = $cat['Name'];
 			}
 		}
-		$submit = Form::add_input('submit','filter','Auswählen');
+		$submit = Form::add_input('submit','filter','Auswählen', array('class'=>'button'));
 
 		//$table->add_td(array(array(2=>'Ansicht')));
 		$table->add_caption('Ansicht');

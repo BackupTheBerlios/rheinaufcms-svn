@@ -19,6 +19,10 @@ class rooms extends RheinaufExhibitionAdmin
 
 		$this->pics_scaff = $scaff;
 
+		$this->filepath = $this->pics_scaff->template_vars['filepath'];
+		$this->portrait_thumb_dir = $this->pics_scaff->template_vars['portrait_thumb_dir'];
+		$this->landscape_thumb_dir = $this->pics_scaff->template_vars['landscape_thumb_dir'];
+
 		$this->indices_scaff = new FormScaffold($this->indices_db_table,$this->connection);
 		$this->rooms_scaff = new FormScaffold($this->rooms_db_table,$this->connection);
 
@@ -87,10 +91,11 @@ class rooms extends RheinaufExhibitionAdmin
 	}
 	function order_images_apply()
 	{
-		$this->indices_scaff->cols_array['Raum_id']['value'] = $id = $_GET['order'];
-		$this->connection->db_query("DELETE FROM `$this->indices_db_table` WHERE `Raum_id` =".$_GET['order'] );
+		$this->indices_scaff->cols_array['Raum_id']['value'] = $id = (int)$_GET['order'];
+		$this->connection->db_query("DELETE FROM `$this->indices_db_table` WHERE `Raum_id` =".(int)$_GET['order'] );
 		$index = 1;
-		foreach ($_POST['new_world_order'] as $Bild_id)
+
+		foreach ((array)$_POST['new_world_order'] as $Bild_id)
 		{
 			$this->indices_scaff->cols_array['Bild_id']['value'] = $Bild_id;
 			$this->indices_scaff->cols_array['index']['value'] = $index;
@@ -147,7 +152,7 @@ class rooms extends RheinaufExhibitionAdmin
 	}
 	function add_pictures_table()
 	{
-				$this->pics_scaff->add_search_field('Name');
+		$this->pics_scaff->add_search_field('Name');
 		$this->pics_scaff->add_search_field('Jahr');
 
 		$this->pics_scaff->template_vars['Name_value'] = ($_GET['Name']) ? $_GET['Name'] :'';
@@ -188,7 +193,7 @@ class rooms extends RheinaufExhibitionAdmin
 		}
 		else
 		{
-			$dir = 'DESC';
+			$dir = 'ASC';
 			$desc ='&amp;dir=asc';
 		}
 
@@ -287,7 +292,7 @@ class rooms extends RheinaufExhibitionAdmin
 
 		$GLOBALS['scripts'] .= Html::script('',array('src'=>'/'.INSTALL_PATH.'/Module/RheinaufExhibition/Backend/order.js'));
 
-		$select = new Select('select[]',array('size'=>24,'id'=>'select', 'onclick'=>"preview(this)" ));
+		$select = new Select('select[]',array('size'=>24,'id'=>'select', 'onclick'=>"preview(this)", 'style' => 'min-width:220px;' ));
 
 		foreach ($images as $img)
 		{
@@ -311,7 +316,7 @@ class rooms extends RheinaufExhibitionAdmin
 
 		$return .= Html::br();
 		$return .= 'Titelbild'.Html::br();
-		$return .= Html::img('/Images/Galerie/180/'.$room_info['Titelbild'],'Noch nicht festgelegt',array('id'=>'coverpic_preview'));
+		$return .= Html::img('/'.$this->filepath.$this->landscape_thumb_dir.$room_info['Titelbild'],'Noch nicht festgelegt',array('id'=>'coverpic_preview'));
 		
 		
 		return $return;

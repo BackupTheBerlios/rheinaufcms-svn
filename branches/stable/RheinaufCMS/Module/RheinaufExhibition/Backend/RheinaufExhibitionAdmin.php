@@ -27,13 +27,17 @@ class RheinaufExhibitionAdmin extends Admin
 		//$this->scaff->cols_array['Dateiname']['type'] = 'text';
 
 		$this->scaff->cols_array['Name']['type'] = 'textarea';
-		$this->scaff->cols_array['Name']['attributes'] = array('rows'=>2);
+		$this->scaff->cols_array['Name']['attributes'] = array('rows'=>1);
 
 
 		$this->scaff->cols_array['BildDesMonats']['type'] = 'hidden';
 		
 		include ('RheinaufExhibition/config.php');
-
+		
+		$this->scaff->template_vars['filepath'] = $this->filepath;
+		$this->scaff->template_vars['portrait_thumb_dir'] = $this->portrait_thumb_dir;
+		$this->scaff->template_vars['landscape_thumb_dir'] = $this->landscape_thumb_dir;
+		
 		if (!class_exists('Bilder')) include_once('Bilder.php');
 
 		$this->event_listen();
@@ -111,8 +115,8 @@ class RheinaufExhibitionAdmin extends Admin
 		
 		$rooms_button = Html::a('/Admin/RheinaufExhibitionAdmin/Rooms','Räume zusammenstellen',array('class'=>'button'.(preg_match('/Rooms/', SELF_URL) ? ' active' : '')));
 		$pictures_button = Html::a('/Admin/RheinaufExhibitionAdmin/Pictures','Bilder verwalten',array('class'=>'button'.(preg_match('/Pictures|Scan|Upload/', SELF_URL) ? ' active' : '')));
-		$exhibitions_button = Html::a('/Admin/RheinaufExhibitionAdmin/Exhibitions','Ausstellungen zusammenstellen',array('class'=>'button'.(preg_match('/Exhibitions/', SELF_URL) ? ' active' : '')));
-		$locations_button = Html::a('/Admin/RheinaufExhibitionAdmin/Locations','Orte',array('class'=>'button'.(preg_match('/Orte/', SELF_URL) ? ' active' : '')));
+		if ($this->use_module['ausstellungen']) $exhibitions_button = Html::a('/Admin/RheinaufExhibitionAdmin/Exhibitions','Ausstellungen zusammenstellen',array('class'=>'button'.(preg_match('/Exhibitions/', SELF_URL) ? ' active' : '')));
+		if ($this->use_module['orte']) $locations_button = Html::a('/Admin/RheinaufExhibitionAdmin/Locations','Orte',array('class'=>'button'.(preg_match('/Orte/', SELF_URL) ? ' active' : '')));
 
 		return $pictures_button.$rooms_button.$exhibitions_button.$locations_button;
 	}
@@ -162,6 +166,16 @@ class RheinaufExhibitionAdmin extends Admin
 	{
 		$file = $this->filepath.$_GET['delete_file'];
 		RheinaufFile::delete($file);
+		$file = $this->filepath.$this->portrait_thumb_dir.$_GET['delete_file'];
+		if (is_file($file))
+		{
+			RheinaufFile::delete($file);
+		}
+		$file = $this->filepath.$this->landscape_thumb_dir.$_GET['delete_file'];
+		if (is_file($file))
+		{
+			RheinaufFile::delete($file);
+		}
 
 	}
 	function upload()

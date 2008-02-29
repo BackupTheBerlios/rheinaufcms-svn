@@ -13,10 +13,10 @@ class pictures extends RheinaufExhibitionAdmin
 	}
 	function show()
 	{
-		$img_scan = Html::img('/'.INSTALL_PATH . '/Module/RheinaufExhibition/Backend/Icons/16x16/search.png','');
+		$img_scan = Html::img('/'.INSTALL_PATH . '/Module/RheinaufExhibition/Backend/Icons/search.png','');
 		$scan_button = Html::a('/Admin/RheinaufExhibitionAdmin/Scan',$img_scan.'Ordner scannen',array('class'=>'button'));
 
-		$img_up = Html::img('/'.INSTALL_PATH . '/Module/RheinaufExhibition/Backend/Icons/16x16/up.png','');
+		$img_up = Html::img('/'.INSTALL_PATH . '/Module/RheinaufExhibition/Backend/Icons/up.png','');
 		$up_button = Html::a('/Admin/RheinaufExhibitionAdmin/Upload',$img_up.'Bilder hochladen',array('class'=>'button'));
 
 		$return = Html::div($scan_button.$up_button);

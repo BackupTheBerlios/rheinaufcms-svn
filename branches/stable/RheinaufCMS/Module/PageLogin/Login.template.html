@@ -1,20 +1,16 @@
 <!--FORM-->
-<div class="pagelogin">
 <form action="{action}" method="post">
-  <p>
-   User <br />
-	<input name="user" type="text" />
-</p>
-  <p>Passwort <br />
-    <input name="pass" type="password" />
-
-</p>
-  <p>
-   <input type="submit" name="login_submit" value="Senden" />
-   <input type="hidden" name="uuid" value="{uuid}" />
-</p>
-</form>
+<div class="pagelogin">
+{meldung}
+<input name="user" type="text" value="Loginname" onfocus="if (this.value == 'Loginname') this.value = '';" onblur="if (!this.value) this.value = 'Loginname';" />
+<br />
+<input name="pass" type="text"  value="Passwort" onfocus="this.type = 'password'; if (this.value == 'Passwort') this.value = '';" onblur="if (!this.value) {this.type = 'text';this.value = 'Passwort';}"/>
+<br />
+<button type="submit" name="login_submit">Anmelden</button>
+<input type="hidden" name="uuid" value="{uuid}" />
 </div>
+</form>
+
 <!--/FORM-->
 <!--LOGGED_IN-->
 <div class="pagelogin">
@@ -22,4 +18,6 @@ Hallo, <strong>{user}</strong><br />
 <small><a href="?logout={user}">abmelden</a></small>
 </div>
 <!--/LOGGED_IN-->
-
+<!--LOGOUT-MELDUNG-->
+Auf Wiedersehen, {user}!
+<!--/LOGOUT-MELDUNG-->

@@ -51,6 +51,7 @@ class KalenderAdmin extends Admin
 
 		$this->scaff->cols_array['CATEGORIES']['name'] = 'Kategorie';
 		$this->scaff->cols_array['CATEGORIES']['type'] = 'select';
+		$this->scaff->cols_array['CATEGORIES']['required'] = true;
 		$this->scaff->cols_array['CATEGORIES']['options'] = array();
 		foreach ($this->connection->db_assoc("SELECT * FROM `RheinaufCMS>Kalender>Kategorien` ORDER BY `id`") as $category)
 		{

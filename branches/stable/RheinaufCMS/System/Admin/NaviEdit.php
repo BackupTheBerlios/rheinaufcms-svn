@@ -355,7 +355,7 @@ function dublette(name,typ)
 				  $navi_table->add_td(array('',Html::bold('Modul').Html::br(). $module_select));  
 				}
 				
-				$ext_link_input =  Html::bold('URL ').'(optional) '.Html::br().Form::add_input('text','ext_link',rawurldecode($this->navi[$i]['ext_link']),array('id'=>'ext_link_rubrik'));
+				$ext_link_input =  Html::bold('externe URL ').'(optional) '.Html::br().Form::add_input('text','ext_link',rawurldecode($this->navi[$i]['ext_link']),array('id'=>'ext_link_rubrik'));
 				$navi_table->add_td(array('',$ext_link_input,(isset($_GET['browse'])) ? '' : Html::br(). Html::a(SELF_URL.'?browse&amp;edit='.$i,$this->images['browse'])));
 				if (isset($_GET['browse']))
 				{
@@ -462,7 +462,7 @@ function dublette(name,typ)
 				  $navi_table->add_td(array('',Html::bold('Modul').Html::br(). $module_select));  
 				}
 
-				$ext_link_input =  Html::bold('URL ').'(optional) '.Html::br().Form::add_input('text','ext_link',rawurldecode($this->navi[$j]['Subnavi'][$i]['ext_link']),array('id'=>'ext_link_page'));
+				$ext_link_input =  Html::bold('externe URL').'(optional) '.Html::br().Form::add_input('text','ext_link',rawurldecode($this->navi[$j]['Subnavi'][$i]['ext_link']),array('id'=>'ext_link_page'));
 				$navi_table->add_td(array('',$ext_link_input,(isset($_GET['browse'])) ? '' : Html::br(). Html::a(SELF_URL.'?browse&amp;edit_page='.$i.'&amp;edit='.$j,$this->images['browse'])));
 				if (isset($_GET['browse']))
 				{
@@ -784,9 +784,8 @@ function dublette(name,typ)
 			{
 					$seite = addcslashes($this->path_encode($this->I18n_get_real($sub_entry['Seite'])),$regex_esc);
 					if ($seite == 'index') continue;
+					$page_key++;
 					$new_htaccess .= 'RewriteRule ^'.$rubrik.'/'.$seite.' CMSinit.php?r='.$rubrik_key.'&s='.$page_key.'&%{QUERY_STRING} [L,NC]'."\n";
-
-				$page_key++;
 			}
 			$new_htaccess .= 'RewriteRule ^'.$rubrik.' CMSinit.php?r='.$rubrik_key.'&s=0&%{QUERY_STRING} [L,NC]'."\n";
 
