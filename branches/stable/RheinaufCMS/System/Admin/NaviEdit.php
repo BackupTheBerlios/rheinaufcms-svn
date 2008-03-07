@@ -275,6 +275,15 @@ function dublette(name,typ)
 		{
 			$path = DOCUMENT_ROOT.INSTALL_PATH.'/Content/';
 			RheinaufFile::rename($path.$oldname_encoded,$path.$name_encoded);
+			
+			if (RheinaufFile::is_file(INSTALL_PATH.'/Templates/'.$oldname_encoded.'/template.html'))
+			{
+				RheinaufFile::rename(INSTALL_PATH.'/Templates/'.$oldname_encoded.'/template.html',INSTALL_PATH.'/Templates/'.$name_encoded.'/template.html');
+			}
+			if (RheinaufFile::is_file(DOCUMENT_ROOT.INSTALL_PATH . "/CSS/{$oldname_encoded}.css"))
+			{
+					RheinaufFile::rename(DOCUMENT_ROOT.INSTALL_PATH . "/CSS/{$oldname_encoded}.css",DOCUMENT_ROOT.INSTALL_PATH . "/CSS/{$name_encoded}.css");
+			}
 		}
 		
 		if (HOMEPAGE == $this->I18n_get_real($oldname))
@@ -309,7 +318,16 @@ function dublette(name,typ)
 		$path = DOCUMENT_ROOT.INSTALL_PATH.'/Content/'.$rubrik_name.'/';
 
 		RheinaufFile::rename($path.$oldname_encoded,$path.$name_encoded);
-
+		
+		if (RheinaufFile::is_file(INSTALL_PATH."/Templates/{$rubrik_name}/{$oldname_encoded}/template.html"))
+		{
+			RheinaufFile::rename(INSTALL_PATH."/Templates/{$rubrik_name}/{$oldname_encoded}/template.html",INSTALL_PATH."/Templates/{$rubrik_name}/{$name_encoded}/template.html");
+		}
+		if (RheinaufFile::is_file(INSTALL_PATH."/CSS/{$rubrik_name}/{$oldname_encoded}.css"))
+		{
+				RheinaufFile::rename(INSTALL_PATH."/CSS/{$rubrik_name}/{$oldname_encoded}.css",INSTALL_PATH."/CSS/{$rubrik_name}/{$name_encoded}.css");
+		}
+		
 		$this->make_the_new_navi();
 		$this->htaccess_update();
 	}
@@ -327,11 +345,10 @@ function dublette(name,typ)
 			{
 				$name = $this->navi[$i]['Rubrik'];
 
-				if ($_SESSION['RheinaufCMS_User']['Group'] == 'dev')
+				if ((defined('RCMSCFG_ALLOW_PAGE_RENAME') && RCMSCFG_ALLOW_PAGE_RENAME) || $_SESSION['RheinaufCMS_User']['Group'] == 'dev')
 				{
 					$I18n = $this->parse_I18n($name);
 					$name_input ='';
-
 
 					$name_input =  Form::add_input('text','name',$name);
 				}
@@ -347,7 +364,7 @@ function dublette(name,typ)
 
 
 				$navi_table->add_td(array($id.$old_name.$visble_checkbox,$name_input,$apply_button.$this->buttons['cancel']));
-//print $this->navi[$i]['Modul'];
+
 				$module_select = $this->modules_select(preg_replace("/\(.*/","",$this->navi[$i]['Modul']));
 				
 				if ($module_select) 
@@ -443,7 +460,7 @@ function dublette(name,typ)
 			if (isset($_GET['edit_page']) && $_GET['edit_page'] == $i && !isset($_GET['visible']))
 			{
 				$name = $this->navi[$j]['Subnavi'][$i]['Seite'];
-				$name_input = ($_SESSION['RheinaufCMS_User']['Group'] == 'dev') ? Form::add_input('text','name',$name) : Html::bold($name).Form::add_input('hidden','name',$name);
+				$name_input = ((defined('RCMSCFG_ALLOW_PAGE_RENAME') && RCMSCFG_ALLOW_PAGE_RENAME) || $_SESSION['RheinaufCMS_User']['Group'] == 'dev') ? Form::add_input('text','name',$name) : Html::bold($name).Form::add_input('hidden','name',$name);
 
 
 				if ($this->navi[$j]['Subnavi'][$i]['Show']==1) $visible_checked = array('checked'=>'checked','title'=>'Sichtbarkeit im Hauptmenü');
@@ -770,9 +787,10 @@ function dublette(name,typ)
 	{
 		$navi = $this->navi;
 		$htaccess = RheinaufFile::get_file(DOCUMENT_ROOT.'.htaccess');
-		preg_match('!(.*?#--REWRITE_RULES--#).*?(#--/REWRITE_RULES--#)!s',$htaccess,$matches);
+		preg_match('!(.*?#--REWRITE_RULES--#).*?(#--/REWRITE_RULES--#.*?)!s',$htaccess,$matches);
 
-		$new_htaccess = "\n";
+		$closed_urls = "\n";
+		$open_urls = "\n\n#Nach hinten offene URLs für Module mit beliebigen Unterseiten\n";
 		$regex_esc = '?*+()^$|[].';
 		$rubrik_key = 0;
 		foreach ($navi as $entry)
@@ -785,13 +803,15 @@ function dublette(name,typ)
 					$seite = addcslashes($this->path_encode($this->I18n_get_real($sub_entry['Seite'])),$regex_esc);
 					if ($seite == 'index') continue;
 					$page_key++;
-					$new_htaccess .= 'RewriteRule ^'.$rubrik.'/'.$seite.' CMSinit.php?r='.$rubrik_key.'&s='.$page_key.'&%{QUERY_STRING} [L,NC]'."\n";
+					$closed_urls .= 'RewriteRule ^'.$rubrik.'/'.$seite.'/$ CMSinit.php?r='.$rubrik_key.'&s='.$page_key.'&%{QUERY_STRING} [L,NC]'."\n";
+					$open_urls .= 'RewriteRule ^'.$rubrik.'/'.$seite.' CMSinit.php?r='.$rubrik_key.'&s='.$page_key.'&%{QUERY_STRING} [L,NC]'."\n";
 			}
-			$new_htaccess .= 'RewriteRule ^'.$rubrik.' CMSinit.php?r='.$rubrik_key.'&s=0&%{QUERY_STRING} [L,NC]'."\n";
+			$closed_urls .= 'RewriteRule ^'.$rubrik.'/$ CMSinit.php?r='.$rubrik_key.'&s=0&%{QUERY_STRING} [L,NC]'."\n";
+			$open_urls .= 'RewriteRule ^'.$rubrik.' CMSinit.php?r='.$rubrik_key.'&s=0&%{QUERY_STRING} [L,NC]'."\n";
 
 			$rubrik_key++;
 		}
-		$new_htaccess = $matches[1].$new_htaccess.$matches[2];
+		$new_htaccess = $matches[1].$closed_urls.$open_urls.$matches[2];
 		RheinaufFile::write_file(DOCUMENT_ROOT.'.htaccess',$new_htaccess);
 	}
 	function make_tree($id)

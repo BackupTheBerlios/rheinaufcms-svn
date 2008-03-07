@@ -1,11 +1,11 @@
-	<?php
+<?php
 /*--------------------------------
 --  RheinaufCMS Admin UI
 --
---  $HeadURL$
---  $LastChangedDate$
---  $LastChangedRevision$
---  $LastChangedBy$
+--  $HeadURL:https://raimund@svn.berlios.de/svnroot/repos/rheinaufcms/branches/stable/RheinaufCMS/System/Admin.php $
+--  $LastChangedDate:2008-02-14 15:48:56 +0100 (Do, 14 Feb 2008) $
+--  $LastChangedRevision:73 $
+--  $LastChangedBy:raimund $
 ---------------------------------*/
 if (isset($_GET['ping']))
 {
@@ -46,14 +46,14 @@ class Admin extends RheinaufCMS
 		
 	}
 	function show()
-	{ 
+	{
 		if (!Login::check_login($this->system))
 		{
 			$page = new Seite($this->system,$this->login_tpl);
 			$login = new Login($this->system);
 			return $page->header().$login->show().$page->footer();
 		}
-		
+		 
 		preg_match("/Admin\/([^\/|?|#]*)/",$_SERVER['REQUEST_URI'],$m);
 		$this->modul = $m[1];
 		
@@ -101,7 +101,7 @@ class Admin extends RheinaufCMS
 			$return ='';
  			//print_r($this->installed_modules);
 			$class = $this->modul;
-			@include(INSTALL_PATH.'/'.$this->installed_modules[$class]['Backend']);
+			include(INSTALL_PATH.'/'.$this->installed_modules[$class]['Backend']);
  			if (!class_exists($class))
 			{
 				$return = 'Modul nicht installiert';
@@ -170,7 +170,7 @@ class Admin extends RheinaufCMS
 			$page->div('',array('id'=>'menu_appendix'));
 			$page->custom($this->admin_menu());
 			
-			$page->div(Html::div($this->installed_modules[$class]['Name'],array('id'=>'module_name')).$return,array('id'=>'content'));
+			$page->div(Html::div($this->installed_modules[$class]['Name'],array('id'=>'module_name')).$return.'<br style="clear:both />',array('id'=>'content', 'class'=>'admin content'));
 			
 			return $page->flush_page();	
 		}

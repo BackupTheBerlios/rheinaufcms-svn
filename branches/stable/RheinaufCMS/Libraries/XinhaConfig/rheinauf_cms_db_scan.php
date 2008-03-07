@@ -90,9 +90,16 @@
     }
 
     
-function dbnavi()
+	function dbnavi()
     {
-     return $_SESSION['RheinaufCMSLinker'];
+     if (!$_SESSION['RheinaufCMSLinker'])
+		{
+			ob_start();
+			$system = new RheinaufCMS();
+			$system->linker_navi();
+			ob_end_clean();
+		}
+	 return $_SESSION['RheinaufCMSLinker'];
     }
 
     function dirsort($files)

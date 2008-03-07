@@ -512,5 +512,25 @@ class RheinaufCMS
 		elseif (isset($langs[$lang])) return $langs[$lang];
 		else return $langs['default'];
 	}
+	
+	function linker_navi()
+	{
+		$array = array();
+		for ($i= 0; $i<count($this->navi);$i++)
+		{
+			if($this->navi[$i]['Rubrik'] == 'Admin') continue;
+			$array[$i]['url'] = '/'.utf8_encode($this->path_encode($this->I18n_get_real($this->navi[$i]['Rubrik'])));
+			$array[$i]['children'] = array();
+			for ($j=0;$j<count($this->navi[$i]['Subnavi']);$j++)
+			{
+				if ($this->navi[$i]['Subnavi'][$j]['Seite'] != 'index')
+				{
+					$array[$i]['children'][$j]['url'] = $array[$i]['url'].'/'.utf8_encode($this->path_encode($this->I18n_get_real($this->navi[$i]['Subnavi'][$j]['Seite'])));
+					$array[$i]['children'][$j]['children'] = array();
+				}
+			}
+		}
+		$_SESSION['RheinaufCMSLinker'] = $array;
+	}
 }
 ?>

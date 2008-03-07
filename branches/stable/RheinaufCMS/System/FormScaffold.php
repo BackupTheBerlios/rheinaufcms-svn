@@ -328,62 +328,10 @@ class FormScaffold extends RheinaufCMS
 						{
 							if (!$xinha_loaded)
 							{
-								$GLOBALS['scripts'] .= Html::script(' _editor_url  = "/'.INSTALL_PATH.'/Libraries/Xinha/";_editor_lang = "de";_document_root = "'.DOCUMENT_ROOT.'"');
-								$GLOBALS['scripts'] .= Html::script('',array('src'=>'/'.INSTALL_PATH.'/Libraries/Xinha/htmlarea.js'));
-								$GLOBALS['scripts'] .= Html::script('
-									xinha_editors = [];
-									xinha_init    = null;
-									xinha_config  = null;
-									xinha_plugins = null;
-
-									// This contains the names of textareas we will make into Xinha editors
-									xinha_init = xinha_init ? xinha_init : function()
-									{
-
-										xinha_plugins = xinha_plugins ? xinha_plugins :
-										[
-										"SuperClean",
-
-										"ImageManager",
-										//"GetHtml",
-										//"Linker",
-										"DoubleClick"
-										];
-									    if(!HTMLArea.loadPlugins(xinha_plugins, xinha_init)) return;
-
-
-										xinha_editors.push("'.$id.'");
-
-										xinha_config = xinha_config ? xinha_config : new HTMLArea.Config();
-
-
-										xinha_config.statusBar = false;
-										xinha_config.toolbar =
-										 [
-										    ["bold","italic"],
-										    ["separator","createlink","insertimage"],
-										    ["separator","undo","redo","selectall"], (HTMLArea.is_gecko ? [] : ["cut","copy","paste","overwrite"]),
-										    ["separator","killword","separator","htmlmode","about","showhelp"]
-									 	 ];
-
-										//xinha_config.flowToolbars = false;
-										xinha_config.showLoading = true;
-										//xinha_config.only7BitPrintablesInURLs = false;
-
-
-										xinha_config.SuperClean.show_dialog = true;
-									    xinha_config.SuperClean.filters = {
-									               "tidy": HTMLArea._lc("General tidy up and correction of some problems.", "SuperClean"),
-									               "word": "Word"
-									    }
-
-									    xinha_editors   = HTMLArea.makeEditors(xinha_editors, xinha_config, xinha_plugins);
-
-										HTMLArea.startEditors(xinha_editors);
-
-									}
-								window.onload = xinha_init;
-							');
+								$GLOBALS['scripts'] .= Html::script(' _editor_url  = "/'.INSTALL_PATH.'/Libraries/Xinha/";_editor_lang = "de";_document_root = "'.DOCUMENT_ROOT.'";project_name = "'.PROJECT_NAME.'";');
+								$GLOBALS['scripts'] .= Html::script('',array('src'=>'/'.INSTALL_PATH.'/Libraries/Xinha/XinhaLoader.js'));
+								$GLOBALS['scripts'] .= Html::script('', array('src'=>'/'.INSTALL_PATH.'/System/Scaffold/XinhaConfig.php'));
+								$GLOBALS['scripts'] .= Html::script('xinha_editors.push("'.$id.'")');
 								$xinha_loaded = true;
 							}
 							else

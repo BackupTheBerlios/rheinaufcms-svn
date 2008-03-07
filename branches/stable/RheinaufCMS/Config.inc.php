@@ -19,6 +19,8 @@ define('FTP_USER','rcms2');
 define('FTP_PASS','rcmspass');
 define('FTP_ROOTDIR','/');
 
+#Diverses
+define('RCMSCFG_ALLOW_PAGE_RENAME', true);
 
 #Bitte nicht ändern
 define('HOMEPAGE','Startseite');

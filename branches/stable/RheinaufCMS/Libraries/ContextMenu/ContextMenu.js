@@ -1,11 +1,3 @@
-// Context Menu Plugin for HTMLArea-3.0
-// Sponsored by www.americanbible.org
-// Implementation by Mihai Bazon, http://dynarch.com/mishoo/
-//
-// (c) dynarch.com 2003.
-// Distributed under the same terms as HTMLArea itself.
-// This notice MUST stay intact for use (see license.txt).
-
 var agt=navigator.userAgent.toLowerCase();
 var is_ie=((agt.indexOf("msie")!=-1)&&(agt.indexOf("opera")==-1));
 
@@ -91,7 +83,7 @@ ContextMenu.prototype.popupMenu = function(ev) {
 	var self = this;
 	var el = is_ie ? ev.srcElement : ev.target;
 
-	if (this.currentMenu)
+	if (this.currentMenu && this.currentMenu.parentNode)
 		this.currentMenu.parentNode.removeChild(this.currentMenu);
 	function getPos(el) {
 		var r = { x: el.offsetLeft, y: el.offsetTop };
@@ -130,6 +122,7 @@ ContextMenu.prototype.popupMenu = function(ev) {
 		}
 	}
 	self.closeMenu = function() {
+		if (!self.currentMenu && !self.currentMenu.parentNode) return;
 		self.currentMenu.parentNode.removeChild(self.currentMenu);
 		self.currentMenu = null;
 		_removeEvent(document, "mousedown", documentClick);
@@ -284,4 +277,4 @@ ContextMenu.prototype.popupMenu = function(ev) {
 	_stopEvent(ev);
 	return false;
 };
-window.onload = function () {new ContextMenu()};
+_addEvent(window, "load", function () {new ContextMenu()});
