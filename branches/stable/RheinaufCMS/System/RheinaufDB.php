@@ -122,5 +122,19 @@ class RheinaufDB
 		$sql = "INSERT INTO `$table` (".implode(',',$cols).") VALUES (".implode(',',$values).")";
 		return $this->db_query($sql);
 	}
+	
+	function db_replace($table,$data)
+	{
+
+		$cols = array();
+		$values = array();
+		foreach ($data as $key => $value)
+		{
+			$cols[] = "`$key`";
+			$values[] = "'$value'";
+		}
+		$sql = "REPLACE INTO `$table` (".implode(',',$cols).") VALUES (".implode(',',$values).")";
+		return $this->db_query($sql);
+	}
 }
 ?>
